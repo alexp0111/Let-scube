@@ -48,6 +48,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 // Следим за values string-ru
 // Для списка людей и сообщений посмотри dividers на сайте MD
 
+//Bobobob
+//Bobobob
+//Bobobob
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private NavigationView navigationView;
