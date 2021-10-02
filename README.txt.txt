@@ -1,0 +1,3 @@
+--- project name: LBar ---
+--- Owner: Petrovskiy A.A. ---
+--- Date of connecting to github: 02.10.21 ---
