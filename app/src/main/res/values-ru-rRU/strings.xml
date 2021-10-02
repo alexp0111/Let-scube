@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">LBar</string>
+    <string name="message">Сообщения</string>
+    <string name="friends">Друзья</string>
+    <string name="profile">Мой профиль</string>
+    <string name="communicate">Communicate</string>
+    <string name="share">Поделиться</string>
+    <string name="estimate">Оценить</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="password">Пароль</string>
+    <string name="you_don_t_have_any_n_messages_yet">У Вас ещё нет\nсообщений</string>
+    <string name="section_under_construction">Раздел находится в разработке…</string>
+    <string name="enter_n_your_n_account">Войдите\n в свой\n аккаунт</string>
+    <string name="you_logged_in">Вы вошли в свой аккаунт</string>
+    <string name="log_out">Выйти</string>
+    <string name="registration">Регистрация</string>
+    <string name="password_one_more_time">Укажите пароль ещё раз</string>
+    <string name="log_in">Войти</string>
+    <string name="register">зарегистрироваться</string>
+    <string name="sww">Что-то пошло не так</string>
+    <string name="comp_pass">Парли не совпадают</string>
+    <string name="user_registered">Пользователь зарегестрирован</string>
+    <string name="em_field">Поле не может быть пустым</string>
+    <string name="ver_mail_has_sent">Письмо для верификации было выслано на вашу почту. Пожалуйста, после верификации, перезайдите в свой аккаунт</string>
+    <string name="ver_mail_has_sent_">После регистрации на указанную вами электронную почту будет выслано письмо для потверждения email.</string>
+    <string name="your_mail_has_not_been_verified">Ваша почта не потверждена!</string>
+    <string name="verify">Потвердить</string>
+    <string name="reset_password">изменить пароль</string>
+    <string name="cye">Проверьте ваш email</string>
+    <string name="instr_to_reset">Для обновления пароля введите свой email и оставьте поле "пароль" пустым</string>
+    <string name="you_can_also">Вы также можете:</string>
+    <string name="name">Имя</string>
+    <string name="age">Возраст</string>
+    <string name="birthday_day_month_year">Дата рождения [день.месяц.год]</string>
+</resources>

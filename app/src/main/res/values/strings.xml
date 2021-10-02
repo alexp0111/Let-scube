@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">LBar</string>
+    <string name="message">Messages</string>
+    <string name="friends">Friends</string>
+    <string name="profile">My profile</string>
+    <string name="communicate">Communicate</string>
+    <string name="share">Share</string>
+    <string name="estimate">Estimate</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="password">Password</string>
+    <string name="you_don_t_have_any_n_messages_yet">You don\'t have any\n messages yet.</string>
+    <string name="section_under_construction">Section under construction…</string>
+    <string name="enter_n_your_n_account">Enter\n your\n account</string>
+    <string name="you_logged_in">You logged in</string>
+    <string name="log_out">Log out</string>
+    <string name="registration">Registration</string>
+    <string name="password_one_more_time">Password one more time</string>
+    <string name="log_in">Log in</string>
+    <string name="register">register</string>
+    <string name="sww">Something went wrong</string>
+    <string name="comp_pass">passwords are not comparable</string>
+    <string name="user_registered">User registered</string>
+    <string name="em_field">the field cannot be empty</string>
+    <string name="ver_mail_has_sent">A verification letter has been sent to your email. Please, after verification, re-login to your account</string>
+    <string name="ver_mail_has_sent_">After registration, a confirmation email will be sent to your email address.</string>
+    <string name="your_mail_has_not_been_verified">Your mail has not been verified!</string>
+    <string name="verify">verify</string>
+    <string name="reset_password">reset password</string>
+    <string name="cye">Check your email</string>
+    <string name="instr_to_reset">To update your password, enter your email and leave the "password" field empty</string>
+    <string name="you_can_also">You can also:</string>
+    <string name="name">Name</string>
+    <string name="age">Age</string>
+    <string name="birthday_day_month_year">Birthday [day.month.year]</string>
+    <string name="add_url"><![CDATA[https://firebasestorage.googleapis.com/v0/b/lbar-messenger.appspot.com/o/camera.png?alt=media&token=8ea07bde-1246-40ab-b3b6-340b9c7f81ec]]></string>
+    <string name="fdb_inst">https://lbar-messenger-default-rtdb.firebaseio.com/</string>
+
+</resources>
