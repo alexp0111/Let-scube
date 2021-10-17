@@ -113,21 +113,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
-            android:hint="email" />
+            android:hint="email"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:theme="@style/AppTheme_2" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/on_log_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:hint="name" />
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/on_log_birthday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:hint="birthday" />
+            android:hint="birthday"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:theme="@style/AppTheme_2" />
 
 
     </LinearLayout>

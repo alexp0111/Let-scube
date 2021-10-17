@@ -1,6 +1,8 @@
 package com.example.lbar.fragments;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,17 +20,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lbar.Adapter.UserAdapter;
 import com.example.lbar.R;
 import com.example.lbar.database.User;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class FriendsFragment extends Fragment {
 
@@ -43,6 +48,7 @@ public class FriendsFragment extends Fragment {
     private List<User> mUsers;
 
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private TextInputEditText search_users;
 
     @Nullable
     @Override
@@ -54,6 +60,26 @@ public class FriendsFragment extends Fragment {
         fUser = mAuth.getCurrentUser();
 
         progressBar = view.findViewById(R.id.prog_bar_list);
+
+        // SEARCHING FOR USERS
+        search_users = view.findViewById(R.id.search_users);
+        search_users.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchUsers(charSequence.toString(), fUser);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        // SEARCHING FOR USERS
 
         recyclerView = view.findViewById(R.id.recycler_users);
         recyclerView.setHasFixedSize(true);
@@ -67,53 +93,58 @@ public class FriendsFragment extends Fragment {
         return view;
     }
 
-    private void readUsers() {
-        //FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+    private void searchUsers(String s, FirebaseUser fUser) {
+        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("us_name")
+                .startAt(s).endAt(s + "\uf8ff");
 
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mUsers.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User us = snapshot.getValue(User.class);
+
+                    assert us != null;
+                    assert fUser != null;
+                    if (!(us.getUs_email().equals(fUser.getEmail()))) {
+                        mUsers.add(us);
+                    }
+                }
+
+                userAdapter = new UserAdapter(getContext(), mUsers, false);
+                recyclerView.setAdapter(userAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void readUsers() {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
-                if (fUser == null) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        User user = snapshot.getValue(User.class);
-                        mUsers.add(user);
-                    }
-
-                    userAdapter = new UserAdapter(getContext(), mUsers, false);
-                    recyclerView.setAdapter(userAdapter);
-                } else {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        User user = snapshot.getValue(User.class);
-
-                        if (!snapshot.getKey().equals(fUser.getUid())) {
+                if (search_users.getText().toString().equals("")) {
+                    if (fUser == null) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User user = snapshot.getValue(User.class);
                             mUsers.add(user);
                         }
-                    }
+                    } else {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User user = snapshot.getValue(User.class);
 
+                            if (!Objects.equals(snapshot.getKey(), fUser.getUid())) {
+                                mUsers.add(user);
+                            }
+                        }
+                    }
                     userAdapter = new UserAdapter(getContext(), mUsers, false);
                     recyclerView.setAdapter(userAdapter);
                 }
-
-                recyclerView.setClickable(true);
-                recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-                    @Override
-                    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                        Toast.makeText(getContext(), "...", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-
-                    @Override
-                    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                    }
-
-                    @Override
-                    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-                    }
-                });
-
                 progressBar.setVisibility(View.GONE);
             }
 

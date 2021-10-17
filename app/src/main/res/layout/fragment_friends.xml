@@ -2,9 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#719fc1">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField_search_users"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:hint="Search...">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/search_users"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/textField_search_users"
         android:id="@+id/recycler_users"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -85,7 +85,7 @@ public class OnLoggedFragment extends Fragment {
         //->
 
         txt_on_log_email = view.findViewById(R.id.on_log_email);            // Поля информации
-        txt_on_log_name = view.findViewById(R.id.on_log_name);              // Поля информации
+        //txt_on_log_name = view.findViewById(R.id.on_log_name);              // Поля информации
         txt_on_log_birthday = view.findViewById(R.id.on_log_birthday);      // Поля информации
         txt_on_log_hi = view.findViewById(R.id.on_log_text_hi);             // Поле приветствия
 
@@ -162,7 +162,7 @@ public class OnLoggedFragment extends Fragment {
                         status = profile.getUs_status();
 
 
-                        txt_on_log_name.setText("Name:     " + name);
+                        //txt_on_log_name.setText("Name:     " + name);
                         txt_on_log_email.setText("email:     " + email);
                         txt_on_log_birthday.setText("Birthday:     " + birthday);
 
