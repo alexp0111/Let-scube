@@ -1,19 +1,29 @@
 package com.example.lbar.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.database.User;
+import com.example.lbar.fragments.DialogueFragment;
+import com.example.lbar.fragments.MessageFragment;
+import com.example.lbar.fragments.RegistrationFragment;
 
 import java.util.List;
 
@@ -55,6 +65,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             holder.status_line.setText("offline");
             holder.status_line.setTextColor(Color.parseColor("#BDBDBD"));
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogueFragment fragment = new DialogueFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("user_img", user.getImage());
+                bundle.putString("user_name", user.getUs_name());
+                fragment.setArguments(bundle);
+
+                try {
+                   ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            fragment).commit();
+                } catch (Exception D) {
+                    Toast.makeText(mContext, R.string.sww, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override

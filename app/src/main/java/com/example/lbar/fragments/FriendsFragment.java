@@ -95,7 +95,7 @@ public class FriendsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                searchUsers(charSequence.toString(), fUser);
+                searchUsers(charSequence.toString().toLowerCase(), fUser);
             }
 
             @Override
@@ -118,7 +118,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void searchUsers(String s, FirebaseUser fUser) {
-        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("us_name")
+        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search_tool")
                 .startAt(s).endAt(s + "\uf8ff");
 
         query.addValueEventListener(new ValueEventListener() {
