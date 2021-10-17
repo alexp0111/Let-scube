@@ -12,12 +12,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lbar.Adapter.UserAdapter;
+import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.database.User;
 import com.google.android.material.textfield.TextInputEditText;
@@ -48,12 +53,31 @@ public class FriendsFragment extends Fragment {
     private List<User> mUsers;
 
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private Toolbar toolbar;
+    private DrawerLayout drawer;
     private TextInputEditText search_users;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        AppCompatActivity main_activity = (MainActivity)getActivity();
+
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_users);
+        if (toolbar != null){
+            activity.setSupportActionBar(toolbar);
+            toolbar.setTitle("Users");
+
+            drawer = main_activity.findViewById(R.id.drawer_layout);
+            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+            toggle.syncState();
+            drawer.addDrawerListener(toggle);
+        }
 
         reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Users");
         mAuth = FirebaseAuth.getInstance();
@@ -104,10 +128,14 @@ public class FriendsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User us = snapshot.getValue(User.class);
 
-                    assert us != null;
-                    assert fUser != null;
-                    if (!(us.getUs_email().equals(fUser.getEmail()))) {
-                        mUsers.add(us);
+                    if (us != null){
+                        if (fUser == null){
+                            mUsers.add(us);
+                        } else {
+                            if (!(us.getUs_email().equals(fUser.getEmail()))) {
+                                mUsers.add(us);
+                            }
+                        }
                     }
                 }
 

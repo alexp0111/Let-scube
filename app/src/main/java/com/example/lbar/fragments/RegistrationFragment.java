@@ -11,9 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.database.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +38,8 @@ public class RegistrationFragment extends Fragment {
     private TextInputEditText txt_new_mail, txt_new_pass, txt_new_pass_check, txt_new_name, txt_new_birthday;
     private static com.google.android.material.button.MaterialButton btn_new_reg;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private Toolbar toolbar;
+    private DrawerLayout drawer;
 
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
@@ -43,6 +50,23 @@ public class RegistrationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        AppCompatActivity main_activity = (MainActivity)getActivity();
+
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_registr);
+        if (toolbar != null){
+            activity.setSupportActionBar(toolbar);
+            toolbar.setTitle("Registration");
+
+            drawer = main_activity.findViewById(R.id.drawer_layout);
+            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+            toggle.syncState();
+            drawer.addDrawerListener(toggle);
+        }
 
         mAuth = FirebaseAuth.getInstance();                                 // Цепляем БД
         storage = FirebaseStorage.getInstance("gs://lbar-messenger.appspot.com");

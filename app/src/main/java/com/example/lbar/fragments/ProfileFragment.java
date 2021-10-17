@@ -15,6 +15,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -38,6 +42,9 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
 
     private TextInputEditText txt_mail, txt_pass;
+    private Toolbar toolbar;
+    private DrawerLayout drawer;
+
     private static com.google.android.material.button.MaterialButton btn_reg, btn_enter, btn_res_pass;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
 
@@ -46,6 +53,23 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        AppCompatActivity main_activity = (MainActivity)getActivity();
+
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_log_in);
+        if (toolbar != null){
+            activity.setSupportActionBar(toolbar);
+            toolbar.setTitle("Log in");
+
+            drawer = main_activity.findViewById(R.id.drawer_layout);
+            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+            toggle.syncState();
+            drawer.addDrawerListener(toggle);
+        }
         //Объявление элементов firebase
         database = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/");
         mAuth = FirebaseAuth.getInstance();

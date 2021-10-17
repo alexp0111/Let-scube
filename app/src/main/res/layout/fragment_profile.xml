@@ -6,74 +6,87 @@
     android:background="#719fc1"
     android:orientation="vertical">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_in_log_in"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#000000" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/prog_bar_log_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txt_view_enter_your_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_in_log_in"
         android:gravity="top|center"
         android:paddingTop="30dp"
         android:text="@string/enter_n_your_n_account"
         android:textSize="48dp"
         android:theme="@style/Elegant_font" />
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/prog_bar_log_in"
+    <LinearLayout
+        android:id="@+id/layout_with_login_and_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="378dp"
-        android:layout_marginBottom="377dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="Email"
+        android:layout_below="@id/txt_view_enter_your_account"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
         android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        app:startIconContentDescription="Login"
-        app:startIconDrawable="@drawable/ic_profile">
+        android:paddingRight="40dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_mail"
-            android:inputType="textEmailAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField_pass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="282dp"
-        android:gravity="center"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:hint="@string/password"
-        android:paddingLeft="40dp"
-        android:paddingTop="10dp"
-        android:paddingRight="40dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="14"
-        app:endIconMode="password_toggle"
-        app:startIconContentDescription="Login"
-        app:startIconDrawable="@drawable/ic_pass_key">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_pass"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textField_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Email"
+            app:startIconContentDescription="Login"
+            app:startIconDrawable="@drawable/ic_profile">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textField_pass"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            app:counterEnabled="true"
+            app:counterMaxLength="14"
+            app:endIconMode="password_toggle"
+            app:startIconContentDescription="Login"
+            app:startIconDrawable="@drawable/ic_pass_key">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_pass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="230dp"
+        android:layout_below="@id/layout_with_login_and_pass"
+        android:layout_marginTop="20dp"
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
@@ -81,58 +94,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
             android:text="@string/log_in" />
 
     </LinearLayout>
 
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="135dp"
-        android:gravity="center"
-        android:text="@string/you_can_also"
-        android:textSize="12sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/you_can_also"
+            android:textSize="12sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btregistr"
             android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_height="42dp"
             android:gravity="center"
+            android:text="@string/register"
             android:textColor="#719fc1"
             android:textSize="12sp"
-            android:theme="@style/AppTheme_2"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:text="@string/register" />
-
-        <TextView
-            android:layout_width="30dp"
-            android:gravity="center"
-            android:layout_height="10dp" />
+            android:theme="@style/AppTheme_2" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btreset_pass"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:textSize="12sp"
+            android:text="@string/reset_password"
             android:textColor="#263238"
-            android:theme="@style/AppTheme_3"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:text="@string/reset_password" />
+            android:textSize="12sp"
+            android:theme="@style/AppTheme_3" />
 
     </LinearLayout>
 

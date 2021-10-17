@@ -5,7 +5,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#719fc1">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_in_users"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:titleTextColor="#000000"
+        android:elevation="4dp"
+        android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <com.google.android.material.textfield.TextInputLayout
+        android:layout_below="@id/toolbar_in_users"
         android:id="@+id/textField_search_users"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

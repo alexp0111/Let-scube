@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View headerView;
 
     private static CircleImageView nav_img;
-    private static TextView nav_name_text, nav_status_text;
+    private TextView nav_name_text, nav_status_text;
 
     private FirebaseAuth mAuth;
     private DatabaseReference reference;
@@ -67,27 +67,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Users");
-        try{
-        userID = mAuth.getCurrentUser().getUid();
-        } catch (Exception e){
+        try {
+            userID = mAuth.getCurrentUser().getUid();
+        } catch (Exception e) {
             Log.d("start_user_id", "not logged");
         }
 
-        //
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         drawer = findViewById(R.id.drawer_layout);
-
-        // toggle - переключатель
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        toggle.syncState();
-        toolbar.setTitle("New messenger");
-        toolbar.setTitleTextColor(Color.BLACK);
-
-        drawer.addDrawerListener(toggle);
 
         // Navigation
         navigationView = findViewById(R.id.nav_view);

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#719fc1"
     android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_in_registr"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:titleTextColor="#000000"
+        android:elevation="4dp"
+        android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_reg"
@@ -16,6 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:layout_below="@id/toolbar_in_registr"
         android:id="@+id/textView_reg"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -29,6 +40,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
+        android:layout_below="@id/textView_reg"
         android:theme="@style/Elegant_font"
         android:layout_width="match_parent"
         android:layout_height="440dp"
@@ -128,9 +140,11 @@
 
     <LinearLayout
         android:id="@+id/reg_button_layout"
+        android:layout_below="@id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
@@ -148,6 +162,7 @@
 
     <TextView
         android:id="@+id/textView2"
+        android:layout_below="@id/reg_button_layout"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_alignParentBottom="true"
@@ -157,7 +172,7 @@
         android:text="@string/ver_mail_has_sent_"
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reg_button_layout"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/reg_button_layout" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
