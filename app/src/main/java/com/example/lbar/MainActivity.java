@@ -119,9 +119,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (profile != null) {
                         String name, urll, status;
 
-                        name = profile.us_name;
-                        status = profile.us_status;
-                        urll = profile.image;
+                        name = profile.getUs_name();
+                        status = profile.getUs_status();
+                        urll = profile.getImage();
                         //->
                         nav_name_text.setText(name);
                         nav_status_text.setText(status);

@@ -155,11 +155,11 @@ public class OnLoggedFragment extends Fragment {
                     if (profile != null) {
                         String name, email, birthday, urll, status;
 
-                        name = profile.us_name;
-                        email = profile.us_email;
-                        birthday = profile.us_birthday;
-                        urll = profile.image;
-                        status = profile.us_status;
+                        name = profile.getUs_name();
+                        email = profile.getUs_email();
+                        birthday = profile.getUs_birthday();
+                        urll = profile.getImage();
+                        status = profile.getUs_status();
 
 
                         txt_on_log_name.setText("Name:     " + name);
