@@ -68,9 +68,10 @@ public class RegistrationFragment extends Fragment {
     }
 
     private void createNewUser() {
-        final String str_mail, str_pass, str_pass_check, str_name, str_birthday, str_img;
+        final String str_mail, str_pass, str_pass_check, str_name, str_birthday, str_img, str_name_toLowerCase;
 
         str_name = txt_new_name.getText().toString();
+        str_name_toLowerCase = str_name.toLowerCase();
         str_mail = txt_new_mail.getText().toString();
         str_pass = txt_new_pass.getText().toString();
         str_pass_check = txt_new_pass_check.getText().toString();
@@ -126,7 +127,7 @@ public class RegistrationFragment extends Fragment {
 
 
                         //Делаем запись в realtimeDB
-                        User user = new User(str_name, str_mail, str_birthday, str_img, "offline");
+                        User user = new User(str_name, str_mail, str_birthday, str_img, str_name_toLowerCase, "offline");
                         FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/").getReference("Users")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .setValue(user).addOnCompleteListener(task1 -> {
