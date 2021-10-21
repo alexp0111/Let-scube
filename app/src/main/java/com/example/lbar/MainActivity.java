@@ -9,10 +9,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Fragment;
 import android.graphics.Color;
+import android.graphics.Insets;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth mAuth;
     private DatabaseReference reference;
     private String userID;
+    public static int dp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +100,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new MessageFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_message);
         }
+
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        dp = displayMetrics.widthPixels;
     }
 
     private void downloadProfileIntoMenu() {

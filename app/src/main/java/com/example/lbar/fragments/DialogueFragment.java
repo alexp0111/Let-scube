@@ -2,6 +2,7 @@ package com.example.lbar.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import com.example.lbar.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.lbar.MainActivity.dp;
+
 public class DialogueFragment extends Fragment {
 
     private Toolbar toolbar;
@@ -37,6 +40,7 @@ public class DialogueFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dialogue, container, false);
         AppCompatActivity activity = (AppCompatActivity)getActivity();
         AppCompatActivity main_activity = (MainActivity)getActivity();
+
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
         if (toolbar != null){
@@ -52,6 +56,7 @@ public class DialogueFragment extends Fragment {
         }
         profileImg = view.findViewById(R.id.dialog_us_img);
         username = view.findViewById(R.id.dialog_txt_us_name);
+        username.setWidth(dp/2);
         String urll = this.getArguments().getString("user_img");
         String username_txt = this.getArguments().getString("user_name");
         username.setText(username_txt);

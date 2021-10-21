@@ -8,35 +8,38 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_in_dialogue"
         android:layout_width="match_parent"
-        android:gravity="start"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
+        android:gravity="center"
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="#000000">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:gravity="start"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="start">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/dialog_us_img"
                 android:layout_width="55dp"
-                android:padding="5sp"
                 android:layout_height="55dp"
+                android:padding="5sp"
                 android:src="@drawable/ic_add_photo" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/dialog_txt_us_name"
                 style="@style/AppTheme_2"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:autoSizeMaxTextSize="22sp"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeTextType="uniform"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:padding="5sp"
-                android:textColor="#263238"
-                android:textSize="22sp" />
+                android:textColor="#263238" />
 
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
