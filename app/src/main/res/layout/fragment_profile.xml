@@ -1,139 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#719fc1"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_in_log_in"
+        android:id="@+id/toolbar_in_profile"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
+        app:titleTextColor="#000000"
         android:elevation="4dp"
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextColor="#000000" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/container_for_log_out_button"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bt_logg_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:text="@string/log_out" />
+    </LinearLayout>
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/prog_bar_log_in"
+        android:id="@+id/prog_bar_onlog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_height="30dp"
         android:indeterminate="true"
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/txt_view_enter_your_account"
+        android:id="@+id/ver_txtv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_in_log_in"
         android:gravity="top|center"
         android:paddingTop="30dp"
-        android:text="@string/enter_n_your_n_account"
-        android:textSize="48dp"
-        android:theme="@style/Elegant_font" />
-
-    <LinearLayout
-        android:id="@+id/layout_with_login_and_pass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txt_view_enter_your_account"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            app:startIconContentDescription="Login"
-            app:startIconDrawable="@drawable/ic_profile">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_mail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField_pass"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            app:counterEnabled="true"
-            app:counterMaxLength="14"
-            app:endIconMode="password_toggle"
-            app:startIconContentDescription="Login"
-            app:startIconDrawable="@drawable/ic_pass_key">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_pass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
+        android:text="@string/your_mail_has_not_been_verified"
+        android:textColor="#C62828"
+        android:textSize="28sp"
+        android:theme="@style/Elegant_font"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_with_login_and_pass"
-        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="80dp"
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btenter"
+            android:id="@+id/ver_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
             android:gravity="center"
-            android:text="@string/log_in" />
+            android:text="@string/verify"
+            android:theme="@style/AppTheme_2"
+            android:visibility="gone" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:id="@+id/container_for_profile_img"
+        android:layout_below="@id/toolbar_in_profile"
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/layout_user_img"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/you_can_also"
-            android:textSize="12sp" />
+            android:padding="10dp"
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btregistr"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:text="@string/register"
-            android:textColor="#719fc1"
-            android:textSize="12sp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/prof_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_add_photo"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/on_log_text_hi"
+        android:layout_below="@id/container_for_profile_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center"
+        android:paddingTop="30dp"
+        android:text="@string/you_logged_in"
+        android:textColor="#FFFFFF"
+        android:textSize="32dp"
+        android:theme="@style/AppTheme_2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_below="@id/on_log_text_hi"
+        android:layout_above="@id/container_for_log_out_button"
+        android:layout_height="300dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/on_log_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:hint="email"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
             android:theme="@style/AppTheme_2" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btreset_pass"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="@string/reset_password"
-            android:textColor="#263238"
-            android:textSize="12sp"
-            android:theme="@style/AppTheme_3" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/on_log_birthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:hint="birthday"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:theme="@style/AppTheme_2" />
+
 
     </LinearLayout>
 

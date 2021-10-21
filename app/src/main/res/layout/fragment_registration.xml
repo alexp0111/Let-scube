@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:titleTextColor="#000000"
         android:elevation="4dp"
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#000000" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_reg"
@@ -26,10 +26,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_below="@id/toolbar_in_registr"
         android:id="@+id/textView_reg"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_below="@id/toolbar_in_registr"
         android:gravity="top|center"
         android:paddingTop="30dp"
         android:text="@string/registration"
@@ -40,14 +40,14 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_below="@id/textView_reg"
-        android:theme="@style/Elegant_font"
         android:layout_width="match_parent"
         android:layout_height="440dp"
+        android:layout_below="@id/textView_reg"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
+        android:theme="@style/Elegant_font"
         app:layout_constraintTop_toBottomOf="@+id/textView_reg">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -62,7 +62,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_new_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -72,13 +72,13 @@
             android:gravity="center"
             android:hint="@string/birthday_day_month_year"
             app:startIconContentDescription="Login"
-            app:startIconDrawable="@drawable/ic_profile">
+            app:startIconDrawable="@drawable/ic_cake">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_new_birthday"
-                android:inputType="date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="date" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -89,13 +89,13 @@
             android:gravity="center"
             android:hint="Email"
             app:startIconContentDescription="Login"
-            app:startIconDrawable="@drawable/ic_profile">
+            app:startIconDrawable="@drawable/ic_email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_new_mail"
-                android:inputType="textEmailAddress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -104,9 +104,9 @@
             android:layout_height="80dp"
             android:gravity="center"
             android:hint="@string/password"
-            app:endIconMode="password_toggle"
             app:counterEnabled="true"
             app:counterMaxLength="14"
+            app:endIconMode="password_toggle"
             app:startIconContentDescription="Login"
             app:startIconDrawable="@drawable/ic_pass_key">
 
@@ -114,17 +114,17 @@
                 android:id="@+id/et_new_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textField_pass_check"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="14"
             android:gravity="center"
             android:hint="@string/password_one_more_time"
+            app:counterEnabled="true"
+            app:counterMaxLength="14"
             app:endIconMode="password_toggle"
             app:startIconContentDescription="Login"
             app:startIconDrawable="@drawable/ic_pass_key">
@@ -133,17 +133,16 @@
                 android:id="@+id/et_new_pass_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/reg_button_layout"
-        android:layout_below="@id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_above="@+id/textView2"
         android:layout_marginBottom="10dp"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView2"
@@ -162,17 +161,15 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_below="@id/reg_button_layout"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:text="@string/ver_mail_has_sent_"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reg_button_layout" />
+        android:textSize="14dp" />
 
 
 </RelativeLayout>

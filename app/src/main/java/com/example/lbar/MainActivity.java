@@ -1,24 +1,16 @@
 package com.example.lbar;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.app.Fragment;
 import android.graphics.Color;
-import android.graphics.Insets;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowInsets;
-import android.view.WindowMetrics;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,9 +19,8 @@ import com.example.lbar.Adapter.StatusAdapter;
 import com.example.lbar.database.User;
 import com.example.lbar.fragments.FriendsFragment;
 import com.example.lbar.fragments.MessageFragment;
-import com.example.lbar.fragments.OnLoggedFragment;
 import com.example.lbar.fragments.ProfileFragment;
-import com.example.lbar.fragments.RegistrationFragment;
+import com.example.lbar.fragments.LogInFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,9 +29,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -55,17 +43,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 // Для списка людей и сообщений посмотри dividers на сайте MD
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static int dp_width;
+    public static int dp_height;
+    private static CircleImageView nav_img;
+
+
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private View headerView;
 
-    private static CircleImageView nav_img;
     private TextView nav_name_text, nav_status_text;
 
     private FirebaseAuth mAuth;
     private DatabaseReference reference;
     private String userID;
-    public static int dp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        dp = displayMetrics.widthPixels;
+        dp_width = displayMetrics.widthPixels;
+        dp_height = displayMetrics.heightPixels;
     }
 
     private void downloadProfileIntoMenu() {
@@ -162,10 +155,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (user == null) {
                     navigationView.setCheckedItem(R.id.nav_profile);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new ProfileFragment()).commit();
+                            new LogInFragment()).commit();
                 } else {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new OnLoggedFragment()).commit();
+                            new ProfileFragment()).commit();
                 }
                 break;
             case R.id.nav_share:
@@ -187,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (user == null) {
             navigationView.setCheckedItem(R.id.nav_profile);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ProfileFragment()).commit();
+                    new LogInFragment()).commit();
         }
     }
 

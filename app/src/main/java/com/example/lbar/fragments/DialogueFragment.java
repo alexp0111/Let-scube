@@ -25,7 +25,7 @@ import com.example.lbar.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.example.lbar.MainActivity.dp;
+import static com.example.lbar.MainActivity.dp_width;
 
 public class DialogueFragment extends Fragment {
 
@@ -56,7 +56,7 @@ public class DialogueFragment extends Fragment {
         }
         profileImg = view.findViewById(R.id.dialog_us_img);
         username = view.findViewById(R.id.dialog_txt_us_name);
-        username.setWidth(dp/2);
+        username.setWidth(dp_width/2);
         String urll = this.getArguments().getString("user_img");
         String username_txt = this.getArguments().getString("user_name");
         username.setText(username_txt);

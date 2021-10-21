@@ -6,15 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -55,17 +52,16 @@ public class RegistrationFragment extends Fragment {
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_registr);
         if (toolbar != null){
-            activity.setSupportActionBar(toolbar);
+            toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
             toolbar.setTitle("Registration");
-
-            drawer = main_activity.findViewById(R.id.drawer_layout);
-            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
-
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
-                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-            toggle.syncState();
-            drawer.addDrawerListener(toggle);
+            toolbar.setNavigationOnClickListener(view1 -> {
+                try {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LogInFragment()).commit();
+                } catch (Exception D) {
+                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         mAuth = FirebaseAuth.getInstance();                                 // Цепляем БД
@@ -167,7 +163,7 @@ public class RegistrationFragment extends Fragment {
 
                         try { // Уходим на фрагмент входа в аккаунт
                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                    new ProfileFragment()).commit();
+                                    new LogInFragment()).commit();
                         } catch (Exception D){
                             Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);

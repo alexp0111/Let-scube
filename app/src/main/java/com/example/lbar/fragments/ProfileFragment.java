@@ -1,18 +1,19 @@
 package com.example.lbar.fragments;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,46 +21,70 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.example.lbar.Adapter.StatusAdapter;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.lbar.database.User;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 
-import java.util.HashMap;
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.app.Activity.RESULT_OK;
+import static com.example.lbar.MainActivity.dp_height;
 
 public class ProfileFragment extends Fragment {
 
-    private FirebaseDatabase database;
     private FirebaseAuth mAuth;
+    private FirebaseUser fUser;
+    private DatabaseReference reference;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private StorageTask mUploadTask;
 
-    private TextInputEditText txt_mail, txt_pass;
+    private Uri imageUri;
+    private ActivityResultLauncher<Intent> launcher;
+
+    private NavigationView navigationView;
+    private View headerView;
     private Toolbar toolbar;
     private DrawerLayout drawer;
 
-    private static com.google.android.material.button.MaterialButton btn_reg, btn_enter, btn_res_pass;
+    private String userID;
+
+    private com.google.android.material.button.MaterialButton btn_logg_out, btn_ver;
+    private com.google.android.material.textview.MaterialTextView txt_on_log_email, txt_on_log_birthday;
+    private CircleImageView pr_img, nav_img;
+    private TextView txt_ver, txt_on_log_hi, nav_name_text, nav_status_text;
+    private LinearLayout image_layout;
+
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
 
+
     @Nullable
-    @SuppressLint("SimpleDateFormat")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        AppCompatActivity main_activity = (MainActivity)getActivity();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_log_in);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_profile);
         if (toolbar != null){
             activity.setSupportActionBar(toolbar);
-            toolbar.setTitle("Log in");
+            toolbar.setTitle("Profile");
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
             //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -70,113 +95,170 @@ public class ProfileFragment extends Fragment {
             toggle.syncState();
             drawer.addDrawerListener(toggle);
         }
-        //Объявление элементов firebase
-        database = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/");
+
+        navigationView = getActivity().findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+
+        btn_logg_out = view.findViewById(R.id.bt_logg_out);                 // Кнопка выхода из аккаунта
+        btn_ver = view.findViewById(R.id.ver_btn);                          // Кнопка верификации почты
+        txt_ver = view.findViewById(R.id.ver_txtv);                         // сообщение о верификации
+
+        pr_img = view.findViewById(R.id.prof_img);                          // фото профиля
+        image_layout = view.findViewById(R.id.layout_user_img);
+
+        ViewGroup.LayoutParams params = image_layout.getLayoutParams();
+        params.height = dp_height/4;
+        params.width = dp_height/4;
+
+        //->
+        nav_name_text = headerView.findViewById(R.id.name_nav);
+        nav_status_text = headerView.findViewById(R.id.status_nav);
+        nav_img = headerView.findViewById(R.id.nav_header_img);
+        //->
+
+        txt_on_log_email = view.findViewById(R.id.on_log_email);            // Поля информации
+        txt_on_log_birthday = view.findViewById(R.id.on_log_birthday);      // Поля информации
+        txt_on_log_hi = view.findViewById(R.id.on_log_text_hi);             // Поле приветствия
+
+        progressBar = view.findViewById(R.id.prog_bar_onlog);
+        progressBar.setVisibility(View.VISIBLE);
+
+        ///////
         mAuth = FirebaseAuth.getInstance();
-        //
-        progressBar = view.findViewById(R.id.prog_bar_log_in);
-        // Поля ввода
-        txt_mail = view.findViewById(R.id.et_mail);
-        txt_pass = view.findViewById(R.id.et_pass);
-        // Кнопки входа и регистрации
-        btn_reg = view.findViewById(R.id.btregistr);
-        btn_enter = view.findViewById(R.id.btenter);
-        btn_res_pass = view.findViewById(R.id.btreset_pass);
-        // Обработчики кнопок
-        btn_reg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new RegistrationFragment()).commit();
-                } catch (Exception D) {
-                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-                }
+        fUser = mAuth.getCurrentUser();
+
+        reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Users");
+        userID = fUser.getUid();
+
+        storage = FirebaseStorage.getInstance("gs://lbar-messenger.appspot.com");
+        storageReference = storage.getReference("AvatarImages");
+        ///////
+
+        pr_img.setOnClickListener(view1 -> {
+            if (mUploadTask != null && mUploadTask.isInProgress()) {
+                Snackbar.make(getView(), "wait for a few", Snackbar.LENGTH_SHORT).show();
+            } else {
+                choosePictureFromAlbum();
             }
         });
-        btn_enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                loginUser();                                            // Входим в аккаунт
-            }
-        });
-        btn_res_pass.setOnClickListener(new View.OnClickListener() {    // Изменяем пароль
-            @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                resetPassword();
-            }
-        });
-        return view;
-    }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    Intent data = result.getData();
 
-    private void loginUser() {
-        String mail, pass;
-
-        mail = txt_mail.getText().toString();
-        pass = txt_pass.getText().toString();
-
-        if (TextUtils.isEmpty(mail)) {                          // Обработчик пустоты
-            txt_mail.setError(getString(R.string.em_field));
-            txt_mail.requestFocus();
-            progressBar.setVisibility(View.GONE);
-        } else if (TextUtils.isEmpty(pass)) {                   // Обработчик пустоты
-            txt_pass.setError(getString(R.string.em_field));
-            txt_pass.requestFocus();
-            progressBar.setVisibility(View.GONE);
-        } else {
-            mAuth.signInWithEmailAndPassword(mail, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        try {                                    // Летим в фрагмент "Вход выполнен"
-                            StatusAdapter adapter = new StatusAdapter();
-                            adapter.setUs_status("online");
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                    new OnLoggedFragment()).commit();
-                            progressBar.setVisibility(View.GONE);
-                        } catch (Exception D) {
-                            Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
+                    if (data.getData() != null && result.getResultCode() == RESULT_OK) {
+                        imageUri = data.getData();
+                        pr_img.setImageURI(imageUri);
+                        uploadPicture();
                     } else {
-                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
+                        Log.d("imageUri", "error");
                     }
-                }
+                });
+
+        if (!fUser.isEmailVerified()) {
+
+            pr_img.setVisibility(View.GONE);
+            btn_ver.setVisibility(View.VISIBLE);
+            txt_ver.setVisibility(View.VISIBLE);
+
+            btn_ver.setOnClickListener(view12 -> {
+                // Верификация через email          begin
+                fUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                fUser.sendEmailVerification()
+                        .addOnSuccessListener(aVoid ->
+                                Toast.makeText(getContext(), R.string.ver_mail_has_sent,
+                                        Toast.LENGTH_LONG).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(getContext(), R.string.sww,
+                                        Toast.LENGTH_SHORT).show());
+                // Верификация через email          end
             });
-        }
-    }
+            progressBar.setVisibility(View.GONE);
 
-    private void resetPassword() {
-        String mail, pass;
-
-        mail = txt_mail.getText().toString();
-        pass = txt_pass.getText().toString();
-
-        if ((TextUtils.isEmpty(pass)) && (!TextUtils.isEmpty(mail))) {                          // Обработчик пустоты
-            mAuth.sendPasswordResetEmail(mail).addOnCompleteListener(new OnCompleteListener<Void>() {
+        } else {
+            reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        Log.d("reset_things", "Success");
-                        Toast.makeText(getContext(), R.string.cye, Toast.LENGTH_LONG).show();
-                    } else {
-                        Log.d("reset_things", "smth went wrong t1");
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User profile = dataSnapshot.getValue(User.class);
+
+                    if (profile != null) {
+                        String name, email, birthday, urll, status;
+
+                        name = profile.getUs_name();
+                        email = profile.getUs_email();
+                        birthday = profile.getUs_birthday();
+                        urll = profile.getImage();
+                        status = profile.getUs_status();
+
+
+                        //txt_on_log_name.setText("Name:     " + name);
+                        txt_on_log_email.setText("email:     " + email);
+                        txt_on_log_birthday.setText("Birthday:     " + birthday);
+
+                        //->
+                        nav_name_text.setText(name);
+                        nav_status_text.setText(status);
+                        nav_status_text.setTextColor(Color.parseColor("#FFC107"));
+                        //->
+
+                        txt_on_log_hi.setText("Здравствуйте,\n" + name + "!");
+
+                        Glide.with(ProfileFragment.this).load(urll).into(pr_img);
+                        Glide.with(headerView).load(urll).into(nav_img);
                     }
+
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d("profile", "sww");
                     progressBar.setVisibility(View.GONE);
                 }
             });
-        } else {
-            Log.d("reset_things", "smth went wrong t2");
-            Toast.makeText(getContext(), R.string.instr_to_reset, Toast.LENGTH_LONG).show();
-            progressBar.setVisibility(View.GONE);
         }
+
+
+        // Листенер
+        btn_logg_out.setOnClickListener(view13 -> {
+
+            StatusAdapter adapter = new StatusAdapter();
+            adapter.setUs_status("offline");
+
+            mAuth.signOut();                                            // Выход
+            try {                                                       // Летим  в фрагмент входа
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new LogInFragment()).commit();
+            } catch (Exception D) {
+                Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return view;
+    }
+
+    private void uploadPicture() {
+        StorageReference riversRef = storageReference.child(userID).child(imageUri.getLastPathSegment());
+        mUploadTask = riversRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            Snackbar.make(getView(), "image uploaded", Snackbar.LENGTH_LONG).show();
+
+            Task<Uri> downloadURl = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task -> {
+                reference.child(userID).child("image").setValue(task.getResult().toString());
+                progressBar.setVisibility(View.GONE);
+            });
+        }).addOnFailureListener(e -> {
+            Log.d("uploading", "f");
+            progressBar.setVisibility(View.GONE);
+        });
+    }
+
+    private void choosePictureFromAlbum() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        launcher.launch(intent);
+        progressBar.setVisibility(View.VISIBLE);
     }
 }
