@@ -56,7 +56,9 @@ public class RegistrationFragment extends Fragment {
             toolbar.setTitle("Registration");
             toolbar.setNavigationOnClickListener(view1 -> {
                 try {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.alpha_to_high, R.anim.to_top)
+                            .replace(R.id.fragment_container,
                             new LogInFragment()).commit();
                 } catch (Exception D) {
                     Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();

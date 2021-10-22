@@ -78,8 +78,9 @@ public class LogInFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new RegistrationFragment()).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.from_bottom, R.anim.alpha_to_low)
+                            .replace(R.id.fragment_container, new RegistrationFragment()).commit();
                 } catch (Exception D) {
                     Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                 }
