@@ -23,7 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.lbar.Adapter.StatusAdapter;
+import com.example.lbar.adapter.StatusAdapter;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.database.User;
@@ -45,15 +45,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.lbar.MainActivity.dp_height;
+import static com.example.lbar.MainActivity.reference;
+import static com.example.lbar.MainActivity.storageReferenceAvatar;
 
 public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
-    private DatabaseReference reference;
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
     private StorageTask mUploadTask;
+    private String userID;
 
     private Uri imageUri;
     private ActivityResultLauncher<Intent> launcher;
@@ -62,8 +62,6 @@ public class ProfileFragment extends Fragment {
     private View headerView;
     private Toolbar toolbar;
     private DrawerLayout drawer;
-
-    private String userID;
 
     private com.google.android.material.button.MaterialButton btn_logg_out, btn_ver;
     private com.google.android.material.textview.MaterialTextView txt_on_log_email, txt_on_log_birthday;
@@ -110,11 +108,11 @@ public class ProfileFragment extends Fragment {
         params.height = dp_height/4;
         params.width = dp_height/4;
 
-        //->
+        //-> left menu bar
         nav_name_text = headerView.findViewById(R.id.name_nav);
         nav_status_text = headerView.findViewById(R.id.status_nav);
         nav_img = headerView.findViewById(R.id.nav_header_img);
-        //->
+        //-> left menu bar
 
         txt_on_log_email = view.findViewById(R.id.on_log_email);            // Поля информации
         txt_on_log_birthday = view.findViewById(R.id.on_log_birthday);      // Поля информации
@@ -126,12 +124,7 @@ public class ProfileFragment extends Fragment {
         ///////
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
-
-        reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Users");
         userID = fUser.getUid();
-
-        storage = FirebaseStorage.getInstance("gs://lbar-messenger.appspot.com");
-        storageReference = storage.getReference("AvatarImages");
         ///////
 
         pr_img.setOnClickListener(view1 -> {
@@ -227,6 +220,14 @@ public class ProfileFragment extends Fragment {
             StatusAdapter adapter = new StatusAdapter();
             adapter.setUs_status("offline");
 
+            //->
+            nav_name_text.setText("User name");
+            nav_status_text.setText("User status");
+            nav_status_text.setTextColor(Color.parseColor("#BDBDBD"));
+
+            Glide.with(headerView).load(R.drawable.ic_add_photo).into(nav_img);
+            //->
+
             mAuth.signOut();                                            // Выход
             try {                                                       // Летим  в фрагмент входа
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -240,7 +241,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void uploadPicture() {
-        StorageReference riversRef = storageReference.child(userID).child(imageUri.getLastPathSegment());
+        StorageReference riversRef = storageReferenceAvatar.child(userID).child(imageUri.getLastPathSegment());
         mUploadTask = riversRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
             Snackbar.make(getView(), "image uploaded", Snackbar.LENGTH_LONG).show();
 

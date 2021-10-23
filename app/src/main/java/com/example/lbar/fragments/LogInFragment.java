@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,24 +18,27 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import com.example.lbar.Adapter.StatusAdapter;
+import com.example.lbar.adapter.StatusAdapter;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
+
+import static com.example.lbar.MainActivity.dp_height;
+import static com.example.lbar.MainActivity.dp_width;
 
 public class LogInFragment extends Fragment {
 
-    private FirebaseDatabase database;
     private FirebaseAuth mAuth;
 
     private TextInputEditText txt_mail, txt_pass;
-    private Toolbar toolbar;
-    private DrawerLayout drawer;
+    private TextInputLayout layout_txt_mail, layout_txt_pass;
+    private TextView txt_youc_can_also;
 
     private static com.google.android.material.button.MaterialButton btn_reg, btn_enter, btn_res_pass;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
@@ -44,15 +48,15 @@ public class LogInFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        AppCompatActivity main_activity = (MainActivity)getActivity();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_log_in);
-        if (toolbar != null){
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_log_in);
+        if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
             toolbar.setTitle("Log in");
 
-            drawer = main_activity.findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
             //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
@@ -61,18 +65,20 @@ public class LogInFragment extends Fragment {
             toggle.syncState();
             drawer.addDrawerListener(toggle);
         }
-        //Объявление элементов firebase
-        database = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/");
+        ///////
         mAuth = FirebaseAuth.getInstance();
-        //
+        ///////
         progressBar = view.findViewById(R.id.prog_bar_log_in);
         // Поля ввода
         txt_mail = view.findViewById(R.id.et_mail);
+        layout_txt_mail = view.findViewById(R.id.textField_name);
         txt_pass = view.findViewById(R.id.et_pass);
+        layout_txt_pass = view.findViewById(R.id.textField_pass);
         // Кнопки входа и регистрации
         btn_reg = view.findViewById(R.id.btregistr);
         btn_enter = view.findViewById(R.id.btenter);
         btn_res_pass = view.findViewById(R.id.btreset_pass);
+        txt_youc_can_also = view.findViewById(R.id.txt_you_can_also);
         // Обработчики кнопок
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +106,34 @@ public class LogInFragment extends Fragment {
                 resetPassword();
             }
         });
+        // Animations
+        layout_txt_mail.setTranslationX(dp_width);
+        layout_txt_pass.setTranslationX(dp_width);
+        btn_enter.setTranslationX(dp_width);
+
+        txt_youc_can_also.setTranslationY(dp_height);
+        btn_reg.setTranslationY(dp_height);
+        btn_res_pass.setTranslationY(dp_height);
+
+
+        layout_txt_mail.setAlpha(1);
+        layout_txt_pass.setAlpha(1);
+        btn_enter.setAlpha(1);
+
+        txt_youc_can_also.setAlpha(1);
+        btn_reg.setAlpha(1);
+        btn_res_pass.setAlpha(1);
+
+
+        layout_txt_mail.animate().translationX(0).alpha(1).setDuration(400).setStartDelay(300).start();
+        layout_txt_pass.animate().translationX(0).alpha(1).setDuration(400).setStartDelay(400).start();
+        btn_enter.animate().translationX(0).alpha(1).setDuration(400).setStartDelay(500).start();
+
+        txt_youc_can_also.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
+        btn_reg.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(800).start();
+        btn_res_pass.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(900).start();
+        // Animations
+
         return view;
     }
 
@@ -156,7 +190,7 @@ public class LogInFragment extends Fragment {
             mAuth.sendPasswordResetEmail(mail).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Log.d("reset_things", "Success");
                         Toast.makeText(getContext(), R.string.cye, Toast.LENGTH_LONG).show();
                     } else {

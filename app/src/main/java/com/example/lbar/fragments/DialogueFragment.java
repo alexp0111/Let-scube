@@ -38,12 +38,12 @@ public class DialogueFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialogue, container, false);
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        AppCompatActivity main_activity = (MainActivity)getActivity();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        AppCompatActivity main_activity = (MainActivity) getActivity();
 
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
-        if (toolbar != null){
+        if (toolbar != null) {
             toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
             toolbar.setNavigationOnClickListener(view1 -> {
                 try {
@@ -56,7 +56,7 @@ public class DialogueFragment extends Fragment {
         }
         profileImg = view.findViewById(R.id.dialog_us_img);
         username = view.findViewById(R.id.dialog_txt_us_name);
-        username.setWidth(dp_width/2);
+        username.setWidth(dp_width / 2);
         String urll = this.getArguments().getString("user_img");
         String username_txt = this.getArguments().getString("user_name");
         username.setText(username_txt);

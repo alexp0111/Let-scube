@@ -109,6 +109,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/txt_you_can_also"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

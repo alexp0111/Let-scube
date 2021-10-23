@@ -5,10 +5,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,11 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lbar.Adapter.UserAdapter;
+import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.database.User;
@@ -30,25 +27,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.lbar.MainActivity.reference;
 
 public class FriendsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
 
-
-    private DatabaseReference reference, fStatusRef;
-    private FirebaseAuth mAuth;
     private FirebaseUser fUser;
+    private FirebaseAuth mAuth;
 
     private List<User> mUsers;
 
@@ -61,11 +56,11 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        AppCompatActivity main_activity = (MainActivity)getActivity();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        AppCompatActivity main_activity = (MainActivity) getActivity();
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_users);
-        if (toolbar != null){
+        if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
             toolbar.setTitle("Users");
 
@@ -79,9 +74,10 @@ public class FriendsFragment extends Fragment {
             drawer.addDrawerListener(toggle);
         }
 
-        reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Users");
+        ///////
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
+        ///////
 
         progressBar = view.findViewById(R.id.prog_bar_list);
 
@@ -128,8 +124,8 @@ public class FriendsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User us = snapshot.getValue(User.class);
 
-                    if (us != null){
-                        if (fUser == null){
+                    if (us != null) {
+                        if (fUser == null) {
                             mUsers.add(us);
                         } else {
                             if (!(us.getUs_email().equals(fUser.getEmail()))) {

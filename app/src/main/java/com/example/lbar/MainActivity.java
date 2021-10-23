@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.lbar.Adapter.StatusAdapter;
+import com.example.lbar.adapter.StatusAdapter;
 import com.example.lbar.database.User;
 import com.example.lbar.fragments.FriendsFragment;
 import com.example.lbar.fragments.MessageFragment;
@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,6 +46,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static DatabaseReference reference;
+    public static FirebaseStorage storage;
+    public static StorageReference storageReferenceAvatar, storageReferenceDefaultImg;
+    private FirebaseAuth mAuth;
+    private FirebaseUser fUser;
+    private String userID;
+
     public static int dp_width;
     public static int dp_height;
     private static CircleImageView nav_img;
@@ -55,10 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TextView nav_name_text, nav_status_text;
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference reference;
-    private String userID;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,8 +71,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Users");
+        storage = FirebaseStorage.getInstance("gs://lbar-messenger.appspot.com");
+        storageReferenceAvatar = storage.getReference("AvatarImages");
+        storageReferenceDefaultImg = storage.getReference("camera.png");
         try {
-            userID = mAuth.getCurrentUser().getUid();
+            fUser = mAuth.getCurrentUser();
+            userID = fUser.getUid();
         } catch (Exception e) {
             Log.d("start_user_id", "not logged");
         }

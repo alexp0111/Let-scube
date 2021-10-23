@@ -47,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top|center"
+        android:layout_below="@id/toolbar_in_profile"
         android:paddingTop="30dp"
         android:text="@string/your_mail_has_not_been_verified"
         android:textColor="#C62828"
@@ -57,16 +58,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="80dp"
+        android:layout_below="@id/ver_txtv"
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ver_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/verify"
             android:theme="@style/AppTheme_2"

@@ -46,6 +46,6 @@
         android:layout_below="@+id/user_item_profile_img"
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@id/user_item_profile_img"
-        android:background="#6290b7"></ImageView>
+        android:background="#6290b7" />
 
 </RelativeLayout>
