@@ -35,6 +35,7 @@ public class RegistrationFragment extends Fragment {
 
     private FirebaseUser fUser;
     private FirebaseAuth mAuth;
+    private String userID;
 
     private TextInputEditText txt_new_mail, txt_new_pass, txt_new_pass_check, txt_new_name, txt_new_birthday;
     private TextInputLayout l_txt_new_mail, l_txt_new_pass, l_txt_new_pass_check, l_txt_new_name, l_txt_new_birthday;
@@ -186,9 +187,9 @@ public class RegistrationFragment extends Fragment {
 
                         Toast.makeText(getContext(), R.string.user_registered, Toast.LENGTH_SHORT).show();
 
-
                         //Делаем запись в realtimeDB
-                        User user = new User(str_name, str_mail, str_birthday, str_img, str_name_toLowerCase, "offline");
+                        userID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+                        User user = new User(str_name, str_mail, str_birthday, str_img, str_name_toLowerCase, "offline", userID);
                         FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                                 .getReference("Users")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())

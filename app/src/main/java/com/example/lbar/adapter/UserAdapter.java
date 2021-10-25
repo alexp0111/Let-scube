@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.lbar.R;
 import com.example.lbar.database.User;
 import com.example.lbar.fragments.DialogueFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -59,23 +60,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             holder.status_line.setTextColor(Color.parseColor("#BDBDBD"));
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            holder.itemView.setOnClickListener(view -> {
+
                 DialogueFragment fragment = new DialogueFragment();
                 Bundle bundle = new Bundle();
+                bundle.putString("us_id", user.getUs_id());
                 bundle.putString("user_img", user.getImage());
                 bundle.putString("user_name", user.getUs_name());
                 fragment.setArguments(bundle);
 
                 try {
-                   ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             fragment).commit();
                 } catch (Exception D) {
                     Toast.makeText(mContext, R.string.sww, Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+            });
+        } else {
+            Toast.makeText(mContext, "To chat, firstly enter your account", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

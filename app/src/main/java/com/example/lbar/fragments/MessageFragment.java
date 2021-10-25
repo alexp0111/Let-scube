@@ -43,6 +43,8 @@ public class MessageFragment extends Fragment {
             drawer.addDrawerListener(toggle);
         }
 
+
+
         return view;
     }
 }

@@ -2,6 +2,7 @@ package com.example.lbar.database;
 
 public class User {
 
+    private String us_id;
     private String us_name;
     private String us_email;
     private String us_birthday;
@@ -17,13 +18,14 @@ public class User {
         this.search_tool = search_tool;
     }
 
-    public User(String us_name, String us_email, String us_birthday, String image, String search_tool, String us_status) {
+    public User(String us_name, String us_email, String us_birthday, String image, String search_tool, String us_status, String us_id) {
         this.us_name = us_name;
         this.us_email = us_email;
         this.us_birthday = us_birthday;
         this.image = image;
         this.us_status = us_status;
         this.search_tool = search_tool;
+        this.us_id = us_id;
     }
 
     public String getUs_name() {
@@ -68,4 +70,9 @@ public class User {
 
     public User() {
     }
+
+    public String getUs_id() {
+        return us_id;
+    }
+
 }

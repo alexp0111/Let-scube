@@ -22,6 +22,16 @@ import androidx.fragment.app.FragmentActivity;
 import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.database.Message;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageTask;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -29,10 +39,17 @@ import static com.example.lbar.MainActivity.dp_width;
 
 public class DialogueFragment extends Fragment {
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser fUser;
+    private String senderUserID, receiverUserID, text;
+
     private Toolbar toolbar;
     private CircleImageView profileImg;
     private Intent intent;
     private TextView username;
+
+    private TextInputEditText text_to_send;
+    private TextInputLayout textInputLayout_send;
 
     @Nullable
     @Override
@@ -40,7 +57,6 @@ public class DialogueFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dialogue, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
-
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
         if (toolbar != null) {
@@ -54,14 +70,49 @@ public class DialogueFragment extends Fragment {
                 }
             });
         }
+
+        ///////
+        mAuth = FirebaseAuth.getInstance();
+        fUser = mAuth.getCurrentUser();
+        senderUserID = fUser.getUid();
+        ///////
+
         profileImg = view.findViewById(R.id.dialog_us_img);
+
         username = view.findViewById(R.id.dialog_txt_us_name);
         username.setWidth(dp_width / 2);
+
         String urll = this.getArguments().getString("user_img");
+        receiverUserID = this.getArguments().getString("us_id");
         String username_txt = this.getArguments().getString("user_name");
+
         username.setText(username_txt);
         Glide.with(DialogueFragment.this).load(urll).into(profileImg);
 
+        text_to_send = view.findViewById(R.id.et_send);
+        textInputLayout_send = view.findViewById(R.id.textField_message);
+
+        textInputLayout_send.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                text = text_to_send.getText().toString();
+                if (!text.equals("")) {
+                sendMessage(senderUserID, receiverUserID, text);
+                } else {
+                    Toast.makeText(main_activity, "Please, enter a message", Toast.LENGTH_SHORT).show();
+                }
+                text_to_send.setText("");
+            }
+        });
+
         return view;
+    }
+
+    private void sendMessage(String sender, String receiver, String message_text){
+
+        DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
+
+        Message msg = new Message(sender, receiver, message_text);
+        reference.child("Chats").push().setValue(msg);
     }
 }
