@@ -71,7 +71,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 fragment.setArguments(bundle);
 
                 try {
-                    ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.to_right, R.anim.from_right)
+                            .replace(R.id.fragment_container,
                             fragment).commit();
                 } catch (Exception D) {
                     Toast.makeText(mContext, R.string.sww, Toast.LENGTH_SHORT).show();

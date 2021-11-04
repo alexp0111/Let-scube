@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.lbar.MainActivity.dp_height;
 import static com.example.lbar.MainActivity.dp_width;
-import static com.example.lbar.MainActivity.reference;
 
 public class RegistrationFragment extends Fragment {
 
@@ -56,7 +55,7 @@ public class RegistrationFragment extends Fragment {
             toolbar.setNavigationOnClickListener(view1 -> {
                 try {
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.alpha_to_high, R.anim.to_top)
+                            .setCustomAnimations(R.anim.alpha_to_high_1000, R.anim.to_top)
                             .replace(R.id.fragment_container,
                                     new LogInFragment()).commit();
                 } catch (Exception D) {

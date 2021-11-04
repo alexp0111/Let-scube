@@ -2,22 +2,18 @@ package com.example.lbar.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
@@ -29,9 +25,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageTask;
-
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,6 +42,7 @@ public class DialogueFragment extends Fragment {
     private TextView username;
 
     private TextInputEditText text_to_send;
+    private ConstraintLayout message_layout;
     private TextInputLayout textInputLayout_send;
 
     @Nullable
@@ -63,7 +57,9 @@ public class DialogueFragment extends Fragment {
             toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
             toolbar.setNavigationOnClickListener(view1 -> {
                 try {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                            .replace(R.id.fragment_container,
                             new FriendsFragment()).commit();
                 } catch (Exception D) {
                     Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
@@ -78,6 +74,12 @@ public class DialogueFragment extends Fragment {
         ///////
 
         profileImg = view.findViewById(R.id.dialog_us_img);
+        message_layout = view.findViewById(R.id.constraint_for_message_edit_text);
+
+        message_layout.setTranslationX(dp_width);
+        message_layout.setAlpha(1);
+        message_layout.animate().translationX(0).alpha(1)
+                .setDuration(200).setStartDelay(100).start();
 
         username = view.findViewById(R.id.dialog_txt_us_name);
         username.setWidth(dp_width / 2);

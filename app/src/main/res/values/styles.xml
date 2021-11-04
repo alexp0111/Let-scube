@@ -1,8 +1,8 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.Bridge">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">#FFC107</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">#263238</item>
         <item name="fontFamily">@font/fnt2</item>
@@ -11,6 +11,7 @@
     <style name="AppTheme_2" parent="Theme.MaterialComponents.Light.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#263238</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">#FFC107</item>
         <item name="fontFamily">@font/fnt3</item>
@@ -20,24 +21,28 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">#263238</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="colorAccent">#FFC107</item>
         <item name="fontFamily">@font/fnt2</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="windowNoTitle">true</item>
         <item name="fontFamily">@font/fnt2</item>
     </style>
 
     <style name="BlackDrawerIconStyle.DrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="android:textColorSecondary">#000000</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="fontFamily">@font/fnt2</item>
     </style>
 
     <style name="Elegant_font" parent="Theme.AppCompat">
         <item name="android:textColorSecondary">#000000</item>
         <item name="fontFamily">@font/fnt1</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="colorAccent">#FFC107</item>
     </style>
 
