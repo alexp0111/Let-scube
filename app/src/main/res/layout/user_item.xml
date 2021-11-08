@@ -22,7 +22,7 @@
         android:layout_toEndOf="@id/user_item_profile_img"
         android:layout_toRightOf="@id/user_item_profile_img"
         android:text="username"
-        android:textColor="#263238"
+        android:textColor="@color/colorUserNameInList"
         android:textSize="20sp" />
 
     <TextView

@@ -9,17 +9,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class MessageFragment extends Fragment {
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
+
+    private FloatingActionButton fab;
+    private SwitchMaterial switchMaterial;
 
     @Nullable
     @Override
@@ -42,7 +48,6 @@ public class MessageFragment extends Fragment {
             toggle.syncState();
             drawer.addDrawerListener(toggle);
         }
-
 
 
         return view;
