@@ -47,7 +47,6 @@
         android:orientation="vertical"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
-        android:theme="@style/Elegant_font"
         app:layout_constraintTop_toBottomOf="@+id/textView_reg">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -55,7 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:gravity="center"
-            app:boxStrokeColor="@color/colorPrimary"
             android:hint="@string/name"
             app:startIconContentDescription="Login"
             app:startIconDrawable="@drawable/ic_profile">
