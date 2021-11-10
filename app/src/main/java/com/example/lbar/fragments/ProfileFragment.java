@@ -202,7 +202,7 @@ public class ProfileFragment extends Fragment {
                         Glide.with(headerView).load(urll).into(nav_img);
                     }
 
-                    progressBar.setVisibility(View.GONE);
+                   progressBar.setVisibility(View.GONE);
                 }
 
                 @Override

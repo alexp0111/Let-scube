@@ -19,6 +19,7 @@
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_log_in"
         android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar_in_log_in"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:indeterminate="true"
@@ -28,7 +29,7 @@
         android:id="@+id/txt_view_enter_your_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_in_log_in"
+        android:layout_below="@id/prog_bar_log_in"
         android:gravity="top|center"
         android:paddingTop="30dp"
         android:text="@string/enter_n_your_n_account"

@@ -19,6 +19,7 @@
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_reg"
         android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar_in_registr"
         android:layout_height="30dp"
         android:indeterminate="true"
         android:visibility="gone"
@@ -29,7 +30,7 @@
         android:id="@+id/textView_reg"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/toolbar_in_registr"
+        android:layout_below="@id/prog_bar_reg"
         android:gravity="top|center"
         android:paddingTop="30dp"
         android:text="@string/registration"

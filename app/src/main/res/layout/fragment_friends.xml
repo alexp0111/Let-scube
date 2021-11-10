@@ -15,8 +15,16 @@
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/prog_bar_list"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar_in_users"
+        android:layout_height="30dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_below="@id/toolbar_in_users"
+        android:layout_below="@id/prog_bar_list"
         android:id="@+id/textField_search_users"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,12 +43,5 @@
         android:id="@+id/recycler_users"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/prog_bar_list"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:indeterminate="true"
-        android:visibility="gone" />
 
 </RelativeLayout>

@@ -38,6 +38,7 @@
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_onlog"
         android:layout_width="match_parent"
+        android:layout_below="@id/toolbar_in_profile"
         android:layout_height="30dp"
         android:indeterminate="true"
         android:visibility="gone" />
@@ -77,7 +78,7 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:id="@+id/container_for_profile_img"
-        android:layout_below="@id/toolbar_in_profile"
+        android:layout_below="@id/prog_bar_onlog"
         android:layout_height="wrap_content">
 
         <LinearLayout
