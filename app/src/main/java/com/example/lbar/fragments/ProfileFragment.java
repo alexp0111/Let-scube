@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.adapter.StatusAdapter;
@@ -67,6 +68,7 @@ public class ProfileFragment extends Fragment {
     private LinearLayout image_layout;
 
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private SwipeRefreshLayout srl;
 
 
     @Nullable
@@ -85,12 +87,37 @@ public class ProfileFragment extends Fragment {
 
         initItems(view);
 
+        srl.setOnRefreshListener(() -> {
+            progressBar.show();
+            getProfileInfoToDownload();
+            progressBar.hide();
+            srl.setRefreshing(false);
+        });
+
         ViewGroup.LayoutParams params = image_layout.getLayoutParams();
         params.height = dp_height / 4;
         params.width = dp_height / 4;
 
         createLauncherForChoosingRomAlbum();
 
+        getProfileInfoToDownload();
+
+        pr_img.setOnClickListener(view1 -> {
+            if (mUploadTask != null && mUploadTask.isInProgress()) {
+                Snackbar.make(getView(), "wait for a few", Snackbar.LENGTH_SHORT).show();
+            } else {
+                choosePictureFromAlbum();
+            }
+        });
+
+        btn_logg_out.setOnClickListener(view13 -> {
+            loggingOutProfile();
+        });
+
+        return view;
+    }
+
+    private void getProfileInfoToDownload() {
         if (!fUser.isEmailVerified()) {
             downloadNotVerifiedItems();
             progressBar.setVisibility(View.GONE);
@@ -116,20 +143,6 @@ public class ProfileFragment extends Fragment {
                         }
                     });
         }
-
-        pr_img.setOnClickListener(view1 -> {
-            if (mUploadTask != null && mUploadTask.isInProgress()) {
-                Snackbar.make(getView(), "wait for a few", Snackbar.LENGTH_SHORT).show();
-            } else {
-                choosePictureFromAlbum();
-            }
-        });
-
-        btn_logg_out.setOnClickListener(view13 -> {
-            loggingOutProfile();
-        });
-
-        return view;
     }
 
     private void initItems(View v) {
@@ -154,6 +167,7 @@ public class ProfileFragment extends Fragment {
         txt_on_log_hi = v.findViewById(R.id.on_log_text_hi);             // Поле приветствия
 
         progressBar = v.findViewById(R.id.prog_bar_onlog);
+        srl = v.findViewById(R.id.pull_to_refresh_profile);
         progressBar.setVisibility(View.VISIBLE);
     }
 
