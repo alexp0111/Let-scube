@@ -34,10 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 
@@ -79,53 +76,46 @@ public class ProfileFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_profile);
-        if (toolbar != null){
-            activity.setSupportActionBar(toolbar);
-            toolbar.setTitle("Profile");
-
-            drawer = main_activity.findViewById(R.id.drawer_layout);
-            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
-
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
-                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-            toggle.syncState();
-            drawer.addDrawerListener(toggle);
-        }
-
-        navigationView = getActivity().findViewById(R.id.nav_view);
-        headerView = navigationView.getHeaderView(0);
-
-        btn_logg_out = view.findViewById(R.id.bt_logg_out);                 // Кнопка выхода из аккаунта
-        btn_ver = view.findViewById(R.id.ver_btn);                          // Кнопка верификации почты
-        txt_ver = view.findViewById(R.id.ver_txtv);                         // сообщение о верификации
-
-        pr_img = view.findViewById(R.id.prof_img);                          // фото профиля
-        image_layout = view.findViewById(R.id.layout_user_img);
-
-        ViewGroup.LayoutParams params = image_layout.getLayoutParams();
-        params.height = dp_height/4;
-        params.width = dp_height/4;
-
-        //-> left menu bar
-        nav_name_text = headerView.findViewById(R.id.name_nav);
-        nav_status_text = headerView.findViewById(R.id.status_nav);
-        nav_img = headerView.findViewById(R.id.nav_header_img);
-        //-> left menu bar
-
-        txt_on_log_email = view.findViewById(R.id.on_log_email);            // Поля информации
-        txt_on_log_birthday = view.findViewById(R.id.on_log_birthday);      // Поля информации
-        txt_on_log_hi = view.findViewById(R.id.on_log_text_hi);             // Поле приветствия
-
-        progressBar = view.findViewById(R.id.prog_bar_onlog);
-        progressBar.setVisibility(View.VISIBLE);
-
-        ///////
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
         userID = fUser.getUid();
-        ///////
+
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_profile);
+        setToolbarSettings(toolbar, activity, main_activity);
+
+        initItems(view);
+
+        ViewGroup.LayoutParams params = image_layout.getLayoutParams();
+        params.height = dp_height / 4;
+        params.width = dp_height / 4;
+
+        createLauncherForChoosingRomAlbum();
+
+        if (!fUser.isEmailVerified()) {
+            downloadNotVerifiedItems();
+            progressBar.setVisibility(View.GONE);
+
+        } else {
+            reference.child(userID).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            User profile = dataSnapshot.getValue(User.class);
+                            if (profile != null) {
+                                downloadProfileInfo(profile);
+                            }
+                            progressBar.setVisibility(View.GONE);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d("profile", "sww");
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+        }
 
         pr_img.setOnClickListener(view1 -> {
             if (mUploadTask != null && mUploadTask.isInProgress()) {
@@ -135,6 +125,120 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        btn_logg_out.setOnClickListener(view13 -> {
+            loggingOutProfile();
+        });
+
+        return view;
+    }
+
+    private void initItems(View v) {
+        navigationView = getActivity().findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+
+        btn_logg_out = v.findViewById(R.id.bt_logg_out);                 // Кнопка выхода из аккаунта
+        btn_ver = v.findViewById(R.id.ver_btn);                          // Кнопка верификации почты
+        txt_ver = v.findViewById(R.id.ver_txtv);                         // сообщение о верификации
+
+        pr_img = v.findViewById(R.id.prof_img);                          // фото профиля
+        image_layout = v.findViewById(R.id.layout_user_img);
+
+        //-> left menu bar
+        nav_name_text = headerView.findViewById(R.id.name_nav);
+        nav_status_text = headerView.findViewById(R.id.status_nav);
+        nav_img = headerView.findViewById(R.id.nav_header_img);
+        //-> left menu bar
+
+        txt_on_log_email = v.findViewById(R.id.on_log_email);            // Поля информации
+        txt_on_log_birthday = v.findViewById(R.id.on_log_birthday);      // Поля информации
+        txt_on_log_hi = v.findViewById(R.id.on_log_text_hi);             // Поле приветствия
+
+        progressBar = v.findViewById(R.id.prog_bar_onlog);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
+        if (tbar != null) {
+            activity.setSupportActionBar(tbar);
+            tbar.setTitle("Profile");
+
+            drawer = main_activity.findViewById(R.id.drawer_layout);
+
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, tbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+            toggle.syncState();
+            drawer.addDrawerListener(toggle);
+        }
+    }
+
+    private void loggingOutProfile() {
+        StatusAdapter adapter = new StatusAdapter();
+        adapter.setUs_status("offline");
+
+        //->
+        nav_name_text.setText("User name");
+        nav_status_text.setText("User status");
+        nav_status_text.setTextColor(Color.parseColor("#BDBDBD"));
+
+        Glide.with(headerView).load(R.drawable.ic_add_photo).into(nav_img);
+        //->
+
+        mAuth.signOut();                                            // Выход
+        try {                                                       // Летим  в фрагмент входа
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new LogInFragment()).commit();
+        } catch (Exception D) {
+            Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void downloadNotVerifiedItems() {
+        pr_img.setVisibility(View.GONE);
+        btn_ver.setVisibility(View.VISIBLE);
+        txt_ver.setVisibility(View.VISIBLE);
+
+        btn_ver.setOnClickListener(view12 -> {
+            // Верификация через email          begin
+            fUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            fUser.sendEmailVerification()
+                    .addOnSuccessListener(aVoid ->
+                            Toast.makeText(getContext(), R.string.ver_mail_has_sent,
+                                    Toast.LENGTH_LONG).show())
+                    .addOnFailureListener(e ->
+                            Toast.makeText(getContext(), R.string.sww,
+                                    Toast.LENGTH_SHORT).show());
+            // Верификация через email          end
+        });
+    }
+
+    private void downloadProfileInfo(User profile) {
+        String name, email, birthday, urll, status;
+
+        name = profile.getUs_name();
+        email = profile.getUs_email();
+        birthday = profile.getUs_birthday();
+        urll = profile.getImage();
+        status = profile.getUs_status();
+
+
+        txt_on_log_email.setText("email:     " + email);
+        txt_on_log_birthday.setText("Birthday:     " + birthday);
+
+        //->
+        nav_name_text.setText(name);
+        nav_status_text.setText(status);
+        nav_status_text.setTextColor(Color.parseColor("#FFC107"));
+        //->
+
+        txt_on_log_hi.setText("Здравствуйте,\n" + name + "!");
+
+        Glide.with(ProfileFragment.this).load(urll).into(pr_img);
+        Glide.with(headerView).load(urll).into(nav_img);
+    }
+
+    private void createLauncherForChoosingRomAlbum() {
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -148,96 +252,6 @@ public class ProfileFragment extends Fragment {
                         Log.d("imageUri", "error");
                     }
                 });
-
-        if (!fUser.isEmailVerified()) {
-
-            pr_img.setVisibility(View.GONE);
-            btn_ver.setVisibility(View.VISIBLE);
-            txt_ver.setVisibility(View.VISIBLE);
-
-            btn_ver.setOnClickListener(view12 -> {
-                // Верификация через email          begin
-                fUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                fUser.sendEmailVerification()
-                        .addOnSuccessListener(aVoid ->
-                                Toast.makeText(getContext(), R.string.ver_mail_has_sent,
-                                        Toast.LENGTH_LONG).show())
-                        .addOnFailureListener(e ->
-                                Toast.makeText(getContext(), R.string.sww,
-                                        Toast.LENGTH_SHORT).show());
-                // Верификация через email          end
-            });
-            progressBar.setVisibility(View.GONE);
-
-        } else {
-            reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    User profile = dataSnapshot.getValue(User.class);
-
-                    if (profile != null) {
-                        String name, email, birthday, urll, status;
-
-                        name = profile.getUs_name();
-                        email = profile.getUs_email();
-                        birthday = profile.getUs_birthday();
-                        urll = profile.getImage();
-                        status = profile.getUs_status();
-
-
-                        //txt_on_log_name.setText("Name:     " + name);
-                        txt_on_log_email.setText("email:     " + email);
-                        txt_on_log_birthday.setText("Birthday:     " + birthday);
-
-                        //->
-                        nav_name_text.setText(name);
-                        nav_status_text.setText(status);
-                        nav_status_text.setTextColor(Color.parseColor("#FFC107"));
-                        //->
-
-                        txt_on_log_hi.setText("Здравствуйте,\n" + name + "!");
-
-                        Glide.with(ProfileFragment.this).load(urll).into(pr_img);
-                        Glide.with(headerView).load(urll).into(nav_img);
-                    }
-
-                   progressBar.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.d("profile", "sww");
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
-        }
-
-
-        // Листенер
-        btn_logg_out.setOnClickListener(view13 -> {
-
-            StatusAdapter adapter = new StatusAdapter();
-            adapter.setUs_status("offline");
-
-            //->
-            nav_name_text.setText("User name");
-            nav_status_text.setText("User status");
-            nav_status_text.setTextColor(Color.parseColor("#BDBDBD"));
-
-            Glide.with(headerView).load(R.drawable.ic_add_photo).into(nav_img);
-            //->
-
-            mAuth.signOut();                                            // Выход
-            try {                                                       // Летим  в фрагмент входа
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new LogInFragment()).commit();
-            } catch (Exception D) {
-                Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        return view;
     }
 
     private void uploadPicture() {

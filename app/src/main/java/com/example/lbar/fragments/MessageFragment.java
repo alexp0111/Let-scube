@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -17,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class MessageFragment extends Fragment {
 
@@ -25,7 +23,6 @@ public class MessageFragment extends Fragment {
     private DrawerLayout drawer;
 
     private FloatingActionButton fab;
-    private SwitchMaterial switchMaterial;
 
     @Nullable
     @Override
@@ -35,21 +32,23 @@ public class MessageFragment extends Fragment {
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_mess);
-        if (toolbar != null) {
-            activity.setSupportActionBar(toolbar);
-            toolbar.setTitle("Messages");
+        setToolbarSettings(toolbar, activity, main_activity);
+
+        return view;
+    }
+
+    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
+        if (tbar != null) {
+            activity.setSupportActionBar(tbar);
+            tbar.setTitle("Messages");
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
-            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, tbar,
                     R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
             toggle.syncState();
             drawer.addDrawerListener(toggle);
         }
-
-
-        return view;
     }
 }

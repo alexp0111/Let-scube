@@ -59,34 +59,19 @@ public class FriendsFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_users);
-        if (toolbar != null) {
-            activity.setSupportActionBar(toolbar);
-            toolbar.setTitle("Users");
-
-            drawer = main_activity.findViewById(R.id.drawer_layout);
-            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
-
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
-                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-            toggle.syncState();
-            drawer.addDrawerListener(toggle);
-        }
-
-        ///////
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
-        ///////
 
-        progressBar = view.findViewById(R.id.prog_bar_list);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_users);
+        setToolbarSettings(toolbar, activity, main_activity);
 
-        // SEARCHING FOR USERS
-        search_users = view.findViewById(R.id.search_users);
+        initItems(view);
+
+        mUsers = new ArrayList<>();
+
         search_users.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -96,21 +81,39 @@ public class FriendsFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
-        // SEARCHING FOR USERS
 
-        recyclerView = view.findViewById(R.id.recycler_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        mUsers = new ArrayList<>();
 
         progressBar.setVisibility(View.VISIBLE);
         readUsers();
 
         return view;
+    }
+
+    private void initItems(View v) {
+        progressBar = v.findViewById(R.id.prog_bar_list);
+
+        search_users = v.findViewById(R.id.search_users);
+
+        recyclerView = v.findViewById(R.id.recycler_users);
+    }
+
+    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
+        if (tbar != null) {
+            activity.setSupportActionBar(tbar);
+            tbar.setTitle("Users");
+
+            drawer = main_activity.findViewById(R.id.drawer_layout);
+
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, tbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+            toggle.syncState();
+            drawer.addDrawerListener(toggle);
+        }
     }
 
     private void searchUsers(String s, FirebaseUser fUser) {

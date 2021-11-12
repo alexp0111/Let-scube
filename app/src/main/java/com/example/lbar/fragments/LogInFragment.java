@@ -27,7 +27,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.lbar.MainActivity.dp_height;
 import static com.example.lbar.MainActivity.dp_width;
@@ -38,7 +37,7 @@ public class LogInFragment extends Fragment {
 
     private TextInputEditText txt_mail, txt_pass;
     private TextInputLayout layout_txt_mail, layout_txt_pass;
-    private TextView txt_youc_can_also;
+    private TextView txt_you_can_also;
 
     private static com.google.android.material.button.MaterialButton btn_reg, btn_enter, btn_res_pass;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
@@ -51,67 +50,73 @@ public class LogInFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
+        mAuth = FirebaseAuth.getInstance();
+
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_log_in);
-        if (toolbar != null) {
-            activity.setSupportActionBar(toolbar);
-            toolbar.setTitle("Log in");
+        setToolbarSettings(toolbar, activity, main_activity);
+
+        initItems(view);
+
+        btn_reg.setOnClickListener(view1 -> {                       // Регитсрация
+            try {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.from_bottom, R.anim.alpha_to_low)
+                        .replace(R.id.fragment_container, new RegistrationFragment()).commit();
+            } catch (Exception D) {
+                Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_enter.setOnClickListener(view12 -> {
+            progressBar.setVisibility(View.VISIBLE);
+            loginUser();                                            // Входим в аккаунт
+        });
+
+        btn_res_pass.setOnClickListener(view13 -> {                 // Изменяем пароль
+            progressBar.setVisibility(View.VISIBLE);
+            resetPassword();
+        });
+
+        setItemAnimations();
+
+        return view;
+    }
+
+    private void initItems(View v) {
+        progressBar = v.findViewById(R.id.prog_bar_log_in);
+        // Поля ввода
+        txt_mail = v.findViewById(R.id.et_mail);
+        layout_txt_mail = v.findViewById(R.id.textField_name);
+        txt_pass = v.findViewById(R.id.et_pass);
+        layout_txt_pass = v.findViewById(R.id.textField_pass);
+        // Кнопки входа и регистрации
+        btn_reg = v.findViewById(R.id.btregistr);
+        btn_enter = v.findViewById(R.id.btenter);
+        btn_res_pass = v.findViewById(R.id.btreset_pass);
+        txt_you_can_also = v.findViewById(R.id.txt_you_can_also);
+    }
+
+    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
+        if (tbar != null) {
+            activity.setSupportActionBar(tbar);
+            tbar.setTitle("Log in");
 
             DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
-            //Objects.requireNonNull(activity.getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar,
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, tbar,
                     R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
             toggle.syncState();
             drawer.addDrawerListener(toggle);
         }
-        ///////
-        mAuth = FirebaseAuth.getInstance();
-        ///////
-        progressBar = view.findViewById(R.id.prog_bar_log_in);
-        // Поля ввода
-        txt_mail = view.findViewById(R.id.et_mail);
-        layout_txt_mail = view.findViewById(R.id.textField_name);
-        txt_pass = view.findViewById(R.id.et_pass);
-        layout_txt_pass = view.findViewById(R.id.textField_pass);
-        // Кнопки входа и регистрации
-        btn_reg = view.findViewById(R.id.btregistr);
-        btn_enter = view.findViewById(R.id.btenter);
-        btn_res_pass = view.findViewById(R.id.btreset_pass);
-        txt_youc_can_also = view.findViewById(R.id.txt_you_can_also);
-        // Обработчики кнопок
-        btn_reg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.from_bottom, R.anim.alpha_to_low)
-                            .replace(R.id.fragment_container, new RegistrationFragment()).commit();
-                } catch (Exception D) {
-                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        btn_enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                loginUser();                                            // Входим в аккаунт
-            }
-        });
-        btn_res_pass.setOnClickListener(new View.OnClickListener() {    // Изменяем пароль
-            @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                resetPassword();
-            }
-        });
-        // Animations
+    }
+
+    private void setItemAnimations() {
         layout_txt_mail.setTranslationX(dp_width);
         layout_txt_pass.setTranslationX(dp_width);
         btn_enter.setTranslationX(dp_width);
 
-        txt_youc_can_also.setTranslationY(dp_height);
+        txt_you_can_also.setTranslationY(dp_height);
         btn_reg.setTranslationY(dp_height);
         btn_res_pass.setTranslationY(dp_height);
 
@@ -120,7 +125,7 @@ public class LogInFragment extends Fragment {
         layout_txt_pass.setAlpha(1);
         btn_enter.setAlpha(1);
 
-        txt_youc_can_also.setAlpha(1);
+        txt_you_can_also.setAlpha(1);
         btn_reg.setAlpha(1);
         btn_res_pass.setAlpha(1);
 
@@ -129,17 +134,9 @@ public class LogInFragment extends Fragment {
         layout_txt_pass.animate().translationX(0).alpha(1).setDuration(400).setStartDelay(400).start();
         btn_enter.animate().translationX(0).alpha(1).setDuration(400).setStartDelay(500).start();
 
-        txt_youc_can_also.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
+        txt_you_can_also.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
         btn_reg.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(800).start();
         btn_res_pass.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(900).start();
-        // Animations
-
-        return view;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     private void loginUser() {

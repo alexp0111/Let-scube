@@ -22,15 +22,11 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private List<User> mUsers;
     private Context mContext;
     private boolean flag;
-
-    private CircleImageView itemUserImg;
 
     public UserAdapter(Context mContext, List<User> mUsers, boolean flag){
         this.mUsers = mUsers;
@@ -89,7 +85,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return mUsers.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView username;
         public ImageView profile_image;

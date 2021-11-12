@@ -52,65 +52,76 @@ public class DialogueFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
+        mAuth = FirebaseAuth.getInstance();
+        fUser = mAuth.getCurrentUser();
+        senderUserID = fUser.getUid();
+
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
-            toolbar.setNavigationOnClickListener(view1 -> {
+        setToolbarSettings(toolbar);
+
+        initItems(view);
+
+        setToolbarProfileInfo();
+
+        textInputLayout_send.setEndIconOnClickListener(view1 -> {
+            text = text_to_send.getText().toString();
+            if (!text.equals("")) {
+                sendMessage(senderUserID, receiverUserID, text);
+            } else {
+                Toast.makeText(main_activity, "Please, enter a message", Toast.LENGTH_SHORT).show();
+            }
+            text_to_send.setText("");
+        });
+
+        setItemAnimations();
+
+        return view;
+    }
+
+    private void initItems(View view) {
+        profileImg = view.findViewById(R.id.dialog_us_img);
+        message_layout = view.findViewById(R.id.constraint_for_message_edit_text);
+
+        username = view.findViewById(R.id.dialog_txt_us_name);
+        username.setWidth(dp_width / 2);
+
+        text_to_send = view.findViewById(R.id.et_send);
+        textInputLayout_send = view.findViewById(R.id.textField_message);
+    }
+
+    private void setToolbarSettings(Toolbar tbar) {
+        if (tbar != null) {
+            tbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
+            tbar.setNavigationOnClickListener(view1 -> {
                 try {
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.from_left, R.anim.to_left)
                             .replace(R.id.fragment_container,
-                            new FriendsFragment()).commit();
+                                    new FriendsFragment()).commit();
                 } catch (Exception D) {
                     Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
 
-        ///////
-        mAuth = FirebaseAuth.getInstance();
-        fUser = mAuth.getCurrentUser();
-        senderUserID = fUser.getUid();
-        ///////
-
-        profileImg = view.findViewById(R.id.dialog_us_img);
-        message_layout = view.findViewById(R.id.constraint_for_message_edit_text);
-
+    private void setItemAnimations() {
         message_layout.setTranslationX(dp_width);
         message_layout.setAlpha(1);
         message_layout.animate().translationX(0).alpha(1)
                 .setDuration(200).setStartDelay(100).start();
+    }
 
-        username = view.findViewById(R.id.dialog_txt_us_name);
-        username.setWidth(dp_width / 2);
-
+    private void setToolbarProfileInfo() {
         String urll = this.getArguments().getString("user_img");
         receiverUserID = this.getArguments().getString("us_id");
         String username_txt = this.getArguments().getString("user_name");
 
         username.setText(username_txt);
         Glide.with(DialogueFragment.this).load(urll).into(profileImg);
-
-        text_to_send = view.findViewById(R.id.et_send);
-        textInputLayout_send = view.findViewById(R.id.textField_message);
-
-        textInputLayout_send.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                text = text_to_send.getText().toString();
-                if (!text.equals("")) {
-                sendMessage(senderUserID, receiverUserID, text);
-                } else {
-                    Toast.makeText(main_activity, "Please, enter a message", Toast.LENGTH_SHORT).show();
-                }
-                text_to_send.setText("");
-            }
-        });
-
-        return view;
     }
 
-    private void sendMessage(String sender, String receiver, String message_text){
+    private void sendMessage(String sender, String receiver, String message_text) {
 
         DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
 
