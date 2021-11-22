@@ -4,15 +4,19 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,9 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
+import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 import static com.example.lbar.MainActivity.reference;
 
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements GestureDetector.OnGestureListener {
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
@@ -51,6 +57,7 @@ public class FriendsFragment extends Fragment {
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private TextInputEditText search_users;
+    private GestureDetector gestureDetector;
 
     @Nullable
     @Override
@@ -66,6 +73,8 @@ public class FriendsFragment extends Fragment {
         setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);
+
+        SwipeMenuOpenerControl(recyclerView);
 
         mUsers = new ArrayList<>();
 
@@ -95,6 +104,7 @@ public class FriendsFragment extends Fragment {
 
     private void initItems(View v) {
         progressBar = v.findViewById(R.id.prog_bar_list);
+        gestureDetector = new GestureDetector(getContext(), this);
 
         search_users = v.findViewById(R.id.search_users);
 
@@ -181,5 +191,65 @@ public class FriendsFragment extends Fragment {
                 Log.d("List_fr", error.getMessage());
             }
         });
+    }
+
+    private void SwipeMenuOpenerControl(View v) {
+        v.setOnTouchListener((view1, motionEvent) -> {
+            view1.performClick();
+            gestureDetector.onTouchEvent(motionEvent);
+            return false;
+        });
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+        boolean res = false;
+        float diffY = 0;
+        float diffX = 0;
+        try {
+            diffY = moveEvent.getY() - downEvent.getY();
+            diffX = moveEvent.getX() - downEvent.getX();
+        } catch (Exception e){
+            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+        }
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffX > 0) {
+                    onSwipeRight();
+                }
+                res = true;
+            }
+        }
+        return res;
+    }
+
+    private void onSwipeRight() {
+        drawer.openDrawer(GravityCompat.START);
     }
 }

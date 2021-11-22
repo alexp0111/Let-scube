@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -42,11 +45,13 @@ import com.google.firebase.storage.StorageTask;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
+import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 import static com.example.lbar.MainActivity.dp_height;
 import static com.example.lbar.MainActivity.reference;
 import static com.example.lbar.MainActivity.storageReferenceAvatar;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements GestureDetector.OnGestureListener {
 
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
@@ -60,6 +65,7 @@ public class ProfileFragment extends Fragment {
     private View headerView;
     private Toolbar toolbar;
     private DrawerLayout drawer;
+    private GestureDetector gestureDetector;
 
     private com.google.android.material.button.MaterialButton btn_logg_out, btn_ver;
     private com.google.android.material.textview.MaterialTextView txt_on_log_email, txt_on_log_birthday;
@@ -86,6 +92,7 @@ public class ProfileFragment extends Fragment {
         setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);
+        SwipeMenuOpenerControl(srl);
 
         srl.setOnRefreshListener(() -> {
             progressBar.show();
@@ -148,6 +155,7 @@ public class ProfileFragment extends Fragment {
     private void initItems(View v) {
         navigationView = getActivity().findViewById(R.id.nav_view);
         headerView = navigationView.getHeaderView(0);
+        gestureDetector = new GestureDetector(getContext(), this);
 
         btn_logg_out = v.findViewById(R.id.bt_logg_out);                 // Кнопка выхода из аккаунта
         btn_ver = v.findViewById(R.id.ver_btn);                          // Кнопка верификации почты
@@ -289,5 +297,59 @@ public class ProfileFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         launcher.launch(intent);
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void SwipeMenuOpenerControl(View v) {
+        v.setOnTouchListener((view1, motionEvent) -> {
+            view1.performClick();
+            gestureDetector.onTouchEvent(motionEvent);
+            return false;
+        });
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+        boolean res = false;
+        float diffY = moveEvent.getY() - downEvent.getY();
+        float diffX = moveEvent.getX() - downEvent.getX();
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffX > 0) {
+                    onSwipeRight();
+                }
+                res = true;
+            }
+        }
+        return res;
+    }
+
+    private void onSwipeRight() {
+        drawer.openDrawer(GravityCompat.START);
     }
 }

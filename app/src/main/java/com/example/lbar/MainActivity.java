@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -23,6 +24,7 @@ import com.example.lbar.fragments.MessageFragment;
 import com.example.lbar.fragments.ProfileFragment;
 import com.example.lbar.fragments.LogInFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +39,9 @@ import com.google.firebase.storage.StorageReference;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static final int SWIPE_THRESHOLD = 100;
+    public static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
     public static DatabaseReference reference;
     public static FirebaseStorage storage;
@@ -127,11 +132,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         status = profile.getUs_status();
                         urll = profile.getImage();
                         //->
-                        nav_name_text.setText(name);
-                        nav_status_text.setText(status);
-                        nav_status_text.setTextColor(Color.parseColor("#FFC107"));
-                        //->
-                        Glide.with(headerView).load(urll).into(nav_img);
+                        try {
+                            nav_name_text.setText(name);
+                            nav_status_text.setText(status);
+                            nav_status_text.setTextColor(Color.parseColor("#FFC107"));
+                            //->
+                            Glide.with(headerView).load(urll).into(nav_img);
+                            Snackbar.make(findViewById(R.id.mainActivity_layout), "menu load", Snackbar.LENGTH_SHORT).show();
+                        } catch (Exception e){
+                            Snackbar.make(findViewById(R.id.mainActivity_layout), "Exception in menu load", Snackbar.LENGTH_SHORT).show();
+                        }
                     }
 
                 }

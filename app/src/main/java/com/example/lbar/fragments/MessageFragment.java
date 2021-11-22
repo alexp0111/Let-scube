@@ -1,15 +1,19 @@
 package com.example.lbar.fragments;
 
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -17,12 +21,14 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MessageFragment extends Fragment {
+import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
+import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 
-    private Toolbar toolbar;
+public class MessageFragment extends Fragment implements GestureDetector.OnGestureListener {
     private DrawerLayout drawer;
 
     private FloatingActionButton fab;
+    private GestureDetector gestureDetector;
 
     @Nullable
     @Override
@@ -31,10 +37,22 @@ public class MessageFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_mess);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_mess);
         setToolbarSettings(toolbar, activity, main_activity);
 
+        gestureDetector = new GestureDetector(getContext(), this);
+
+        SwipeMenuOpenerControl(view);
+
         return view;
+    }
+
+    private void SwipeMenuOpenerControl(View v) {
+        v.setOnTouchListener((view1, motionEvent) -> {
+            view1.performClick();
+            gestureDetector.onTouchEvent(motionEvent);
+            return true;
+        });
     }
 
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
@@ -50,5 +68,52 @@ public class MessageFragment extends Fragment {
             toggle.syncState();
             drawer.addDrawerListener(toggle);
         }
+    }
+
+    @Override
+    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+        boolean res = false;
+        float diffY = moveEvent.getY() - downEvent.getY();
+        float diffX = moveEvent.getX() - downEvent.getX();
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffX > 0) {
+                    onSwipeRight();
+                }
+                res = true;
+            }
+        }
+        return res;
+    }
+
+
+    private void onSwipeRight() {
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
     }
 }
