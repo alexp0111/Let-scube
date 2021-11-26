@@ -1,4 +1,4 @@
-package com.example.lbar.fragments;
+package com.example.lbar.fragments.mainMenuFragments.accountFragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

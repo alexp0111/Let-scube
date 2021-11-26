@@ -1,4 +1,4 @@
-package com.example.lbar.fragments;
+package com.example.lbar.fragments.mainMenuFragments;
 
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,25 +18,24 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 
-public class MessageFragment extends Fragment implements GestureDetector.OnGestureListener {
+public class EventFragment extends Fragment implements GestureDetector.OnGestureListener {
+
     private DrawerLayout drawer;
 
-    private FloatingActionButton fab;
     private GestureDetector gestureDetector;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_message, container, false);
+        View view = inflater.inflate(R.layout.fragment_event, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_mess);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_event);
         setToolbarSettings(toolbar, activity, main_activity);
 
         gestureDetector = new GestureDetector(getContext(), this);
@@ -58,7 +56,7 @@ public class MessageFragment extends Fragment implements GestureDetector.OnGestu
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
-            tbar.setTitle("Messages");
+            tbar.setTitle("Events");
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 

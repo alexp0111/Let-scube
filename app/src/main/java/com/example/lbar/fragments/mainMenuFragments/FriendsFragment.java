@@ -1,4 +1,4 @@
-package com.example.lbar.fragments;
+package com.example.lbar.fragments.mainMenuFragments;
 
 import android.os.Bundle;
 import android.text.Editable;

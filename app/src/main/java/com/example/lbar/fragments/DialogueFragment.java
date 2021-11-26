@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.database.Message;
+import com.example.lbar.fragments.mainMenuFragments.FriendsFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;

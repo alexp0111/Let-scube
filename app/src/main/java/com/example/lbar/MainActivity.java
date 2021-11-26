@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -19,10 +18,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.lbar.adapter.StatusAdapter;
 import com.example.lbar.database.User;
-import com.example.lbar.fragments.FriendsFragment;
-import com.example.lbar.fragments.MessageFragment;
-import com.example.lbar.fragments.ProfileFragment;
-import com.example.lbar.fragments.LogInFragment;
+import com.example.lbar.fragments.mainMenuFragments.CollectionFragment;
+import com.example.lbar.fragments.mainMenuFragments.EventFragment;
+import com.example.lbar.fragments.mainMenuFragments.FriendsFragment;
+import com.example.lbar.fragments.mainMenuFragments.MessageFragment;
+import com.example.lbar.fragments.mainMenuFragments.accountFragments.ProfileFragment;
+import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -166,6 +167,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_news:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new EventFragment()).commit();
+                break;
             case R.id.nav_message:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new MessageFragment()).commit();
@@ -185,6 +190,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             new ProfileFragment()).commit();
                 }
                 break;
+            case R.id.nav_collection:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new CollectionFragment()).commit();
+                break;
+            //////////////////
             case R.id.nav_share:
                 Toast.makeText(this, "Sorry.\nThe action is currently unavailable", Toast.LENGTH_SHORT).show();
                 break;

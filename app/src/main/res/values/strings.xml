@@ -35,5 +35,7 @@
     <string name="birthday_day_month_year">Birthday [day.month.year]</string>
     <string name="add_url"><![CDATA[https://firebasestorage.googleapis.com/v0/b/lbar-messenger.appspot.com/o/camera.png?alt=media&token=8ea07bde-1246-40ab-b3b6-340b9c7f81ec]]></string>
     <string name="fdb_inst">https://lbar-messenger-default-rtdb.firebaseio.com/</string>
+    <string name="event_ribbon">Event ribbon</string>
+    <string name="my_collection">My collection</string>
 
 </resources>

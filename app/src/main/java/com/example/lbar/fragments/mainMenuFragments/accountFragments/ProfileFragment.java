@@ -1,4 +1,4 @@
-package com.example.lbar.fragments;
+package com.example.lbar.fragments.mainMenuFragments.accountFragments;
 
 import android.content.Intent;
 import android.graphics.Color;
