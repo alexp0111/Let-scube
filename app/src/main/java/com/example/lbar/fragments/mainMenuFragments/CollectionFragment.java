@@ -1,6 +1,7 @@
 package com.example.lbar.fragments.mainMenuFragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -125,8 +126,14 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     @Override
     public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
         boolean res = false;
-        float diffY = moveEvent.getY() - downEvent.getY();
-        float diffX = moveEvent.getX() - downEvent.getX();
+        float diffY = 0;
+        float diffX = 0;
+        try {
+            diffY = moveEvent.getY() - downEvent.getY();
+            diffX = moveEvent.getX() - downEvent.getX();
+        } catch (Exception e){
+            Log.d("Collection", e.toString());
+        }
 
         if (Math.abs(diffX) > Math.abs(diffY)) {
             if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {

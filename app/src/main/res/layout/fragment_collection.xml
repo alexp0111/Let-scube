@@ -236,7 +236,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo1" />
+                        android:src="@drawable/cube_clock" />
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -256,7 +256,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo0" />
+                        android:src="@drawable/cube_megaminx" />
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -276,7 +276,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo2" />
+                        android:src="@drawable/cube_square1" />
 
                 </com.google.android.material.card.MaterialCardView>
 
