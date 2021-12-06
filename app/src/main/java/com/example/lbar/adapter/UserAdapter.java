@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.R;
-import com.example.lbar.database.User;
+import com.example.lbar.helpClasses.User;
 import com.example.lbar.fragments.DialogueFragment;
 import com.google.firebase.auth.FirebaseAuth;
 

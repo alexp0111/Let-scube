@@ -15,8 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.lbar.R;
-import com.example.lbar.database.User;
-import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
+import com.example.lbar.helpClasses.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;

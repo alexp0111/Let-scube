@@ -2,6 +2,7 @@ package com.example.lbar.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.database.Message;
+import com.example.lbar.adapter.MessageAdapter;
+import com.example.lbar.helpClasses.Message;
 import com.example.lbar.fragments.mainMenuFragments.FriendsFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,16 +45,19 @@ public class DialogueFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
-    private String senderUserID, receiverUserID, text;
+    private String senderUserID, receiverUserID, text, urll;
 
     private Toolbar toolbar;
     private CircleImageView profileImg;
-    private Intent intent;
     private TextView username;
 
     private TextInputEditText text_to_send;
     private ConstraintLayout message_layout;
     private TextInputLayout textInputLayout_send;
+
+    private MessageAdapter messageAdapter;
+    private List<Message> mChat;
+    private RecyclerView recyclerView;
 
     @Nullable
     @Override
@@ -64,6 +77,14 @@ public class DialogueFragment extends Fragment {
 
         setToolbarProfileInfo();
 
+        ///->
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        ///->
+
+        readMessages(senderUserID, receiverUserID, urll);
+
         textInputLayout_send.setEndIconOnClickListener(view1 -> {
             text = text_to_send.getText().toString();
             if (!text.equals("")) {
@@ -82,6 +103,9 @@ public class DialogueFragment extends Fragment {
     private void initItems(View view) {
         profileImg = view.findViewById(R.id.dialog_us_img);
         message_layout = view.findViewById(R.id.constraint_for_message_edit_text);
+
+        recyclerView = view.findViewById(R.id.recycler_view_messages);
+        recyclerView.setHasFixedSize(true);
 
         username = view.findViewById(R.id.dialog_txt_us_name);
         username.setWidth(dp_width / 2);
@@ -114,7 +138,7 @@ public class DialogueFragment extends Fragment {
     }
 
     private void setToolbarProfileInfo() {
-        String urll = this.getArguments().getString("user_img");
+        urll = this.getArguments().getString("user_img");
         receiverUserID = this.getArguments().getString("us_id");
         String username_txt = this.getArguments().getString("user_name");
 
@@ -128,5 +152,38 @@ public class DialogueFragment extends Fragment {
 
         Message msg = new Message(sender, receiver, message_text);
         reference.child("Chats").push().setValue(msg);
+    }
+
+    private void readMessages (final String myID, final String userID, String imageURI){
+        mChat = new ArrayList<>();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mChat.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Message chat = snapshot.getValue(Message.class);
+
+                    try {
+                        if (chat.getReceiverUserId().equals(myID) && chat.getSenderUserId().equals(userID) ||
+                                chat.getReceiverUserId().equals(userID) && chat.getSenderUserId().equals(myID)) {
+                            mChat.add(chat);
+                        }
+
+                        messageAdapter = new MessageAdapter(getContext(), mChat, imageURI);
+                        recyclerView.setAdapter(messageAdapter);
+                    } catch (NullPointerException e){
+                        Log.d("getId_in_dialogue", "Exception" + e);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

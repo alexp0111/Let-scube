@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.database.User;
+import com.example.lbar.helpClasses.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,7 +45,7 @@ import static com.example.lbar.MainActivity.reference;
 
 public class FriendsFragment extends Fragment implements GestureDetector.OnGestureListener {
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewInFriends;
     private UserAdapter userAdapter;
 
     private FirebaseUser fUser;
@@ -74,7 +74,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
 
         initItems(view);
 
-        SwipeMenuOpenerControl(recyclerView);
+        SwipeMenuOpenerControl(recyclerViewInFriends);
 
         mUsers = new ArrayList<>();
 
@@ -93,8 +93,8 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
             }
         });
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewInFriends.setHasFixedSize(true);
+        recyclerViewInFriends.setLayoutManager(new LinearLayoutManager(getContext()));
 
         progressBar.setVisibility(View.VISIBLE);
         readUsers();
@@ -108,7 +108,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
 
         search_users = v.findViewById(R.id.search_users);
 
-        recyclerView = v.findViewById(R.id.recycler_users);
+        recyclerViewInFriends = v.findViewById(R.id.recycler_users);
     }
 
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
@@ -149,7 +149,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
                 }
 
                 userAdapter = new UserAdapter(getContext(), mUsers, false);
-                recyclerView.setAdapter(userAdapter);
+                recyclerViewInFriends.setAdapter(userAdapter);
             }
 
             @Override
@@ -180,7 +180,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
                         }
                     }
                     userAdapter = new UserAdapter(getContext(), mUsers, false);
-                    recyclerView.setAdapter(userAdapter);
+                    recyclerViewInFriends.setAdapter(userAdapter);
                 }
                 progressBar.setVisibility(View.GONE);
             }

@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.adapter.StatusAdapter;
-import com.example.lbar.database.User;
+import com.example.lbar.helpClasses.User;
 import com.example.lbar.fragments.mainMenuFragments.CollectionFragment;
 import com.example.lbar.fragments.mainMenuFragments.EventFragment;
 import com.example.lbar.fragments.mainMenuFragments.FriendsFragment;

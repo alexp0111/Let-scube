@@ -1,4 +1,4 @@
-package com.example.lbar.database;
+package com.example.lbar.helpClasses;
 
 public class Message {
     private String senderUserId;
@@ -9,6 +9,9 @@ public class Message {
         this.senderUserId = senderUserId;
         this.receiverUserId = receiverUserId;
         this.message = message;
+    }
+
+    public Message() {
     }
 
     public String getSenderUserId() {

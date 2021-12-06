@@ -1,4 +1,4 @@
-package com.example.lbar.database;
+package com.example.lbar.helpClasses;
 
 public class User {
 
