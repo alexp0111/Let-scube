@@ -56,4 +56,13 @@
         <item name="colorAccent">#FFC107</item>
     </style>
 
+    <style name="slider">
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+        <item name="android:scrollbarSize">10dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:scrollbarThumbVertical">@drawable/slider</item>
+    </style>
+
 </resources>
