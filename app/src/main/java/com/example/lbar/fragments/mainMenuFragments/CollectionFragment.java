@@ -44,8 +44,6 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private static MaterialCardView cubeMegaminx;
     private static MaterialCardView cubeSquare1;
 
-
-
     private GestureDetector gestureDetector;
 
     @Nullable
@@ -87,8 +85,12 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     }
 
     private void realiseClickListenerOnCards() {
-        cubeType0.setOnClickListener(view -> Toast.makeText(getContext(), "2 x 2", Toast.LENGTH_SHORT).show());
-        cubeType1.setOnClickListener(view -> Toast.makeText(getContext(), "3 x 3", Toast.LENGTH_SHORT).show());
+        cubeType0.setOnClickListener(view -> {
+            Toast.makeText(getContext(), "2 x 2", Toast.LENGTH_SHORT).show();
+        });
+        cubeType1.setOnClickListener(view -> {
+            Toast.makeText(getContext(), "3 x 3", Toast.LENGTH_SHORT).show();
+        });
         cubeType2.setOnClickListener(view -> Toast.makeText(getContext(), "4 x 4", Toast.LENGTH_SHORT).show());
         cubeType3.setOnClickListener(view -> Toast.makeText(getContext(), "5 x 5", Toast.LENGTH_SHORT).show());
         cubeType4.setOnClickListener(view -> Toast.makeText(getContext(), "6 x 6", Toast.LENGTH_SHORT).show());
