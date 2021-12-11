@@ -22,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 import static com.example.lbar.MainActivity.dp_height;
 import static com.example.lbar.MainActivity.dp_width;
 
@@ -159,7 +161,9 @@ public class RegistrationFragment extends Fragment {
                     //Делаем запись в realtimeDB        begin
 
                     userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    User user = new User(str_name, str_mail, str_birthday, str_img, str_name_toLowerCase, "offline", userID);
+                    ArrayList<String> friends = new ArrayList<>();
+                    friends.add("nobody");
+                    User user = new User(str_name, str_mail, str_birthday, str_img, str_name_toLowerCase, "offline", userID, friends);
                     FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                             .getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid())

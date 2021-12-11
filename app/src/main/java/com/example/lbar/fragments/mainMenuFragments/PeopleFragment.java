@@ -43,9 +43,9 @@ import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 import static com.example.lbar.MainActivity.reference;
 
-public class FriendsFragment extends Fragment implements GestureDetector.OnGestureListener {
+public class PeopleFragment extends Fragment implements GestureDetector.OnGestureListener {
 
-    private RecyclerView recyclerViewInFriends;
+    private RecyclerView recyclerViewInPeople;
     private UserAdapter userAdapter;
 
     private FirebaseUser fUser;
@@ -62,7 +62,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friends, container, false);
+        View view = inflater.inflate(R.layout.fragment_people, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
@@ -74,7 +74,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
 
         initItems(view);
 
-        SwipeMenuOpenerControl(recyclerViewInFriends);
+        SwipeMenuOpenerControl(recyclerViewInPeople);
 
         mUsers = new ArrayList<>();
 
@@ -93,8 +93,8 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
             }
         });
 
-        recyclerViewInFriends.setHasFixedSize(true);
-        recyclerViewInFriends.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewInPeople.setHasFixedSize(true);
+        recyclerViewInPeople.setLayoutManager(new LinearLayoutManager(getContext()));
 
         progressBar.setVisibility(View.VISIBLE);
         readUsers();
@@ -108,7 +108,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
 
         search_users = v.findViewById(R.id.search_users);
 
-        recyclerViewInFriends = v.findViewById(R.id.recycler_users);
+        recyclerViewInPeople = v.findViewById(R.id.recycler_users);
     }
 
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
@@ -149,7 +149,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
                 }
 
                 userAdapter = new UserAdapter(getContext(), mUsers, false);
-                recyclerViewInFriends.setAdapter(userAdapter);
+                recyclerViewInPeople.setAdapter(userAdapter);
             }
 
             @Override
@@ -180,7 +180,7 @@ public class FriendsFragment extends Fragment implements GestureDetector.OnGestu
                         }
                     }
                     userAdapter = new UserAdapter(getContext(), mUsers, false);
-                    recyclerViewInFriends.setAdapter(userAdapter);
+                    recyclerViewInPeople.setAdapter(userAdapter);
                 }
                 progressBar.setVisibility(View.GONE);
             }

@@ -68,6 +68,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 bundle.putString("us_id", user.getUs_id());
                 bundle.putString("user_img", user.getImage());
                 bundle.putString("user_name", user.getUs_name());
+                // Отправлять инфу сразу - друг или нет.
                 fragment.setArguments(bundle);
 
                 try {

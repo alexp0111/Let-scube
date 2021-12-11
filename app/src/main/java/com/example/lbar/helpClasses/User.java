@@ -1,5 +1,8 @@
 package com.example.lbar.helpClasses;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 
     private String us_id;
@@ -9,6 +12,7 @@ public class User {
     private String image;
     private String us_status;
     private String search_tool;
+    private ArrayList<String> us_friends = new ArrayList<>();
 
     public String getSearch_tool() {
         return search_tool;
@@ -26,6 +30,17 @@ public class User {
         this.us_status = us_status;
         this.search_tool = search_tool;
         this.us_id = us_id;
+    }
+
+    public User(String us_name, String us_email, String us_birthday, String image, String search_tool, String us_status, String us_id, ArrayList<String> us_friends) {
+        this.us_name = us_name;
+        this.us_email = us_email;
+        this.us_birthday = us_birthday;
+        this.image = image;
+        this.us_status = us_status;
+        this.search_tool = search_tool;
+        this.us_id = us_id;
+        this.us_friends = us_friends;
     }
 
     public String getUs_name() {
@@ -75,4 +90,11 @@ public class User {
         return us_id;
     }
 
+    public ArrayList<String> getUs_friends() {
+        return us_friends;
+    }
+
+    public void setUs_friends(ArrayList<String> us_friends) {
+        this.us_friends = us_friends;
+    }
 }

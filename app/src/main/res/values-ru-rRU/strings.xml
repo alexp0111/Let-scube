@@ -35,4 +35,5 @@
     <string name="birthday_day_month_year">Дата рождения [день.месяц.год]</string>
     <string name="event_ribbon">Лента событий</string>
     <string name="my_collection">Моя коллекция</string>
+    <string name="people">Люди</string>
 </resources>

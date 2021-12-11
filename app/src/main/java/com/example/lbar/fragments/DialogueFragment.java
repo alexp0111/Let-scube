@@ -1,11 +1,15 @@
 package com.example.lbar.fragments;
 
-import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +27,8 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.MessageAdapter;
 import com.example.lbar.helpClasses.Message;
-import com.example.lbar.fragments.mainMenuFragments.FriendsFragment;
+import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
+import com.example.lbar.helpClasses.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,20 +41,26 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.lbar.MainActivity.dp_width;
+import static com.example.lbar.MainActivity.reference;
 
 public class DialogueFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
+    private DatabaseReference friendsRef;
+    private ArrayList<String> friends = new ArrayList<>();
     private String senderUserID, receiverUserID, text, urll;
 
     private Toolbar toolbar;
     private CircleImageView profileImg;
+    private ImageView addFriend;
     private TextView username;
+    private String username_txt;
 
     private TextInputEditText text_to_send;
     private ConstraintLayout message_layout;
@@ -58,6 +69,8 @@ public class DialogueFragment extends Fragment {
     private MessageAdapter messageAdapter;
     private List<Message> mChat;
     private RecyclerView recyclerView;
+
+    private boolean isFriend;
 
     @Nullable
     @Override
@@ -69,13 +82,16 @@ public class DialogueFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
         senderUserID = fUser.getUid();
+        friendsRef = reference.child(fUser.getUid()).child("us_friends");
+
+        isFriend = false;
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
         setToolbarSettings(toolbar);
 
         initItems(view);
 
-        setToolbarProfileInfo();
+        isFriendCheckListener();
 
         ///->
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -100,8 +116,33 @@ public class DialogueFragment extends Fragment {
         return view;
     }
 
+    private void isFriendCheckListener() {
+        friendsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String friend_id = snapshot.getValue().toString();
+
+                    Log.d("fr_chkr", friend_id);
+
+                    if (friend_id.equals(receiverUserID)) {
+                        Log.d("fr_chkr", "bingo");
+                        isFriend = true;
+                    }
+                }
+                setToolbarProfileInfo();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void initItems(View view) {
         profileImg = view.findViewById(R.id.dialog_us_img);
+        addFriend = view.findViewById(R.id.add_a_friend);
         message_layout = view.findViewById(R.id.constraint_for_message_edit_text);
 
         recyclerView = view.findViewById(R.id.recycler_view_messages);
@@ -112,6 +153,10 @@ public class DialogueFragment extends Fragment {
 
         text_to_send = view.findViewById(R.id.et_send);
         textInputLayout_send = view.findViewById(R.id.textField_message);
+
+        urll = this.getArguments().getString("user_img");
+        receiverUserID = this.getArguments().getString("us_id");
+        username_txt = this.getArguments().getString("user_name");
     }
 
     private void setToolbarSettings(Toolbar tbar) {
@@ -122,7 +167,7 @@ public class DialogueFragment extends Fragment {
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.from_left, R.anim.to_left)
                             .replace(R.id.fragment_container,
-                                    new FriendsFragment()).commit();
+                                    new PeopleFragment()).commit();
                 } catch (Exception D) {
                     Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                 }
@@ -138,12 +183,16 @@ public class DialogueFragment extends Fragment {
     }
 
     private void setToolbarProfileInfo() {
-        urll = this.getArguments().getString("user_img");
-        receiverUserID = this.getArguments().getString("us_id");
-        String username_txt = this.getArguments().getString("user_name");
-
         username.setText(username_txt);
         Glide.with(DialogueFragment.this).load(urll).into(profileImg);
+
+        if (isFriend){
+            Log.d("fr_chkr", "it is friend");
+            addFriend.setImageResource(R.drawable.ic_already_friend);
+        } else {
+            Log.d("fr_chkr", "it is not a friend");
+            addFriend.setImageResource(R.drawable.ic_add_friend);
+        }
     }
 
     private void sendMessage(String sender, String receiver, String message_text) {
@@ -154,7 +203,7 @@ public class DialogueFragment extends Fragment {
         reference.child("Chats").push().setValue(msg);
     }
 
-    private void readMessages (final String myID, final String userID, String imageURI){
+    private void readMessages(final String myID, final String userID, String imageURI) {
         mChat = new ArrayList<>();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats");
@@ -163,7 +212,7 @@ public class DialogueFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mChat.clear();
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Message chat = snapshot.getValue(Message.class);
 
                     try {
@@ -174,7 +223,7 @@ public class DialogueFragment extends Fragment {
 
                         messageAdapter = new MessageAdapter(getContext(), mChat, imageURI);
                         recyclerView.setAdapter(messageAdapter);
-                    } catch (NullPointerException e){
+                    } catch (NullPointerException e) {
                         Log.d("getId_in_dialogue", "Exception" + e);
                     }
                 }

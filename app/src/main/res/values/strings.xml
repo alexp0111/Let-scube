@@ -37,5 +37,6 @@
     <string name="fdb_inst">https://lbar-messenger-default-rtdb.firebaseio.com/</string>
     <string name="event_ribbon">Event ribbon</string>
     <string name="my_collection">My collection</string>
+    <string name="people">People</string>
 
 </resources>

@@ -20,7 +20,7 @@ import com.example.lbar.adapter.StatusAdapter;
 import com.example.lbar.helpClasses.User;
 import com.example.lbar.fragments.mainMenuFragments.CollectionFragment;
 import com.example.lbar.fragments.mainMenuFragments.EventFragment;
-import com.example.lbar.fragments.mainMenuFragments.FriendsFragment;
+import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
 import com.example.lbar.fragments.mainMenuFragments.MessageFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.ProfileFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
@@ -175,9 +175,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new MessageFragment()).commit();
                 break;
-            case R.id.nav_friends:
+            case R.id.nav_listOfUsers:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new FriendsFragment()).commit();
+                        new PeopleFragment()).commit();
                 break;
             case R.id.nav_profile:                                                                  // Фрагмент аккаунта!
                 FirebaseUser user = mAuth.getCurrentUser();
