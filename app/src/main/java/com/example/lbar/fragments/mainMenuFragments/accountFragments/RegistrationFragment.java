@@ -162,7 +162,7 @@ public class RegistrationFragment extends Fragment {
 
                     userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     ArrayList<String> friends = new ArrayList<>();
-                    friends.add("nobody");
+                    friends.add("0");
                     User user = new User(str_name, str_mail, str_birthday, str_img, str_name_toLowerCase, "offline", userID, friends);
                     FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                             .getReference("Users")

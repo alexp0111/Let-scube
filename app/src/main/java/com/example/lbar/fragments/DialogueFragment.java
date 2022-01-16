@@ -1,12 +1,8 @@
 package com.example.lbar.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,7 +24,6 @@ import com.example.lbar.R;
 import com.example.lbar.adapter.MessageAdapter;
 import com.example.lbar.helpClasses.Message;
 import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
-import com.example.lbar.helpClasses.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +36,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -52,8 +46,10 @@ public class DialogueFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
-    private DatabaseReference friendsRef;
-    private ArrayList<String> friends = new ArrayList<>();
+    private DatabaseReference SendersFriendsRef;
+    private DatabaseReference ReceiversFriendsRef;
+    private ArrayList<String> SendersFriends = new ArrayList<>();
+    private ArrayList<String> ReceiversFriends = new ArrayList<>();
     private String senderUserID, receiverUserID, text, urll;
 
     private Toolbar toolbar;
@@ -82,7 +78,8 @@ public class DialogueFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
         senderUserID = fUser.getUid();
-        friendsRef = reference.child(fUser.getUid()).child("us_friends");
+
+        SendersFriendsRef = reference.child(fUser.getUid()).child("us_friends");
 
         isFriend = false;
 
@@ -101,6 +98,35 @@ public class DialogueFragment extends Fragment {
 
         readMessages(senderUserID, receiverUserID, urll);
 
+        addFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (SendersFriends.contains(receiverUserID)) {
+                    Toast.makeText(getContext(), "Not a friend yet", Toast.LENGTH_SHORT).show();
+
+                    if (SendersFriends != null){
+                        SendersFriends.remove(receiverUserID);
+                        ReceiversFriends.remove(senderUserID);
+
+                        SendersFriendsRef.setValue(SendersFriends);
+                        ReceiversFriendsRef.setValue(ReceiversFriends);
+                    }
+                    setToolbarProfileInfo(false);
+                } else {
+                    Toast.makeText(getContext(), "Now, you are friends!", Toast.LENGTH_SHORT).show();
+
+                    if (SendersFriends != null) {
+                        SendersFriends.add(receiverUserID);
+                        ReceiversFriends.add(senderUserID);
+
+                        SendersFriendsRef.setValue(SendersFriends);
+                        ReceiversFriendsRef.setValue(ReceiversFriends);
+                    }
+                    setToolbarProfileInfo(true);
+                }
+            }
+        });
+
         textInputLayout_send.setEndIconOnClickListener(view1 -> {
             text = text_to_send.getText().toString();
             if (!text.equals("")) {
@@ -117,11 +143,13 @@ public class DialogueFragment extends Fragment {
     }
 
     private void isFriendCheckListener() {
-        friendsRef.addValueEventListener(new ValueEventListener() {
+        SendersFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String friend_id = snapshot.getValue().toString();
+
+                    SendersFriends.add(friend_id);
 
                     Log.d("fr_chkr", friend_id);
 
@@ -130,7 +158,21 @@ public class DialogueFragment extends Fragment {
                         isFriend = true;
                     }
                 }
-                setToolbarProfileInfo();
+                setToolbarProfileInfo(isFriend);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        ReceiversFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String friend_id = snapshot.getValue().toString();
+                    ReceiversFriends.add(friend_id);
+                }
             }
 
             @Override
@@ -157,6 +199,7 @@ public class DialogueFragment extends Fragment {
         urll = this.getArguments().getString("user_img");
         receiverUserID = this.getArguments().getString("us_id");
         username_txt = this.getArguments().getString("user_name");
+        ReceiversFriendsRef = reference.child(receiverUserID).child("us_friends");
     }
 
     private void setToolbarSettings(Toolbar tbar) {
@@ -182,11 +225,15 @@ public class DialogueFragment extends Fragment {
                 .setDuration(200).setStartDelay(100).start();
     }
 
-    private void setToolbarProfileInfo() {
+    private void setToolbarProfileInfo(boolean friend) {
         username.setText(username_txt);
-        Glide.with(DialogueFragment.this).load(urll).into(profileImg);
+        try {
+            Glide.with(DialogueFragment.this).load(urll).into(profileImg);
+        } catch (NullPointerException exception){
+            Log.d("FriendSwapping", "setToolbarProfileInfo() error");
+        }
 
-        if (isFriend){
+        if (friend) {
             Log.d("fr_chkr", "it is friend");
             addFriend.setImageResource(R.drawable.ic_already_friend);
         } else {
