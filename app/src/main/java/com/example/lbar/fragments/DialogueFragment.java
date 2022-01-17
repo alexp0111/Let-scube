@@ -79,8 +79,6 @@ public class DialogueFragment extends Fragment {
         fUser = mAuth.getCurrentUser();
         senderUserID = fUser.getUid();
 
-        SendersFriendsRef = reference.child(fUser.getUid()).child("us_friends");
-
         isFriend = false;
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
@@ -88,6 +86,7 @@ public class DialogueFragment extends Fragment {
 
         initItems(view);
 
+        // На этапе создания происходит запрос в БД - является ли контакт другом или нет
         isFriendCheckListener();
 
         ///->
@@ -98,32 +97,12 @@ public class DialogueFragment extends Fragment {
 
         readMessages(senderUserID, receiverUserID, urll);
 
-        addFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SendersFriends.contains(receiverUserID)) {
-                    Toast.makeText(getContext(), "Not a friend yet", Toast.LENGTH_SHORT).show();
-
-                    if (SendersFriends != null){
-                        SendersFriends.remove(receiverUserID);
-                        ReceiversFriends.remove(senderUserID);
-
-                        SendersFriendsRef.setValue(SendersFriends);
-                        ReceiversFriendsRef.setValue(ReceiversFriends);
-                    }
-                    setToolbarProfileInfo(false);
-                } else {
-                    Toast.makeText(getContext(), "Now, you are friends!", Toast.LENGTH_SHORT).show();
-
-                    if (SendersFriends != null) {
-                        SendersFriends.add(receiverUserID);
-                        ReceiversFriends.add(senderUserID);
-
-                        SendersFriendsRef.setValue(SendersFriends);
-                        ReceiversFriendsRef.setValue(ReceiversFriends);
-                    }
-                    setToolbarProfileInfo(true);
-                }
+        // Обработчик нажатия кнопки добавления в друзья\удаления из друзей
+        addFriend.setOnClickListener(view12 -> {
+            if (SendersFriends.contains(receiverUserID)) {
+                removeFriend();
+            } else {
+                makeFriend();
             }
         });
 
@@ -140,6 +119,38 @@ public class DialogueFragment extends Fragment {
         setItemAnimations();
 
         return view;
+    }
+
+    private void makeFriend() {
+        Toast.makeText(getContext(), "Now, you are friends!", Toast.LENGTH_SHORT).show();
+
+        if (SendersFriends != null) {
+            SendersFriends.add(receiverUserID);
+            ReceiversFriends.add(senderUserID);
+
+            SendersFriends.set(0, String.valueOf(SendersFriends.size()-1));
+            ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size()-1));
+
+            SendersFriendsRef.setValue(SendersFriends);
+            ReceiversFriendsRef.setValue(ReceiversFriends);
+        }
+        setToolbarProfileInfo(true);
+    }
+
+    private void removeFriend() {
+        Toast.makeText(getContext(), "Not a friend yet", Toast.LENGTH_SHORT).show();
+
+        if (SendersFriends != null){
+            SendersFriends.remove(receiverUserID);
+            ReceiversFriends.remove(senderUserID);
+
+            SendersFriends.set(0, String.valueOf(SendersFriends.size()-1));
+            ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size()-1));
+
+            SendersFriendsRef.setValue(SendersFriends);
+            ReceiversFriendsRef.setValue(ReceiversFriends);
+        }
+        setToolbarProfileInfo(false);
     }
 
     private void isFriendCheckListener() {
@@ -199,6 +210,8 @@ public class DialogueFragment extends Fragment {
         urll = this.getArguments().getString("user_img");
         receiverUserID = this.getArguments().getString("us_id");
         username_txt = this.getArguments().getString("user_name");
+
+        SendersFriendsRef = reference.child(fUser.getUid()).child("us_friends");
         ReceiversFriendsRef = reference.child(receiverUserID).child("us_friends");
     }
 
