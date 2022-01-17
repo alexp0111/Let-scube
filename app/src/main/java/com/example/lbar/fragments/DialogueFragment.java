@@ -276,17 +276,19 @@ public class DialogueFragment extends Fragment {
                     Message chat = snapshot.getValue(Message.class);
 
                     try {
+                        assert chat != null;
                         if (chat.getReceiverUserId().equals(myID) && chat.getSenderUserId().equals(userID) ||
                                 chat.getReceiverUserId().equals(userID) && chat.getSenderUserId().equals(myID)) {
                             mChat.add(chat);
                         }
-
-                        messageAdapter = new MessageAdapter(getContext(), mChat, imageURI);
-                        recyclerView.setAdapter(messageAdapter);
                     } catch (NullPointerException e) {
                         Log.d("getId_in_dialogue", "Exception" + e);
                     }
                 }
+
+                messageAdapter = new MessageAdapter(getContext(), mChat, imageURI, false);
+                recyclerView.setAdapter(messageAdapter);
+                //messageAdapter.setAnimationStart(true);
             }
 
             @Override

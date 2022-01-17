@@ -34,13 +34,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private List<Message> mChat;
     private Context mContext;
     private String imageURI;
+    private boolean animationStart = true;
 
     private FirebaseUser fUser;
 
-    public MessageAdapter(Context mContext, List<Message> mMessages, String imageURI){
+    public MessageAdapter(Context mContext, List<Message> mMessages, String imageURI, boolean animationStart) {
         this.mChat = mMessages;
         this.mContext = mContext;
         this.imageURI = imageURI;
+        this.animationStart = animationStart;
     }
 
     @NonNull
@@ -65,7 +67,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         holder.message.setText(chat.getMessage());
         Glide.with(mContext).load(imageURI).into(holder.profile_image);
 
-        holder.itemView.startAnimation(animation);
+
+        // Жуткий костыль. Другого решения пока найти не смог.
+        if (mChat.size()-20 == mChat.indexOf(chat)) {
+            animationStart = true;
+        }
+        if (animationStart){
+            holder.itemView.startAnimation(animation);
+        }
+    }
+
+    public void setAnimationStart(boolean animationStart) {
+        this.animationStart = animationStart;
     }
 
     @Override
@@ -73,7 +86,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return mChat.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView message;
         public ImageView profile_image;
@@ -90,7 +105,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public int getItemViewType(int position) {
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (mChat.get(position).getSenderUserId().equals(fUser.getUid())){
+        if (mChat.get(position).getSenderUserId().equals(fUser.getUid())) {
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;
