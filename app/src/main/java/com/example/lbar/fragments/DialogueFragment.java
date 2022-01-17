@@ -67,6 +67,7 @@ public class DialogueFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private boolean isFriend;
+    private boolean isFirstEnter = true;
 
     @Nullable
     @Override
@@ -286,9 +287,9 @@ public class DialogueFragment extends Fragment {
                     }
                 }
 
-                messageAdapter = new MessageAdapter(getContext(), mChat, imageURI, false);
+                messageAdapter = new MessageAdapter(getContext(), mChat, imageURI, false, isFirstEnter);
                 recyclerView.setAdapter(messageAdapter);
-                //messageAdapter.setAnimationStart(true);
+                isFirstEnter = false;
             }
 
             @Override

@@ -83,7 +83,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         } else {
             Toast.makeText(mContext, "To chat, firstly enter your account", Toast.LENGTH_SHORT).show();
         }
-        holder.itemView.startAnimation(animation);
+        // Надо отлаживать и думать над анимацией. Она обновляет список каждый раз, когда кто-то в приложении
+        // выходит или меняет тему - так быть не должно. Или не должно приносить дискомфорт пользователю
+
+        // При смене темы вылетает офлайн на мгновение - странно?
+
+        //holder.itemView.startAnimation(animation);
     }
 
     @Override

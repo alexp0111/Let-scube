@@ -35,14 +35,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private Context mContext;
     private String imageURI;
     private boolean animationStart = true;
+    private boolean isFirstEnter = true;
 
     private FirebaseUser fUser;
 
-    public MessageAdapter(Context mContext, List<Message> mMessages, String imageURI, boolean animationStart) {
+    public MessageAdapter(Context mContext, List<Message> mMessages, String imageURI, boolean animationStart, boolean isFirstEnter) {
         this.mChat = mMessages;
         this.mContext = mContext;
         this.imageURI = imageURI;
         this.animationStart = animationStart;
+        this.isFirstEnter = isFirstEnter;
     }
 
     @NonNull
@@ -69,16 +71,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
         // Жуткий костыль. Другого решения пока найти не смог.
+
+        if (!isFirstEnter) {
+            if (mChat.size() - 1 == mChat.indexOf(chat)) {
+                holder.itemView.startAnimation(animation);
+            }
+        }
         if (mChat.size()-20 == mChat.indexOf(chat)) {
             animationStart = true;
         }
         if (animationStart){
             holder.itemView.startAnimation(animation);
         }
-    }
-
-    public void setAnimationStart(boolean animationStart) {
-        this.animationStart = animationStart;
     }
 
     @Override
