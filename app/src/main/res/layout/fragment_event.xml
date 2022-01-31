@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:srcCompat="http://schemas.android.com/tools"
     android:background="@color/colorBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -16,21 +16,49 @@
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/prog_bar_events"
+        android:layout_width="match_parent"
         android:layout_below="@id/toolbar_in_event"
+        android:layout_height="30dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/prog_bar_events"
         android:id="@+id/recycler_events"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/event_pull_new"
+        app:srcCompat="@drawable/ic_plus"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        app:borderWidth="0dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="#ffffff" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <View
+        android:id="@+id/circle"
+        android:elevation="6dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignStart="@+id/event_pull_new"
+        android:layout_alignTop="@+id/event_pull_new"
+        android:layout_alignEnd="@+id/event_pull_new"
+        android:layout_alignBottom="@+id/event_pull_new"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/circle_for_anim"
+        android:visibility="invisible" />
+
+
 
 
 </RelativeLayout>

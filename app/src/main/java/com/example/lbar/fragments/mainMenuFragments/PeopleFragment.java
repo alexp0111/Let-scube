@@ -54,7 +54,6 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
     private List<User> mUsers;
 
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
-    private Toolbar toolbar;
     private DrawerLayout drawer;
     private TextInputEditText search_users;
     private GestureDetector gestureDetector;
@@ -69,7 +68,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_users);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_users);
         setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);

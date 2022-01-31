@@ -7,7 +7,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +29,11 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.EventAdapter;
 import com.example.lbar.adapter.UserAdapter;
+import com.example.lbar.fragments.AddingEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
 import com.example.lbar.helpClasses.Event;
 import com.example.lbar.helpClasses.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,17 +51,18 @@ import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 public class EventFragment extends Fragment implements GestureDetector.OnGestureListener {
 
     private RecyclerView recyclerViewInEvents;
-    private Button pullNewEvent;
+    private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private FloatingActionButton pullNewEvent;
 
     private EventAdapter eventAdapter;
 
     private DatabaseReference eventReference;
-    private FirebaseUser fUser;
-    private FirebaseAuth mAuth;
 
     private List<Event> mEvents;
 
     private DrawerLayout drawer;
+    private View circle;
+    private boolean isUnExploid;
 
     private GestureDetector gestureDetector;
 
@@ -65,13 +74,18 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Events");
-        mAuth = FirebaseAuth.getInstance();
-        fUser = mAuth.getCurrentUser();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_event);
         setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);
+
+        if (isUnExploid){
+            Animation animationUnCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_unexplosion);
+
+            animationUnCircle.setDuration(700);
+            circle.startAnimation(animationUnCircle);
+        }
 
         SwipeMenuOpenerControl(view);
 
@@ -80,13 +94,62 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
         recyclerViewInEvents.setHasFixedSize(true);
         recyclerViewInEvents.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        pullNewEvent.setOnClickListener(view1 -> {
-            DatabaseReference ref_evention = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
+        Animation animationCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_explosion);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.to_top);
 
-            Event event = new Event("aI7TwAhjMVRzQjqXbJ3ypPnd6mQ2", "LOLOLOLOlolololol", "Some interesting text", "https://firebasestorage.googleapis.com/v0/b/lbar-messenger.appspot.com/o/AvatarImages%2Fmdfi9Xb6ubPy7IjkbiIxqRm4RZa2%2Fimage%3A139389?alt=media&token=9d1a8247-e348-4d3a-9af1-cb6aa377472a", 100);
-            ref_evention.child("Events").push().setValue(event);
+        animationCircle.setDuration(700);
+
+
+        pullNewEvent.setOnClickListener(view1 -> {
+            //DatabaseReference ref_evention = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
+//
+            //Event event = new Event("aI7TwAhjMVRzQjqXbJ3ypPnd6mQ2", "LOLOLOLOlolololol", "Some interesting text", "https://firebasestorage.googleapis.com/v0/b/lbar-messenger.appspot.com/o/AvatarImages%2Fmdfi9Xb6ubPy7IjkbiIxqRm4RZa2%2Fimage%3A139389?alt=media&token=9d1a8247-e348-4d3a-9af1-cb6aa377472a", 100);
+            //ref_evention.child("Events").push().setValue(event);
+
+            pullNewEvent.startAnimation(animation);
         });
 
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                pullNewEvent.setVisibility(View.INVISIBLE);
+                circle.setVisibility(View.VISIBLE);
+                circle.startAnimation(animationCircle);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        animationCircle.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //pushNewEvent.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                try {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new AddingEventFragment()).commit();
+                } catch (Exception D) {
+                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        progressBar.setVisibility(View.VISIBLE);
         readEvents();
 
         return view;
@@ -105,21 +168,29 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
 
                 eventAdapter = new EventAdapter(getContext(), mEvents);
                 recyclerViewInEvents.setAdapter(eventAdapter);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                progressBar.setVisibility(View.GONE);
                 Log.d("List_ev", error.getMessage());
             }
         });
     }
 
     private void initItems(View v) {
-        //progressBar = v.findViewById(R.id.prog_bar_list);
+        progressBar = v.findViewById(R.id.prog_bar_events);
         gestureDetector = new GestureDetector(getContext(), this);
 
+        try {
+            isUnExploid = this.getArguments().getBoolean("circle_anim");
+        } catch (NullPointerException e){
+            isUnExploid = false;
+        }
         recyclerViewInEvents = v.findViewById(R.id.recycler_events);
         pullNewEvent = v.findViewById(R.id.event_pull_new);
+        circle = v.findViewById(R.id.circle);
     }
 
     private void SwipeMenuOpenerControl(View v) {
