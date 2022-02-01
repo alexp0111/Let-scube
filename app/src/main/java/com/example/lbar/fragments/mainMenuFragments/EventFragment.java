@@ -61,6 +61,7 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
     private List<Event> mEvents;
 
     private DrawerLayout drawer;
+    private Animation animationCircle;
     private View circle;
     private boolean isUnExploid;
 
@@ -79,25 +80,13 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
         setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);
-
-        if (isUnExploid){
-            Animation animationUnCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_unexplosion);
-
-            animationUnCircle.setDuration(700);
-            circle.startAnimation(animationUnCircle);
-        }
-
+        setItemAnimations();
         SwipeMenuOpenerControl(view);
 
         mEvents = new ArrayList<>();
 
         recyclerViewInEvents.setHasFixedSize(true);
         recyclerViewInEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        Animation animationCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_explosion);
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.to_top);
-
-        animationCircle.setDuration(700);
 
 
         pullNewEvent.setOnClickListener(view1 -> {
@@ -106,32 +95,32 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
             //Event event = new Event("aI7TwAhjMVRzQjqXbJ3ypPnd6mQ2", "LOLOLOLOlolololol", "Some interesting text", "https://firebasestorage.googleapis.com/v0/b/lbar-messenger.appspot.com/o/AvatarImages%2Fmdfi9Xb6ubPy7IjkbiIxqRm4RZa2%2Fimage%3A139389?alt=media&token=9d1a8247-e348-4d3a-9af1-cb6aa377472a", 100);
             //ref_evention.child("Events").push().setValue(event);
 
-            pullNewEvent.startAnimation(animation);
+            //pullNewEvent.startAnimation(animation);
+
+            circle.setVisibility(View.VISIBLE);
+            circle.startAnimation(animationCircle);
         });
 
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        progressBar.setVisibility(View.VISIBLE);
+        readEvents();
 
-            }
+        return view;
+    }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                pullNewEvent.setVisibility(View.INVISIBLE);
-                circle.setVisibility(View.VISIBLE);
-                circle.startAnimation(animationCircle);
-            }
+    private void setItemAnimations() {
+        if (isUnExploid){
+            Animation animationUnCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_unexplosion);
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+            animationUnCircle.setDuration(700);
+            circle.startAnimation(animationUnCircle);
+        }
 
-            }
-        });
+        animationCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_explosion);
+        animationCircle.setDuration(700);
 
         animationCircle.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                //pushNewEvent.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -149,10 +138,6 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
 
             }
         });
-        progressBar.setVisibility(View.VISIBLE);
-        readEvents();
-
-        return view;
     }
 
     private void readEvents() {

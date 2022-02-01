@@ -24,6 +24,15 @@ public class AddingEventFragment extends Fragment {
     private FloatingActionButton fabApply;
     private FloatingActionButton fabDisable;
 
+    private Animation startExtendedFabAnimation;
+    private Animation miniUnExplosionAnimation;
+    private Animation rotateExtendedFabAnimation;
+    private Animation rotateBackExtendedFabAnimation;
+    private Animation startApplyFabAnimation;
+    private Animation startDisableFabAnimation;
+    private Animation closeApplyFabAnimation;
+    private Animation closeDisableFabAnimation;
+
     private boolean fabFlag = false;
 
     @Nullable
@@ -33,82 +42,14 @@ public class AddingEventFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        fabExtended = view.findViewById(R.id.event_push);
-        fabApply = view.findViewById(R.id.event_apply);
-        fabDisable = view.findViewById(R.id.event_disable);
+        initItems(view);
+        setItemAnimations();
 
-        Animation startExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.from_bottom);
-        Animation closeExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.to_top);
         fabExtended.startAnimation(startExtendedFabAnimation);
 
-        closeExtendedFabAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                //
-                // Небольшой буг - при простом сворачивании менюшки происходит выход из фрагмента
-                //
-
-                EventFragment fragment = new EventFragment();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("circle_anim", true);
-                fragment.setArguments(bundle);
-
-                try {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            fragment).commit();
-                } catch (Exception D) {
-                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-
-
-        Animation rotateExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate);
-        Animation rotateBackExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_back);
-
-
-        Animation startApplyFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_from_bottom_lvl2);
-        Animation startDisableFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_from_bottom_lvl1);
-
-        Animation closeApplyFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_to_bottom_lvl2);
-        Animation closeDisableFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_to_bottom_lvl1);
-
-        rotateExtendedFabAnimation.setDuration(200);
-        rotateBackExtendedFabAnimation.setDuration(200);
-
-        rotateBackExtendedFabAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                fabExtended.startAnimation(closeExtendedFabAnimation);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
         fabExtended.setOnClickListener(view1 -> {
-            if (!fabFlag){
+            if (!fabFlag) {
                 fabExtended.startAnimation(rotateExtendedFabAnimation);
-
                 fabApply.setVisibility(View.VISIBLE);
                 fabDisable.setVisibility(View.VISIBLE);
 
@@ -118,7 +59,6 @@ public class AddingEventFragment extends Fragment {
                 fabFlag = true;
             } else {
                 fabExtended.startAnimation(rotateBackExtendedFabAnimation);
-
                 fabApply.startAnimation(closeApplyFabAnimation);
                 fabDisable.startAnimation(closeDisableFabAnimation);
 
@@ -130,29 +70,81 @@ public class AddingEventFragment extends Fragment {
         });
 
         fabApply.setOnClickListener(view12 -> {
-            fabExtended.startAnimation(rotateBackExtendedFabAnimation);
-
-            fabApply.startAnimation(closeApplyFabAnimation);
-            fabDisable.startAnimation(closeDisableFabAnimation);
-
-            fabApply.setVisibility(View.INVISIBLE);
-            fabDisable.setVisibility(View.INVISIBLE);
-
-            fabFlag = false;
+            getBackAnimationsStart();
         });
 
         fabDisable.setOnClickListener(view13 -> {
-            fabExtended.startAnimation(rotateBackExtendedFabAnimation);
-
-            fabApply.startAnimation(closeApplyFabAnimation);
-            fabDisable.startAnimation(closeDisableFabAnimation);
-
-            fabApply.setVisibility(View.INVISIBLE);
-            fabDisable.setVisibility(View.INVISIBLE);
-
-            fabFlag = false;
+            getBackAnimationsStart();
         });
 
         return view;
+    }
+
+    private void getBackAnimationsStart() {
+        fabApply.startAnimation(miniUnExplosionAnimation);
+        fabDisable.startAnimation(miniUnExplosionAnimation);
+        fabExtended.startAnimation(miniUnExplosionAnimation);
+
+        fabApply.setVisibility(View.INVISIBLE);
+        fabDisable.setVisibility(View.INVISIBLE);
+        fabExtended.setVisibility(View.INVISIBLE);
+
+        fabFlag = false;
+    }
+
+    private void closeFrgament() {
+        EventFragment fragment = new EventFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("circle_anim", true);
+        fragment.setArguments(bundle);
+
+        try {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    fragment).commit();
+        } catch (Exception D) {
+            Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setItemAnimations() {
+        startExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.from_bottom);
+        miniUnExplosionAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.mini_circle_unexplosion);
+
+        rotateExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate);
+        rotateBackExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_back);
+
+        startApplyFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_from_bottom_lvl2);
+        startDisableFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_from_bottom_lvl1);
+
+        closeApplyFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_to_bottom_lvl2);
+        closeDisableFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fab_to_bottom_lvl1);
+
+        rotateExtendedFabAnimation.setDuration(200);
+        rotateBackExtendedFabAnimation.setDuration(200);
+        miniUnExplosionAnimation.setDuration(200);
+
+        miniUnExplosionAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                closeFrgament();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+    }
+
+    private void initItems(View view) {
+        fabExtended = view.findViewById(R.id.event_push);
+        fabApply = view.findViewById(R.id.event_apply);
+        fabDisable = view.findViewById(R.id.event_disable);
     }
 }
