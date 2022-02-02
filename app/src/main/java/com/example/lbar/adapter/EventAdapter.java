@@ -1,6 +1,7 @@
 package com.example.lbar.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         holder.eventHeader.setText(event.getEv_header());
         holder.eventText.setText(event.getEv_text());
-        Glide.with(mContext).load(event.getEv_image()).into(holder.eventImage);
+        if (event.getEv_image().equals("none")){
+            holder.eventText.setPadding(0, 0, 0, 10);
+            holder.eventImage.setVisibility(View.GONE);
+            Log.d("picture bug", "marker");
+        } else {
+            Glide.with(mContext).load(event.getEv_image()).into(holder.eventImage);
+            Log.d("picture existing", event.getEv_image() + "  " + position);
+        }
 
     }
 

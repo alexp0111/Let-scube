@@ -43,12 +43,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 
 public class EventFragment extends Fragment implements GestureDetector.OnGestureListener {
+
+    //
+    // Разобраться с маштабированием фотографий!
+    //
 
     private RecyclerView recyclerViewInEvents;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
@@ -90,13 +95,6 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
 
 
         pullNewEvent.setOnClickListener(view1 -> {
-            //DatabaseReference ref_evention = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
-//
-            //Event event = new Event("aI7TwAhjMVRzQjqXbJ3ypPnd6mQ2", "LOLOLOLOlolololol", "Some interesting text", "https://firebasestorage.googleapis.com/v0/b/lbar-messenger.appspot.com/o/AvatarImages%2Fmdfi9Xb6ubPy7IjkbiIxqRm4RZa2%2Fimage%3A139389?alt=media&token=9d1a8247-e348-4d3a-9af1-cb6aa377472a", 100);
-            //ref_evention.child("Events").push().setValue(event);
-
-            //pullNewEvent.startAnimation(animation);
-
             circle.setVisibility(View.VISIBLE);
             circle.startAnimation(animationCircle);
         });
@@ -151,6 +149,7 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
                     mEvents.add(event);
                 }
 
+                Collections.reverse(mEvents);
                 eventAdapter = new EventAdapter(getContext(), mEvents);
                 recyclerViewInEvents.setAdapter(eventAdapter);
                 progressBar.setVisibility(View.GONE);
