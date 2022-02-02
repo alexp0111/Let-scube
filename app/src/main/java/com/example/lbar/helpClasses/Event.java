@@ -8,14 +8,24 @@ public class Event {
     private String ev_header;
     private String ev_text;
     private String ev_image;
+    private int ev_accessibility;   // 0 - without restrictions; 1 - only for friends
     private int ev_likes;
 
-    public Event(String ev_author_id, String ev_header, String ev_text, String ev_image, int ev_likes) {
+    public Event(String ev_author_id, String ev_header, String ev_text, String ev_image, int ev_likes, int ev_accessibility) {
         this.ev_author_id = ev_author_id;
         this.ev_header = ev_header;
         this.ev_text = ev_text;
         this.ev_image = ev_image;
         this.ev_likes = ev_likes;
+        this.ev_accessibility = ev_accessibility;
+    }
+
+    public int getEv_accessibility() {
+        return ev_accessibility;
+    }
+
+    public void setEv_accessibility(int ev_accessibility) {
+        this.ev_accessibility = ev_accessibility;
     }
 
     public String getEv_author_id() {

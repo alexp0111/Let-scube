@@ -37,4 +37,5 @@
     <string name="my_collection">Моя коллекция</string>
     <string name="people">Люди</string>
     <string name="author">Автор: </string>
+    <string name="add_picture">add picture</string>
 </resources>

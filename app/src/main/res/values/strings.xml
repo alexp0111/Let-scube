@@ -39,5 +39,6 @@
     <string name="my_collection">My collection</string>
     <string name="people">People</string>
     <string name="author">Author: </string>
+    <string name="add_picture">add picture</string>
 
 </resources>
