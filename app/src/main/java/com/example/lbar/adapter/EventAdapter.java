@@ -70,10 +70,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.eventHeader.setText(event.getEv_header());
         holder.eventText.setText(event.getEv_text());
         if (event.getEv_image().equals("none")){
-            holder.eventText.setPadding(0, 0, 0, 10);
+            holder.eventText.setPadding(0, 0, 0, 16);
             holder.eventImage.setVisibility(View.GONE);
             Log.d("picture bug", "marker");
         } else {
+            holder.eventImage.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(event.getEv_image()).into(holder.eventImage);
             Log.d("picture existing", event.getEv_image() + "  " + position);
         }
