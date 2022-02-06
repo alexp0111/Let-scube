@@ -2,24 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:srcCompat="http://schemas.android.com/tools"
     android:background="@color/colorBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_in_event"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        app:titleTextColor="#000000"
-        android:elevation="4dp"
-        android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_events"
         android:layout_width="match_parent"
-        android:layout_below="@id/toolbar_in_event"
         android:layout_height="30dp"
         android:indeterminate="true"
         android:visibility="gone" />

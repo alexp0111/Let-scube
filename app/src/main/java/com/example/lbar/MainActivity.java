@@ -17,9 +17,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.adapter.StatusAdapter;
+import com.example.lbar.fragments.mainMenuFragments.EventFragments.MainEventFragment;
 import com.example.lbar.helpClasses.User;
 import com.example.lbar.fragments.mainMenuFragments.CollectionFragment;
-import com.example.lbar.fragments.mainMenuFragments.EventFragment;
+import com.example.lbar.fragments.mainMenuFragments.EventFragments.AnyEventFragment;
 import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
 import com.example.lbar.fragments.mainMenuFragments.MessageFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.ProfileFragment;
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_news:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new EventFragment()).commit();
+                        new MainEventFragment()).commit();
                 break;
             case R.id.nav_message:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

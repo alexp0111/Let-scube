@@ -21,11 +21,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.fragments.mainMenuFragments.EventFragment;
+import com.example.lbar.fragments.mainMenuFragments.EventFragments.AnyEventFragment;
 import com.example.lbar.helpClasses.Event;
-import com.example.lbar.helpClasses.Message;
-import com.example.lbar.helpClasses.User;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,10 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.LOCATION_SERVICE;
-import static com.example.lbar.MainActivity.reference;
 import static com.example.lbar.MainActivity.storage;
-import static com.example.lbar.MainActivity.storageReferenceAvatar;
 
 public class AddingEventFragment extends Fragment {
 
@@ -222,7 +216,7 @@ public class AddingEventFragment extends Fragment {
     }
 
     private void closeFrgament() {
-        EventFragment fragment = new EventFragment();
+        AnyEventFragment fragment = new AnyEventFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("circle_anim", true);
         fragment.setArguments(bundle);

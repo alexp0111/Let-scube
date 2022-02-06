@@ -1,4 +1,4 @@
-package com.example.lbar.fragments.mainMenuFragments;
+package com.example.lbar.fragments.mainMenuFragments.EventFragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -7,11 +7,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,14 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.EventAdapter;
-import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.fragments.AddingEventFragment;
-import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
 import com.example.lbar.helpClasses.Event;
-import com.example.lbar.helpClasses.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,11 +41,7 @@ import java.util.List;
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 
-public class EventFragment extends Fragment implements GestureDetector.OnGestureListener {
-
-    //
-    // Разобраться с маштабированием фотографий!
-    //
+public class AnyEventFragment extends Fragment implements GestureDetector.OnGestureListener {
 
     private RecyclerView recyclerViewInEvents;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
@@ -75,14 +63,11 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_any_event, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Events");
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_event);
-        setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);
         setItemAnimations();
@@ -183,21 +168,6 @@ public class EventFragment extends Fragment implements GestureDetector.OnGesture
             gestureDetector.onTouchEvent(motionEvent);
             return true;
         });
-    }
-
-    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
-        if (tbar != null) {
-            activity.setSupportActionBar(tbar);
-            tbar.setTitle("Events");
-
-            drawer = main_activity.findViewById(R.id.drawer_layout);
-
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, tbar,
-                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-            toggle.syncState();
-            drawer.addDrawerListener(toggle);
-        }
     }
 
     @Override
