@@ -18,35 +18,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/event_pull_new"
-        app:srcCompat="@drawable/ic_plus"
-        android:backgroundTint="@color/colorPrimary"
-        android:layout_width="wrap_content"
-        app:borderWidth="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp" />
-
-    <View
-        android:id="@+id/circle"
-        android:elevation="6dp"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignStart="@+id/event_pull_new"
-        android:layout_alignTop="@+id/event_pull_new"
-        android:layout_alignEnd="@+id/event_pull_new"
-        android:layout_alignBottom="@+id/event_pull_new"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/circle_for_anim"
-        android:visibility="invisible" />
-
-
-
-
 </RelativeLayout>

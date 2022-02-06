@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.fragments.mainMenuFragments.EventFragments.AnyEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.EventFragments.MainEventFragment;
 import com.example.lbar.helpClasses.Event;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -216,7 +217,7 @@ public class AddingEventFragment extends Fragment {
     }
 
     private void closeFrgament() {
-        AnyEventFragment fragment = new AnyEventFragment();
+        MainEventFragment fragment = new MainEventFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("circle_anim", true);
         fragment.setArguments(bundle);

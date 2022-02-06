@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,30 +15,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.ViewPagerFragmentAdapter;
+import com.example.lbar.fragments.AddingEventFragment;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainEventFragment extends Fragment {
 
     // Кнопку + перекинуть сюда
     // Посмотреть на прогрессбар
     // Заниматься адаптерами и настройкой доступа в разных фрагментах
+
+    private FloatingActionButton pullNewEvent;
+    private View circle;
+
+    private Animation animationCircle;
+    private boolean isUnExploid;
 
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
@@ -55,6 +56,7 @@ public class MainEventFragment extends Fragment {
 
 
         initItems(view);
+        setItemAnimations();
 
         viewPager2.setAdapter(new ViewPagerFragmentAdapter(getActivity()));
 
@@ -69,15 +71,61 @@ public class MainEventFragment extends Fragment {
             }
         }).attach();
 
+        pullNewEvent.setOnClickListener(view1 -> {
+            circle.setVisibility(View.VISIBLE);
+            circle.startAnimation(animationCircle);
+        });
+
         return view;
     }
 
-    private void initItems(View v) {
+    private void setItemAnimations() {
+        if (isUnExploid){
+            Animation animationUnCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_unexplosion);
 
+            animationUnCircle.setDuration(700);
+            circle.startAnimation(animationUnCircle);
+        }
+
+        animationCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_explosion);
+        animationCircle.setDuration(700);
+
+        animationCircle.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                try {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new AddingEventFragment()).commit();
+                } catch (Exception D) {
+                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void initItems(View v) {
         tabLayout = v.findViewById(R.id.event_main_tablayout);
         viewPager2 = v.findViewById(R.id.event_main_viewpager);
 
         appBarLayout = v.findViewById(R.id.app_bar_layout_in_main_event);
+
+        try {
+            isUnExploid = this.getArguments().getBoolean("circle_anim");
+        } catch (NullPointerException e){
+            isUnExploid = false;
+        }
+
+        pullNewEvent = v.findViewById(R.id.event_pull_new);
+        circle = v.findViewById(R.id.circle);
     }
 
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {

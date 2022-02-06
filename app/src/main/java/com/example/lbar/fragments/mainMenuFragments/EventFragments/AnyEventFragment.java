@@ -45,7 +45,6 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
     private RecyclerView recyclerViewInEvents;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
-    private FloatingActionButton pullNewEvent;
 
     private EventAdapter eventAdapter;
 
@@ -54,9 +53,6 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     private List<Event> mEvents;
 
     private DrawerLayout drawer;
-    private Animation animationCircle;
-    private View circle;
-    private boolean isUnExploid;
 
     private GestureDetector gestureDetector;
 
@@ -70,7 +66,6 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Events");
 
         initItems(view);
-        setItemAnimations();
         SwipeMenuOpenerControl(view);
 
         mEvents = new ArrayList<>();
@@ -78,49 +73,10 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         recyclerViewInEvents.setHasFixedSize(true);
         recyclerViewInEvents.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-        pullNewEvent.setOnClickListener(view1 -> {
-            circle.setVisibility(View.VISIBLE);
-            circle.startAnimation(animationCircle);
-        });
-
         progressBar.setVisibility(View.VISIBLE);
         readEvents();
 
         return view;
-    }
-
-    private void setItemAnimations() {
-        if (isUnExploid){
-            Animation animationUnCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_unexplosion);
-
-            animationUnCircle.setDuration(700);
-            circle.startAnimation(animationUnCircle);
-        }
-
-        animationCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_explosion);
-        animationCircle.setDuration(700);
-
-        animationCircle.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                try {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new AddingEventFragment()).commit();
-                } catch (Exception D) {
-                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
     }
 
     private void readEvents() {
@@ -151,15 +107,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     private void initItems(View v) {
         progressBar = v.findViewById(R.id.prog_bar_events);
         gestureDetector = new GestureDetector(getContext(), this);
-
-        try {
-            isUnExploid = this.getArguments().getBoolean("circle_anim");
-        } catch (NullPointerException e){
-            isUnExploid = false;
-        }
         recyclerViewInEvents = v.findViewById(R.id.recycler_events);
-        pullNewEvent = v.findViewById(R.id.event_pull_new);
-        circle = v.findViewById(R.id.circle);
     }
 
     private void SwipeMenuOpenerControl(View v) {
