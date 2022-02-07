@@ -139,10 +139,10 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     }
 
     private void initItems(View v) {
-        progressBar = v.findViewById(R.id.prog_bar_events);
+        progressBar = v.findViewById(R.id.prog_bar_any_events);
         gestureDetector = new GestureDetector(getContext(), this);
 
-        recyclerViewInEvents = v.findViewById(R.id.recycler_events);
+        recyclerViewInEvents = v.findViewById(R.id.recycler_any_events);
     }
 
     private void SwipeMenuOpenerControl(View v) {
