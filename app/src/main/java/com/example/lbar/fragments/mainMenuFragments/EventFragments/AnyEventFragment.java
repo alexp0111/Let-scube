@@ -7,15 +7,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -25,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.EventAdapter;
-import com.example.lbar.fragments.AddingEventFragment;
 import com.example.lbar.helpClasses.Event;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,8 +35,12 @@ import java.util.List;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
+import static com.example.lbar.MainActivity.reference;
 
 public class AnyEventFragment extends Fragment implements GestureDetector.OnGestureListener {
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser fUser;
 
     private RecyclerView recyclerViewInEvents;
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
@@ -49,8 +48,10 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     private EventAdapter eventAdapter;
 
     private DatabaseReference eventReference;
+    private DatabaseReference mFriendsRef;
 
     private List<Event> mEvents;
+    private ArrayList<String> mFriends = new ArrayList<>();
 
     private DrawerLayout drawer;
 
@@ -63,9 +64,13 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
+        mAuth = FirebaseAuth.getInstance();
+        fUser = mAuth.getCurrentUser();
+
         eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Events");
 
         initItems(view);
+        getUserFriendsList();
         SwipeMenuOpenerControl(view);
 
         mEvents = new ArrayList<>();
@@ -79,6 +84,22 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         return view;
     }
 
+    private void getUserFriendsList() {
+        mFriendsRef = reference.child(fUser.getUid()).child("us_friends");
+        mFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String friend_id = snapshot.getValue().toString();
+                    mFriends.add(friend_id);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+    }
+
     private void readEvents() {
         eventReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,7 +108,11 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Event event = snapshot.getValue(Event.class);
-                    mEvents.add(event);
+                    assert event != null;
+
+                    if (event.getEv_accessibility() == 0 || event.getEv_author_id().equals(fUser.getUid()) || isFriend(event.getEv_author_id())){
+                        mEvents.add(event);
+                    }
                 }
 
                 Collections.reverse(mEvents);
@@ -104,9 +129,19 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         });
     }
 
+    private boolean isFriend(String id) {
+        for (int i = 1; i < mFriends.size(); i++) {
+            if (mFriends.get(i).equals(id)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void initItems(View v) {
         progressBar = v.findViewById(R.id.prog_bar_events);
         gestureDetector = new GestureDetector(getContext(), this);
+
         recyclerViewInEvents = v.findViewById(R.id.recycler_events);
     }
 
