@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="@color/colorBackground"
-xmlns:app="http://schemas.android.com/apk/res-auto">
-
-<com.google.android.material.progressindicator.LinearProgressIndicator
-    android:id="@+id/prog_bar_any_events"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:indeterminate="true"
-    android:visibility="gone" />
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
 
-<androidx.recyclerview.widget.RecyclerView
-    android:layout_below="@id/prog_bar_any_events"
-    android:id="@+id/recycler_any_events"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/prog_bar_any_events"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pull_to_refresh_any_event"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_any_events"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/prog_bar_any_events" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

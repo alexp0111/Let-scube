@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/colorBackground">
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_fr_events"
@@ -12,10 +12,17 @@
         android:indeterminate="true"
         android:visibility="gone" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/prog_bar_fr_events"
-        android:id="@+id/recycler_fr_events"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pull_to_refresh_fr_event"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_fr_events"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/prog_bar_fr_events" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

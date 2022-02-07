@@ -21,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.MainActivity;
@@ -53,10 +54,12 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
 
     private List<User> mUsers;
 
-    private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
     private DrawerLayout drawer;
     private TextInputEditText search_users;
     private GestureDetector gestureDetector;
+
+    private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private SwipeRefreshLayout srl;
 
     @Nullable
     @Override
@@ -98,11 +101,19 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
         progressBar.setVisibility(View.VISIBLE);
         readUsers();
 
+        srl.setOnRefreshListener(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+            readUsers();
+            progressBar.setVisibility(View.GONE);
+            srl.setRefreshing(false);
+        });
+
         return view;
     }
 
     private void initItems(View v) {
         progressBar = v.findViewById(R.id.prog_bar_list);
+        srl = v.findViewById(R.id.pull_to_refresh_users);
         gestureDetector = new GestureDetector(getContext(), this);
 
         search_users = v.findViewById(R.id.search_users);
@@ -234,7 +245,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
             diffY = moveEvent.getY() - downEvent.getY();
             diffX = moveEvent.getX() - downEvent.getX();
         } catch (Exception e){
-            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
         }
 
         if (Math.abs(diffX) > Math.abs(diffY)) {

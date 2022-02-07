@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
@@ -42,13 +43,11 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
 
-    private RecyclerView recyclerViewInEvents;
-    private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
-
-    private EventAdapter eventAdapter;
-
     private DatabaseReference eventReference;
     private DatabaseReference mFriendsRef;
+
+    private RecyclerView recyclerViewInEvents;
+    private EventAdapter eventAdapter;
 
     private List<Event> mEvents;
     private ArrayList<String> mFriends = new ArrayList<>();
@@ -56,6 +55,9 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     private DrawerLayout drawer;
 
     private GestureDetector gestureDetector;
+
+    private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private SwipeRefreshLayout srl;
 
     @Nullable
     @Override
@@ -81,6 +83,14 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         progressBar.setVisibility(View.VISIBLE);
         readEvents();
 
+        srl.setOnRefreshListener(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+            getUserFriendsList();
+            readEvents();
+            progressBar.setVisibility(View.GONE);
+            srl.setRefreshing(false);
+        });
+
         return view;
     }
 
@@ -89,6 +99,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         mFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mFriends.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String friend_id = snapshot.getValue().toString();
                     mFriends.add(friend_id);
@@ -96,7 +107,8 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
     }
 
@@ -110,7 +122,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
                     Event event = snapshot.getValue(Event.class);
                     assert event != null;
 
-                    if (event.getEv_accessibility() == 0 || event.getEv_author_id().equals(fUser.getUid()) || isFriend(event.getEv_author_id())){
+                    if (event.getEv_accessibility() == 0 || event.getEv_author_id().equals(fUser.getUid()) || isFriend(event.getEv_author_id())) {
                         mEvents.add(event);
                     }
                 }
@@ -131,7 +143,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
     private boolean isFriend(String id) {
         for (int i = 1; i < mFriends.size(); i++) {
-            if (mFriends.get(i).equals(id)){
+            if (mFriends.get(i).equals(id)) {
                 return true;
             }
         }
@@ -140,6 +152,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
     private void initItems(View v) {
         progressBar = v.findViewById(R.id.prog_bar_any_events);
+        srl = v.findViewById(R.id.pull_to_refresh_any_event);
         gestureDetector = new GestureDetector(getContext(), this);
 
         recyclerViewInEvents = v.findViewById(R.id.recycler_any_events);

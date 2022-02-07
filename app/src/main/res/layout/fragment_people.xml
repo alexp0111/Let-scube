@@ -1,48 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/colorBackground"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/colorBackground">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_in_users"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:titleTextColor="#000000"
         android:elevation="4dp"
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#000000" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/prog_bar_list"
         android:layout_width="match_parent"
-        android:layout_below="@+id/toolbar_in_users"
         android:layout_height="30dp"
+        android:layout_below="@+id/toolbar_in_users"
         android:indeterminate="true"
         android:visibility="gone" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_below="@id/prog_bar_list"
-        android:id="@+id/textField_search_users"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pull_to_refresh_users"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:hint="Search...">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_in_users">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/search_users"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/textField_search_users"
-        android:id="@+id/recycler_users"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textField_search_users"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="Search...">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_users"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_users"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/textField_search_users" />
+
+
+        </RelativeLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
