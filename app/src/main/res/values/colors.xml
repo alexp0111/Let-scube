@@ -6,4 +6,5 @@
     <color name="colorAccent">#263238</color>
     <color name="colorBlue">#719fc1</color>
     <color name="colorUserNameInList">#263238</color>
+    <color name="menu_color">#fff</color>
 </resources>
