@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.User;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,7 +57,8 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
     private List<User> mUsers;
 
     private DrawerLayout drawer;
-    private TextInputEditText search_users;
+    private TextInputEditText searchUsers;
+    private ImageView imgSearchUsers;
     private GestureDetector gestureDetector;
 
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
@@ -80,7 +83,10 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
 
         mUsers = new ArrayList<>();
 
-        search_users.addTextChangedListener(new TextWatcher() {
+        recyclerViewInPeople.setHasFixedSize(true);
+        recyclerViewInPeople.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        searchUsers.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -95,8 +101,18 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
             }
         });
 
-        recyclerViewInPeople.setHasFixedSize(true);
-        recyclerViewInPeople.setLayoutManager(new LinearLayoutManager(getContext()));
+        imgSearchUsers.setOnClickListener(view1 -> {
+            TextInputLayout textInputLayout = view.findViewById(R.id.textField_search_users);
+            if (textInputLayout.getVisibility() == View.GONE){
+                textInputLayout.setVisibility(View.VISIBLE);
+            } else {
+                textInputLayout.setVisibility(View.GONE);
+            }
+            //RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout_users);
+            //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+            //textInputLayout.setVisibility(View.VISIBLE);
+            //params.addRule(RelativeLayout.BELOW, R.id.toolbar_in_users);
+        });
 
         progressBar.setVisibility(View.VISIBLE);
         readUsers();
@@ -116,7 +132,8 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
         srl = v.findViewById(R.id.pull_to_refresh_users);
         gestureDetector = new GestureDetector(getContext(), this);
 
-        search_users = v.findViewById(R.id.search_users);
+        searchUsers = v.findViewById(R.id.search_users);
+        imgSearchUsers = v.findViewById(R.id.img_search_users);
 
         recyclerViewInPeople = v.findViewById(R.id.recycler_users);
     }
@@ -124,7 +141,6 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
-            tbar.setTitle("Users");
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 
@@ -174,7 +190,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
-                if (search_users.getText().toString().equals("")) {
+                if (searchUsers.getText().toString().equals("")) {
                     if (fUser == null) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             User user = snapshot.getValue(User.class);
