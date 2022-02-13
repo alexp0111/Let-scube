@@ -108,10 +108,6 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
             } else {
                 textInputLayout.setVisibility(View.GONE);
             }
-            //RelativeLayout relativeLayout = view.findViewById(R.id.relative_layout_users);
-            //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
-            //textInputLayout.setVisibility(View.VISIBLE);
-            //params.addRule(RelativeLayout.BELOW, R.id.toolbar_in_users);
         });
 
         progressBar.setVisibility(View.VISIBLE);
@@ -141,6 +137,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
+            tbar.setTitle(R.string.title_people);
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 

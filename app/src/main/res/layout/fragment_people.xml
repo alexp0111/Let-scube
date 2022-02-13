@@ -51,7 +51,7 @@
                 android:visibility="gone"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_marginHorizontal="5dp"
-                android:hint="Search...">
+                android:hint="@string/search_hint">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_users"

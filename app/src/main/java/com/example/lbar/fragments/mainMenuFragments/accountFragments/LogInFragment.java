@@ -99,7 +99,7 @@ public class LogInFragment extends Fragment {
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
-            tbar.setTitle("Log in");
+            tbar.setTitle(R.string.title_login);
 
             DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
 

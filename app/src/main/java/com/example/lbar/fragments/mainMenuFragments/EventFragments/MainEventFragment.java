@@ -131,7 +131,7 @@ public class MainEventFragment extends Fragment {
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
-            tbar.setTitle("Events");
+            tbar.setTitle(R.string.title_event);
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 

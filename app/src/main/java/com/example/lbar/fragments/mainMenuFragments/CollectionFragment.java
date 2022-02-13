@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -23,6 +26,9 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.google.android.material.card.MaterialCardView;
 
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
@@ -43,6 +49,8 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private static MaterialCardView cubeClock;
     private static MaterialCardView cubeMegaminx;
     private static MaterialCardView cubeSquare1;
+
+    private List<MaterialCardView> mcvList;
 
     private GestureDetector gestureDetector;
 
@@ -82,24 +90,67 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         cubeClock = v.findViewById(R.id.collection_card_clock);
         cubeMegaminx = v.findViewById(R.id.collection_card_megaminx);
         cubeSquare1 = v.findViewById(R.id.collection_card_square1);
+
+        mcvList = Arrays.asList(cubeType0, cubeType1, cubeType2, cubeType3, cubeType4,
+                cubeType5, cubePyraminx, cubeSqube, cubeClock, cubeMegaminx, cubeSquare1);
     }
 
     private void realiseClickListenerOnCards() {
         cubeType0.setOnClickListener(view -> {
+            startItemAnimations();
             Toast.makeText(getContext(), "2 x 2", Toast.LENGTH_SHORT).show();
         });
         cubeType1.setOnClickListener(view -> {
+            startItemAnimations();
             Toast.makeText(getContext(), "3 x 3", Toast.LENGTH_SHORT).show();
         });
-        cubeType2.setOnClickListener(view -> Toast.makeText(getContext(), "4 x 4", Toast.LENGTH_SHORT).show());
-        cubeType3.setOnClickListener(view -> Toast.makeText(getContext(), "5 x 5", Toast.LENGTH_SHORT).show());
-        cubeType4.setOnClickListener(view -> Toast.makeText(getContext(), "6 x 6", Toast.LENGTH_SHORT).show());
-        cubeType5.setOnClickListener(view -> Toast.makeText(getContext(), "7 x 7", Toast.LENGTH_SHORT).show());
-        cubeClock.setOnClickListener(view -> Toast.makeText(getContext(), "Clocks", Toast.LENGTH_SHORT).show());
-        cubePyraminx.setOnClickListener(view -> Toast.makeText(getContext(), "Pyraminx", Toast.LENGTH_SHORT).show());
-        cubeMegaminx.setOnClickListener(view -> Toast.makeText(getContext(), "Megaminx", Toast.LENGTH_SHORT).show());
-        cubeSqube.setOnClickListener(view -> Toast.makeText(getContext(), "Sqube", Toast.LENGTH_SHORT).show());
-        cubeSquare1.setOnClickListener(view -> Toast.makeText(getContext(), "Square-1", Toast.LENGTH_SHORT).show());
+        cubeType2.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "4 x 4", Toast.LENGTH_SHORT).show();
+        });
+        cubeType3.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "5 x 5", Toast.LENGTH_SHORT).show();
+        });
+        cubeType4.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "6 x 6", Toast.LENGTH_SHORT).show();
+        });
+        cubeType5.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "7 x 7", Toast.LENGTH_SHORT).show();
+        });
+        cubeClock.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "Clocks", Toast.LENGTH_SHORT).show();
+        });
+        cubePyraminx.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "Pyraminx", Toast.LENGTH_SHORT).show();
+        });
+        cubeMegaminx.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "Megaminx", Toast.LENGTH_SHORT).show();
+        });
+        cubeSqube.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "Sqube", Toast.LENGTH_SHORT).show();
+        });
+        cubeSquare1.setOnClickListener(view -> {
+            startItemAnimations();
+            Toast.makeText(getContext(), "Square-1", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void startItemAnimations() {
+        //Animation animationUnExplosion = AnimationUtils.loadAnimation(getContext(), R.anim.mini_circle_unexplosion);
+        //animationUnExplosion.setDuration(400);
+        //for (int i = 0; i < mcvList.size(); i++) {
+        //    mcvList.get(i).startAnimation(animationUnExplosion);
+        //}
+        //for (int i = 0; i < mcvList.size(); i++) {
+        //    mcvList.get(i).setVisibility(View.INVISIBLE);
+        //}
     }
 
     private void SwipeMenuOpenerControl(View v) {
@@ -113,7 +164,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
-            tbar.setTitle("Collection");
+            tbar.setTitle(R.string.title_collection);
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 

@@ -182,7 +182,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
-            tbar.setTitle("Profile");
+            tbar.setTitle(R.string.title_profile);
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 

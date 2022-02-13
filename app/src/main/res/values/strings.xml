@@ -40,5 +40,14 @@
     <string name="people">People</string>
     <string name="author">Author: </string>
     <string name="add_picture">add picture</string>
+    <string name="message_hint">Message...</string>
+    <string name="search_hint">Search...</string>
+    <string name="title_login">Log in</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_registration">Registration</string>
+    <string name="title_event">Events</string>
+    <string name="title_collection">Collection</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_people">People</string>
 
 </resources>

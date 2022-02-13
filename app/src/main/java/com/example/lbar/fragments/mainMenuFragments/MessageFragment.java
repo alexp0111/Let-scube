@@ -58,7 +58,7 @@ public class MessageFragment extends Fragment implements GestureDetector.OnGestu
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
-            tbar.setTitle("Messages");
+            tbar.setTitle(R.string.title_messages);
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 

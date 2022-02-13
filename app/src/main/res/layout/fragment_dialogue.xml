@@ -69,14 +69,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp">
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="8dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textField_message"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Message..."
+            android:hint="@string/message_hint"
             app:endIconDrawable="@drawable/ic_send"
             app:endIconMode="custom"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -85,7 +85,7 @@ public class RegistrationFragment extends Fragment {
         if (tbar != null) {
 
             tbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
-            tbar.setTitle("Registration");
+            tbar.setTitle(R.string.title_registration);
 
             tbar.setNavigationOnClickListener(view1 -> {
                 try {
