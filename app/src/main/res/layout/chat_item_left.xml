@@ -22,7 +22,7 @@
         android:paddingBottom="12dp"
         android:paddingTop="8dp"
         android:text="Hello!"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorMsgText"
         android:textSize="18sp" />
 
 </RelativeLayout>

@@ -7,4 +7,8 @@
     <color name="colorBlue">#719fc1</color>
     <color name="colorUserNameInList">#263238</color>
     <color name="menu_color">#fff</color>
+
+    <color name="colorMsgText">#000</color>
+    <color name="colorMsgLeftItem">#84afcb</color>
+    <color name="colorMsgRightItem">#a1c5db</color>
 </resources>

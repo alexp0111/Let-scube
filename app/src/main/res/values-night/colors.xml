@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#b6b195</color>
-    <color name="colorBackground">#2D2D2D</color>
+    <color name="colorBackground">#181818</color>
+    <!--<color name="colorBackground">#1A2026</color>-->
     <color name="colorAccent">#263238</color>
     <color name="colorBlue">#719fc1</color>
     <color name="menu_color">#343434</color>
     <color name="colorUserNameInList">#ffffff</color>
+
+    <color name="colorMsgText">#fff</color>
+    <color name="colorMsgLeftItem">#263238</color>
+    <color name="colorMsgRightItem">#37474f</color>
 </resources>

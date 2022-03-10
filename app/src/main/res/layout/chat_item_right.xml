@@ -29,8 +29,8 @@
             android:paddingBottom="12dp"
             android:paddingTop="8dp"
             android:gravity="fill"
-            android:text="Hi!"
-            android:textColor="@color/colorPrimary"
+            android:text="Hello world!"
+            android:textColor="@color/colorMsgText"
             android:textSize="18sp" />
 
     </RelativeLayout>
