@@ -1,6 +1,7 @@
 package com.example.lbar.fragments.mainMenuFragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.helpClasses.Cube;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
