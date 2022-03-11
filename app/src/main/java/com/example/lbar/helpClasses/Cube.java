@@ -5,31 +5,17 @@ import java.util.ArrayList;
 
 public class Cube {
     private int cube_type;
+    private String cube_name;
 
-    private String single_best;
-    private String average_of_3;
-    private String best_of_3;
-    private String average_of_5;
-    private String best_of_5;
-    private String average_of_12;
-    private String best_of_12;
-    private String average_of_100;
-    private String best_of_100;
+    private ArrayList<String> puzzle_build_pb_statistics = new ArrayList<>(); //pb, pb3, pb5, pb12, pb100;
+    private ArrayList<String> puzzle_build_avg_statistics = new ArrayList<>();
 
-    private ArrayList<String> puzzle_build_statistics = new ArrayList<>();
-
-    public Cube(int cube_type, String single_best, String average_of_3, String best_of_3, String average_of_5, String best_of_5, String average_of_12, String best_of_12, String average_of_100, String best_of_100, ArrayList<String> puzzle_build_statistics) {
+    public Cube(int cube_type, String cube_name, ArrayList<String> puzzle_build_pb_statistics, ArrayList<String> puzzle_build_avg_statistics) {
         this.cube_type = cube_type;
-        this.single_best = single_best;
-        this.average_of_3 = average_of_3;
-        this.best_of_3 = best_of_3;
-        this.average_of_5 = average_of_5;
-        this.best_of_5 = best_of_5;
-        this.average_of_12 = average_of_12;
-        this.best_of_12 = best_of_12;
-        this.average_of_100 = average_of_100;
-        this.best_of_100 = best_of_100;
-        this.puzzle_build_statistics = puzzle_build_statistics;
+        this.cube_name = cube_name;
+
+        this.puzzle_build_pb_statistics = puzzle_build_pb_statistics;
+        this.puzzle_build_avg_statistics = puzzle_build_avg_statistics;
     }
 
     public Cube(int cube_type) {
@@ -59,83 +45,27 @@ public class Cube {
         this.cube_type = cube_type;
     }
 
-    public String getSingle_best() {
-        return single_best;
+    public String getCube_name() {
+        return cube_name;
     }
 
-    public void setSingle_best(String single_best) {
-        this.single_best = single_best;
+    public void setCube_name(String cube_name) {
+        this.cube_name = cube_name;
     }
 
-    public String getAverage_of_3() {
-        return average_of_3;
+    public ArrayList<String> getPuzzle_build_pb_statistics() {
+        return puzzle_build_pb_statistics;
     }
 
-    public void setAverage_of_3(String average_of_3) {
-        this.average_of_3 = average_of_3;
+    public void setPuzzle_build_pb_statistics(ArrayList<String> puzzle_build_pb_statistics) {
+        this.puzzle_build_pb_statistics = puzzle_build_pb_statistics;
     }
 
-    public String getBest_of_3() {
-        return best_of_3;
+    public ArrayList<String> getPuzzle_build_avg_statistics() {
+        return puzzle_build_avg_statistics;
     }
 
-    public void setBest_of_3(String best_of_3) {
-        this.best_of_3 = best_of_3;
-    }
-
-    public String getAverage_of_5() {
-        return average_of_5;
-    }
-
-    public void setAverage_of_5(String average_of_5) {
-        this.average_of_5 = average_of_5;
-    }
-
-    public String getBest_of_5() {
-        return best_of_5;
-    }
-
-    public void setBest_of_5(String best_of_5) {
-        this.best_of_5 = best_of_5;
-    }
-
-    public String getAverage_of_12() {
-        return average_of_12;
-    }
-
-    public void setAverage_of_12(String average_of_12) {
-        this.average_of_12 = average_of_12;
-    }
-
-    public String getBest_of_12() {
-        return best_of_12;
-    }
-
-    public void setBest_of_12(String best_of_12) {
-        this.best_of_12 = best_of_12;
-    }
-
-    public String getAverage_of_100() {
-        return average_of_100;
-    }
-
-    public void setAverage_of_100(String average_of_100) {
-        this.average_of_100 = average_of_100;
-    }
-
-    public String getBest_of_100() {
-        return best_of_100;
-    }
-
-    public void setBest_of_100(String best_of_100) {
-        this.best_of_100 = best_of_100;
-    }
-
-    public ArrayList<String> getPuzzle_build_statistics() {
-        return puzzle_build_statistics;
-    }
-
-    public void setPuzzle_build_statistics(ArrayList<String> puzzle_build_statistics) {
-        this.puzzle_build_statistics = puzzle_build_statistics;
+    public void setPuzzle_build_avg_statistics(ArrayList<String> puzzle_build_avg_statistics) {
+        this.puzzle_build_avg_statistics = puzzle_build_avg_statistics;
     }
 }
