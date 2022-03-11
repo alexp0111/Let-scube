@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,11 +26,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
@@ -49,6 +53,10 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private static MaterialCardView cubeClock;
     private static MaterialCardView cubeMegaminx;
     private static MaterialCardView cubeSquare1;
+
+    private BottomSheetDialog bottomSheetDialog;
+    private View bottomSheetView;
+    private TextView tv;
 
     private List<MaterialCardView> mcvList;
 
@@ -93,64 +101,56 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
         mcvList = Arrays.asList(cubeType0, cubeType1, cubeType2, cubeType3, cubeType4,
                 cubeType5, cubePyraminx, cubeSqube, cubeClock, cubeMegaminx, cubeSquare1);
+
+        bottomSheetDialog = new BottomSheetDialog(
+                requireContext(), R.style.BottomSheetDialogTheme
+        );
+        bottomSheetView = LayoutInflater.from(getContext()).inflate(
+                R.layout.bottom_dialog_in_cubes, v.findViewById(R.id.bottom_dialog_container)
+        );
+        tv = bottomSheetView.findViewById(R.id.text_test);
     }
 
     private void realiseClickListenerOnCards() {
         cubeType0.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "2 x 2", Toast.LENGTH_SHORT).show();
+            showDialog(0);
         });
         cubeType1.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "3 x 3", Toast.LENGTH_SHORT).show();
+            showDialog(1);
         });
         cubeType2.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "4 x 4", Toast.LENGTH_SHORT).show();
+            showDialog(2);
         });
         cubeType3.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "5 x 5", Toast.LENGTH_SHORT).show();
+            showDialog(3);
         });
         cubeType4.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "6 x 6", Toast.LENGTH_SHORT).show();
+            showDialog(4);
         });
         cubeType5.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "7 x 7", Toast.LENGTH_SHORT).show();
+            showDialog(5);
         });
         cubeClock.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "Clocks", Toast.LENGTH_SHORT).show();
+            showDialog(6);
         });
         cubePyraminx.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "Pyraminx", Toast.LENGTH_SHORT).show();
+            showDialog(7);
         });
         cubeMegaminx.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "Megaminx", Toast.LENGTH_SHORT).show();
+            showDialog(8);
         });
         cubeSqube.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "Sqube", Toast.LENGTH_SHORT).show();
+            showDialog(9);
         });
         cubeSquare1.setOnClickListener(view -> {
-            startItemAnimations();
-            Toast.makeText(getContext(), "Square-1", Toast.LENGTH_SHORT).show();
+            showDialog(10);
         });
     }
 
-    private void startItemAnimations() {
-        //Animation animationUnExplosion = AnimationUtils.loadAnimation(getContext(), R.anim.mini_circle_unexplosion);
-        //animationUnExplosion.setDuration(400);
-        //for (int i = 0; i < mcvList.size(); i++) {
-        //    mcvList.get(i).startAnimation(animationUnExplosion);
-        //}
-        //for (int i = 0; i < mcvList.size(); i++) {
-        //    mcvList.get(i).setVisibility(View.INVISIBLE);
-        //}
+    private void showDialog(int n){
+        tv.setText(Integer.toString(n));
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
     }
 
     private void SwipeMenuOpenerControl(View v) {

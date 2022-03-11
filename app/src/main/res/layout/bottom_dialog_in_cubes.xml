@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_dialog_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/dialog_bottom_sheet_background"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Hello world!"
+        android:id="@+id/text_test"
+        android:paddingVertical="30dp"
+        android:textSize="50dp"
+        android:gravity="center"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="430dp"
+        android:layout_height="1dp"
+        android:layout_below="@id/text_test"
+        android:background="?android:attr/listDivider"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="135dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Hello world! gvkyyi yv yvvkk gv yvv vgv vv vg vouvu vkuvkuvukvguvguvkuvk vkv ugv ukvk vguk vuv uk vuk v kuv ukvuk vuk "
+        android:id="@+id/big_text"
+        android:paddingVertical="30dp"
+        android:layout_below="@id/divider"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

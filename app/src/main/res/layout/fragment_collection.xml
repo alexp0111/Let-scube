@@ -41,7 +41,7 @@
                     android:layout_margin="20dp"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -61,7 +61,7 @@
                     android:layout_toEndOf="@id/collection_card_type1"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -82,7 +82,7 @@
                     android:layout_toEndOf="@id/collection_card_type1"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -111,7 +111,7 @@
                     android:layout_margin="20dp"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -131,7 +131,7 @@
                     android:layout_margin="20dp"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -151,7 +151,7 @@
                     android:layout_toEndOf="@id/collection_card_pyraminx"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -180,7 +180,7 @@
                     android:layout_margin="20dp"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -200,7 +200,7 @@
                     android:layout_toEndOf="@id/collection_card_type4"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -229,7 +229,7 @@
                     android:layout_margin="20dp"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -249,7 +249,7 @@
                     android:layout_toEndOf="@id/collection_card_clock"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
@@ -269,7 +269,7 @@
                     android:layout_toEndOf="@id/collection_card_megaminx"
                     android:orientation="vertical"
                     android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorBackground"
+                    app:cardBackgroundColor="@color/colorMsgRightItem"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="6dp">
 
