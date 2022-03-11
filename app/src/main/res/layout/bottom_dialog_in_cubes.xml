@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_dialog_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/dialog_bottom_sheet_background"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:text="3 x 3"
         android:id="@+id/text_test"
-        android:textColor="@color/colorAccent"
-        android:paddingVertical="30dp"
-        android:textSize="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_height="wrap_content" />
+        android:paddingVertical="30dp"
+        android:text="3 x 3"
+        android:textColor="@color/colorAccent"
+        android:textSize="50dp" />
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/sheet_divider_1"
         android:layout_width="430dp"
         android:layout_height="1dp"
         android:layout_below="@id/text_test"
@@ -27,33 +26,90 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="135dp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/sheet_avg"
         android:layout_width="match_parent"
-        android:layout_below="@id/divider"
-        android:paddingHorizontal="10dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sheet_divider_1"
+        android:layout_marginVertical="20dp"
+        android:gravity="center"
+        android:text="Average results"
+        android:textColor="@color/colorAccent"
+        android:textSize="28sp" />
+
+    <LinearLayout
+        android:id="@+id/sheet_ll_avg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sheet_avg"
         android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:paddingHorizontal="10dp">
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="PB:\nAVG 3:\nAVG 5:\nAVG 12:\nAVG 100:"
-            android:textColor="@color/colorAccent"
-            android:paddingVertical="30dp"
-            android:textSize="32sp"
             android:gravity="start"
-            android:layout_height="wrap_content" />
+            android:text="Single:\nAVG 3:\nAVG 5:\nAVG 12:\nAVG 100:"
+            android:textColor="@color/colorAccent"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/info_in_collection_avg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="100"
+            android:gravity="center"
+            android:text="00:00:13:341\n00:00:15:471\n00:00:16:272\n00:00:16:732\n00:00:17:928"
+            android:textColor="@color/colorAccent"
+            android:textSize="28sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/sheet_divider_2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/sheet_ll_avg"
+        android:layout_marginVertical="20dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/sheet_best"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sheet_divider_2"
+        android:gravity="center"
+        android:text="Best results"
+        android:textColor="@color/colorAccent"
+        android:textSize="28sp" />
+
+    <LinearLayout
+        android:id="@+id/sheet_ll_best"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sheet_best"
+        android:layout_marginVertical="20dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_weight="100"
-            android:text="00:00:13:341\n00:00:15:471\n00:00:16:272\n00:00:16:732\n00:00:17:928"
-            android:id="@+id/info_in_collection"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Single:\nAVG 3:\nAVG 5:\nAVG 12:\nAVG 100:"
             android:textColor="@color/colorAccent"
-            android:paddingVertical="30dp"
-            android:textSize="32sp"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/info_in_collection_best"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="100"
             android:gravity="center"
-            android:layout_height="wrap_content" />
+            android:text="00:00:13:341\n00:00:15:471\n00:00:16:272\n00:00:16:732\n00:00:17:928"
+            android:textColor="@color/colorAccent"
+            android:textSize="28sp" />
     </LinearLayout>
 
 </RelativeLayout>
