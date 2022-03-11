@@ -10,8 +10,9 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:text="Hello world!"
+        android:text="3 x 3"
         android:id="@+id/text_test"
+        android:textColor="@color/colorAccent"
         android:paddingVertical="30dp"
         android:textSize="50dp"
         android:gravity="center"
@@ -26,14 +27,33 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="135dp" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:text="Hello world! gvkyyi yv yvvkk gv yvv vgv vv vg vouvu vkuvkuvukvguvguvkuvk vkv ugv ukvk vguk vuv uk vuk v kuv ukvuk vuk "
-        android:id="@+id/big_text"
-        android:paddingVertical="30dp"
         android:layout_below="@id/divider"
-        android:textSize="32sp"
-        android:gravity="center"
-        android:layout_height="wrap_content" />
+        android:paddingHorizontal="10dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:text="PB:\nAVG 3:\nAVG 5:\nAVG 12:\nAVG 100:"
+            android:textColor="@color/colorAccent"
+            android:paddingVertical="30dp"
+            android:textSize="32sp"
+            android:gravity="start"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="100"
+            android:text="00:00:13:341\n00:00:15:471\n00:00:16:272\n00:00:16:732\n00:00:17:928"
+            android:id="@+id/info_in_collection"
+            android:textColor="@color/colorAccent"
+            android:paddingVertical="30dp"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>
