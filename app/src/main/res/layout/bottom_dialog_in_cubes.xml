@@ -10,12 +10,15 @@
     <TextView
         android:id="@+id/text_test"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="128dp"
         android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:paddingHorizontal="20dp"
         android:paddingVertical="30dp"
-        android:text="3 x 3"
-        android:textColor="@color/colorAccent"
-        android:textSize="50dp" />
+        android:maxLines="1"
+        android:autoSizeMinTextSize="1sp"
+        android:autoSizeMaxTextSize="50sp"
+        android:textColor="@color/colorAccent" />
 
     <View
         android:id="@+id/sheet_divider_1"
@@ -60,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="100"
             android:gravity="center"
-            android:text="00:00:13:341\n00:00:15:471\n00:00:16:272\n00:00:16:732\n00:00:17:928"
+            android:text="...\n...\n...\n...\n..."
             android:textColor="@color/colorAccent"
             android:textSize="28sp" />
     </LinearLayout>
@@ -107,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="100"
             android:gravity="center"
-            android:text="00:00:13:341\n00:00:15:471\n00:00:16:272\n00:00:16:732\n00:00:17:928"
+            android:text="...\n...\n...\n...\n..."
             android:textColor="@color/colorAccent"
             android:textSize="28sp" />
     </LinearLayout>

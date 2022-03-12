@@ -7,8 +7,8 @@ public class Cube {
     private int cube_type;
     private String cube_name;
 
-    private ArrayList<Long> puzzle_build_pb_statistics = new ArrayList<>(); //pb, pb3, pb5, pb12, pb100;
-    private ArrayList<Long> puzzle_build_avg_statistics = new ArrayList<>();
+    private ArrayList<Long> puzzle_build_pb_statistics; //pb, pb3, pb5, pb12, pb100;
+    private ArrayList<Long> puzzle_build_avg_statistics;
 
     public Cube(int cube_type, String cube_name, ArrayList<Long> puzzle_build_pb_statistics, ArrayList<Long> puzzle_build_avg_statistics) {
         this.cube_type = cube_type;
@@ -18,11 +18,10 @@ public class Cube {
         this.puzzle_build_avg_statistics = puzzle_build_avg_statistics;
     }
 
-    public Cube(int cube_type) {
-        this.cube_type = cube_type;
+    public Cube() {
     }
 
-    public String getBestInfo() {
+    public String bestInfo() { //TODO: make logic of best results forming
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < puzzle_build_pb_statistics.size() - 1; i++) {
             result.append(convertFromMStoString(puzzle_build_pb_statistics.get(i))).append("\n");
@@ -31,7 +30,7 @@ public class Cube {
         return result.toString();
     }
 
-    public String getAvgInfo() {
+    public String avgInfo() {
         StringBuilder result = new StringBuilder();
         result.append(convertFromMStoString(getThisAvg(1))).append("\n");
         result.append(convertFromMStoString(getThisAvg(3))).append("\n");
@@ -43,13 +42,19 @@ public class Cube {
 
     private Long getThisAvg(int number) {
         Long result = 0L;
-        for (int i = puzzle_build_avg_statistics.size() - 1; i < puzzle_build_avg_statistics.size() - number; i++) {
-            result += puzzle_build_avg_statistics.get(i);
+        int realNumber = 0;
+        for (int i = puzzle_build_avg_statistics.size() - 1; i >= puzzle_build_avg_statistics.size() - number; i--) {
+            if (puzzle_build_avg_statistics.get(i) != -1L){
+                result += puzzle_build_avg_statistics.get(i);
+                realNumber++;
+            }
         }
+        if (realNumber < number) return -1L;
         return result / number;
     }
 
     private String convertFromMStoString(long ms) {
+        if (ms == -1L) return "Not enough info";
         String result = "";
         if (ms / 3600000 != 0) {
             result += strCorrection(ms / 3600000, 2) + ":";

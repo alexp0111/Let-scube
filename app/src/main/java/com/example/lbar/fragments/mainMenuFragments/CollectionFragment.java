@@ -26,18 +26,33 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.helpClasses.Cube;
+import com.example.lbar.helpClasses.Message;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
+import static com.example.lbar.MainActivity.reference;
 
 public class CollectionFragment extends Fragment implements GestureDetector.OnGestureListener {
+
+    private DatabaseReference collectionReference;
+    private String userID;
+
+    private ArrayList<Cube> allCubesArray = new ArrayList<Cube>(11);
 
     private DrawerLayout drawer;
     private ScrollView sv;
@@ -56,6 +71,8 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
     private BottomSheetDialog bottomSheetDialog;
     private View bottomSheetView;
+    private TextView txt_avg;
+    private TextView txt_best;
     private TextView tv;
 
     private List<MaterialCardView> mcvList;
@@ -76,6 +93,25 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
         realiseClickListenerOnCards();
 
+        collectionReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                allCubesArray.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Cube cube = snapshot.getValue(Cube.class);
+                    assert cube != null;
+                    Log.d("Cube_getter", "*start*" + cube.getCube_name() + "*+*" + cube.avgInfo() + "*close*");
+                    allCubesArray.add(cube);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         gestureDetector = new GestureDetector(getContext(), this);
 
         SwipeMenuOpenerControl(sv);
@@ -84,6 +120,10 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     }
 
     private void initItems(View v) {
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        collectionReference = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                .getReference("Users").child(userID).child("Collection");
+
         sv = v.findViewById(R.id.scrollView_in_collection);
 
         cubeType0 = v.findViewById(R.id.collection_card_type0);
@@ -108,47 +148,58 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         bottomSheetView = LayoutInflater.from(getContext()).inflate(
                 R.layout.bottom_dialog_in_cubes, v.findViewById(R.id.bottom_dialog_container)
         );
+
         tv = bottomSheetView.findViewById(R.id.text_test);
+        txt_avg = bottomSheetView.findViewById(R.id.info_in_collection_avg);
+        txt_best = bottomSheetView.findViewById(R.id.info_in_collection_best);
     }
 
     private void realiseClickListenerOnCards() {
         cubeType0.setOnClickListener(view -> {
-            showDialog(0, "2 x 2");
+            Log.d("Cube_getter_onclick", allCubesArray.get(0).avgInfo());
+            showDialog(0);
         });
         cubeType1.setOnClickListener(view -> {
-            showDialog(1, "3 x 3");
+            showDialog(1);
         });
         cubeType2.setOnClickListener(view -> {
-            showDialog(2, "4 x 4");
+            showDialog(2);
         });
         cubeType3.setOnClickListener(view -> {
-            showDialog(3, "5 x 5");
+            showDialog(3);
         });
         cubeType4.setOnClickListener(view -> {
-            showDialog(4, "6 x 6");
+            showDialog(4);
         });
         cubeType5.setOnClickListener(view -> {
-            showDialog(5, "7 x 7");
+            showDialog(5);
         });
         cubeClock.setOnClickListener(view -> {
-            showDialog(6, "Clock");
+            showDialog(6);
         });
         cubePyraminx.setOnClickListener(view -> {
-            showDialog(7, "Pyraminx");
+            showDialog(7);
         });
         cubeMegaminx.setOnClickListener(view -> {
-            showDialog(8, "Megaminx");
+            showDialog(8);
         });
         cubeSqube.setOnClickListener(view -> {
-            showDialog(9, "Sqube");
+            showDialog(9);
         });
         cubeSquare1.setOnClickListener(view -> {
-            showDialog(10, "Square-1");
+            showDialog(10);
         });
     }
 
-    private void showDialog(int n, String name){
-        tv.setText(name);
+    private void showDialog(int n){
+        try {
+            tv.setText(allCubesArray.get(n).getCube_name());
+            txt_avg.setText(allCubesArray.get(n).avgInfo());
+            txt_best.setText(allCubesArray.get(n).bestInfo());
+        } catch (IndexOutOfBoundsException e){
+            tv.setText(R.string.sww);
+        }
+
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
     }

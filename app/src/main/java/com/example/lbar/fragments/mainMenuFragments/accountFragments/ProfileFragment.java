@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.example.lbar.adapter.StatusAdapter;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -38,9 +39,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -93,6 +97,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
         initItems(view);
         SwipeMenuOpenerControl(srl);
+        //loadCubeInfo();
 
         srl.setOnRefreshListener(() -> {
             progressBar.show();
@@ -123,6 +128,34 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
         return view;
     }
+
+    //private void loadCubeInfo() {
+    //    ArrayList<Cube> allCubesArray = new ArrayList<Cube>(11);
+    //    Cube cube;
+    //    ArrayList<Long> arrBest = new ArrayList<Long>(5);
+    //    ArrayList<Long> arrAvg = new ArrayList<Long>(100);
+    //    for (int i = 0; i < 100; i++) {
+    //        arrAvg.add(-1L);
+    //    }
+    //    for (int i = 0; i < 5; i++) {
+    //        arrBest.add(-1L);
+    //    }
+//
+    //    for (int i = 0; i < 11; i++) {
+    //        cube = new Cube(0, "Cube code: " + i, arrBest, arrAvg);
+    //        allCubesArray.add(cube);
+    //    }
+//
+    //    FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+    //            .getReference("Users")
+    //            .child(userID).child("Collection").setValue(allCubesArray).addOnCompleteListener(task1 -> {
+    //        if (task1.isSuccessful()) {
+    //            Log.d("create_user_in_realtimeDB", "success");
+    //        } else {
+    //            Log.d("create_user_in_realtimeDB", "failure");
+    //        }
+    //    });
+    //}
 
     private void getProfileInfoToDownload() {
         if (!fUser.isEmailVerified()) {
