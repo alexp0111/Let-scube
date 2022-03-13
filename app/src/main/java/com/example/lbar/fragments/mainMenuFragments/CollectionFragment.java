@@ -1,5 +1,7 @@
 package com.example.lbar.fragments.mainMenuFragments;
 
+import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -30,6 +33,9 @@ import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.Message;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,6 +81,10 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private TextView txt_best;
     private TextView tv;
 
+    private MaterialAlertDialogBuilder mdBuilder;
+    private View rl;
+    private TextInputEditText et;
+
     private List<MaterialCardView> mcvList;
 
     private GestureDetector gestureDetector;
@@ -83,12 +93,13 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_collection, container, false);
+        rl = inflater.inflate(R.layout.dialog_renaming, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_collection);
         setToolbarSettings(toolbar, activity, main_activity);
-        
+
         initItems(view);
 
         realiseClickListenerOnCards();
@@ -125,6 +136,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
                 .getReference("Users").child(userID).child("Collection");
 
         sv = v.findViewById(R.id.scrollView_in_collection);
+        et = rl.findViewById(R.id.et_puzzle_name);
 
         cubeType0 = v.findViewById(R.id.collection_card_type0);
         cubeType1 = v.findViewById(R.id.collection_card_type1);
@@ -191,16 +203,40 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         });
     }
 
-    private void showDialog(int n){
+    private void showDialog(int n) {
         try {
             tv.setText(allCubesArray.get(n).getCube_name());
             txt_avg.setText(allCubesArray.get(n).avgInfo());
             txt_best.setText(allCubesArray.get(n).bestInfo());
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             tv.setText(R.string.sww);
         }
 
+        tv.setOnClickListener(view1 -> {
+            mdBuilder = new MaterialAlertDialogBuilder(getContext());
+
+            et.setText(tv.getText());
+            et.setSelection(et.getText().length());
+
+            mdBuilder.setTitle("Cube name");
+            mdBuilder.setMessage("Here you can set the name of your puzzle");
+            mdBuilder.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
+
+            if (rl.getParent() != null) {
+                ((ViewGroup) rl.getParent()).removeView(rl);
+            }
+            mdBuilder.setView(rl);
+
+            mdBuilder.setPositiveButton("APPlY", (dialogInterface, i) -> {
+                tv.setText(et.getText().toString());
+                collectionReference.child(String.valueOf(n)).child("cube_name").setValue(et.getText().toString());
+            });
+
+            mdBuilder.show();
+        });
+
         bottomSheetDialog.setContentView(bottomSheetView);
+
         bottomSheetDialog.show();
     }
 
@@ -235,7 +271,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         try {
             diffY = moveEvent.getY() - downEvent.getY();
             diffX = moveEvent.getX() - downEvent.getX();
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d("Collection", e.toString());
         }
 
