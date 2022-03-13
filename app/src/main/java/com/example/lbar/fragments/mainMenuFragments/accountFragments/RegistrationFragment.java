@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.lbar.R;
+import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -164,6 +165,23 @@ public class RegistrationFragment extends Fragment {
                     ArrayList<String> friends = new ArrayList<>();
                     friends.add("0");
                     User user = new User(str_name, str_mail, str_birthday, str_img, str_name_toLowerCase, "offline", userID, friends);
+
+                    ArrayList<Cube> allCubesArray = new ArrayList<Cube>(11);
+                    ArrayList<Long> arrBest = new ArrayList<Long>(5);
+                    ArrayList<Long> arrAvg = new ArrayList<Long>(100);
+
+                    for (int i = 0; i < 100; i++) {
+                        arrAvg.add(-1L);
+                    }
+                    for (int i = 0; i < 5; i++) {
+                        arrBest.add(-1L);
+                    }
+
+                    for (int i = 0; i < 11; i++) {
+                        Cube cube = new Cube(0, "Cube code: " + i, arrBest, arrAvg);
+                        allCubesArray.add(cube);
+                    }
+
                     FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                             .getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -172,6 +190,16 @@ public class RegistrationFragment extends Fragment {
                             Log.d("create_user_in_realtimeDB", "success");
                         } else {
                             Log.d("create_user_in_realtimeDB", "failure");
+                        }
+                    });
+
+                    FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                            .getReference("Users")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Collection").setValue(allCubesArray).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            Log.d("create_collection_in_realtimeDB", "success");
+                        } else {
+                            Log.d("create_collection_in_realtimeDB", "failure");
                         }
                     });
                     progressBar.setVisibility(View.GONE);

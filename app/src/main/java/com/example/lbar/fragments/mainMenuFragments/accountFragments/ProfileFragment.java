@@ -97,7 +97,6 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
         initItems(view);
         SwipeMenuOpenerControl(srl);
-        //loadCubeInfo();
 
         srl.setOnRefreshListener(() -> {
             progressBar.show();
@@ -128,34 +127,6 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
         return view;
     }
-
-    //private void loadCubeInfo() {
-    //    ArrayList<Cube> allCubesArray = new ArrayList<Cube>(11);
-    //    Cube cube;
-    //    ArrayList<Long> arrBest = new ArrayList<Long>(5);
-    //    ArrayList<Long> arrAvg = new ArrayList<Long>(100);
-    //    for (int i = 0; i < 100; i++) {
-    //        arrAvg.add(-1L);
-    //    }
-    //    for (int i = 0; i < 5; i++) {
-    //        arrBest.add(-1L);
-    //    }
-//
-    //    for (int i = 0; i < 11; i++) {
-    //        cube = new Cube(0, "Cube code: " + i, arrBest, arrAvg);
-    //        allCubesArray.add(cube);
-    //    }
-//
-    //    FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
-    //            .getReference("Users")
-    //            .child(userID).child("Collection").setValue(allCubesArray).addOnCompleteListener(task1 -> {
-    //        if (task1.isSuccessful()) {
-    //            Log.d("create_user_in_realtimeDB", "success");
-    //        } else {
-    //            Log.d("create_user_in_realtimeDB", "failure");
-    //        }
-    //    });
-    //}
 
     private void getProfileInfoToDownload() {
         if (!fUser.isEmailVerified()) {
