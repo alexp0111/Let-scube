@@ -100,7 +100,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
         srl.setOnRefreshListener(() -> {
             progressBar.show();
-            getProfileInfoToDownload();
+            getProfileInfoToDownload("after srl");
             progressBar.hide();
             srl.setRefreshing(false);
         });
@@ -111,7 +111,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
         createLauncherForChoosingRomAlbum();
 
-        getProfileInfoToDownload();
+        getProfileInfoToDownload("first");
 
         pr_img.setOnClickListener(view1 -> {
             if (mUploadTask != null && mUploadTask.isInProgress()) {
@@ -128,7 +128,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
         return view;
     }
 
-    private void getProfileInfoToDownload() {
+    private void getProfileInfoToDownload(String tmp) {
         if (!fUser.isEmailVerified()) {
             downloadNotVerifiedItems();
             progressBar.setVisibility(View.GONE);
@@ -138,7 +138,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
                     new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                            Log.d("TAGTAG", tmp);
                             User profile = dataSnapshot.getValue(User.class);
                             if (profile != null) {
                                 downloadProfileInfo(profile);

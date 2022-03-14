@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top|center"
-                android:layout_below="@id/toolbar_in_profile"
+                android:layout_below="@id/prog_bar_onlog"
                 android:paddingTop="30dp"
                 android:text="@string/your_mail_has_not_been_verified"
                 android:textColor="#C62828"

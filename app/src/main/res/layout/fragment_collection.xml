@@ -18,274 +18,291 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="#000000" />
 
-    <ScrollView
-        android:id="@+id/scrollView_in_collection"
-        style="@style/slider"
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/prog_bar_collection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pull_to_refresh_collection"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_in_collection">
 
-        <RelativeLayout
+        <ScrollView
+            android:id="@+id/scrollView_in_collection"
+            style="@style/slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_below="@id/prog_bar_collection">
 
             <RelativeLayout
-                android:id="@+id/collection_block_1"
                 android:layout_width="match_parent"
-                android:gravity="center"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_type1"
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
-                    android:layout_margin="20dp"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
+                <RelativeLayout
+                    android:id="@+id/collection_block_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo1" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_type1"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:layout_margin="20dp"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
 
-                </com.google.android.material.card.MaterialCardView>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_typo1" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_type0"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="20dp"
-                    android:layout_toEndOf="@id/collection_card_type1"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
+                    </com.google.android.material.card.MaterialCardView>
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo0" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_type0"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_margin="20dp"
+                        android:layout_toEndOf="@id/collection_card_type1"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
 
-                </com.google.android.material.card.MaterialCardView>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_typo0" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_type2"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_below="@id/collection_card_type0"
-                    android:layout_margin="20dp"
-                    android:layout_toEndOf="@id/collection_card_type1"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
+                    </com.google.android.material.card.MaterialCardView>
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo2" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_type2"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_below="@id/collection_card_type0"
+                        android:layout_margin="20dp"
+                        android:layout_toEndOf="@id/collection_card_type1"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
 
-                </com.google.android.material.card.MaterialCardView>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_typo2" />
 
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/collection_block_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/collection_block_1"
+                    android:gravity="center">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_pyraminx"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_margin="20dp"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_pyraminx" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_sqube"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_below="@id/collection_card_pyraminx"
+                        android:layout_margin="20dp"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_sqube" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_type3"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:layout_margin="20dp"
+                        android:layout_toEndOf="@id/collection_card_pyraminx"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_typo3" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/collection_block_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/collection_block_2"
+                    android:gravity="center">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_type4"
+                        android:layout_width="155dp"
+                        android:layout_height="155dp"
+                        android:layout_margin="20dp"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_typo4" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_type5"
+                        android:layout_width="155dp"
+                        android:layout_height="155dp"
+                        android:layout_margin="20dp"
+                        android:layout_toEndOf="@id/collection_card_type4"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_typo5" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/collection_block_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/collection_block_3"
+                    android:gravity="center">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_clock"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_margin="20dp"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_clock" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_megaminx"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_margin="20dp"
+                        android:layout_toEndOf="@id/collection_card_clock"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_megaminx" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/collection_card_square1"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_margin="20dp"
+                        android:layout_toEndOf="@id/collection_card_megaminx"
+                        android:orientation="vertical"
+                        android:theme="@style/AppTheme"
+                        app:cardBackgroundColor="@color/colorMsgRightItem"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="6dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/cube_square1" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </RelativeLayout>
 
             </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/collection_block_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/collection_block_1"
-                android:gravity="center">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_pyraminx"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="20dp"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_pyraminx" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_sqube"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_below="@id/collection_card_pyraminx"
-                    android:layout_margin="20dp"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_sqube" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_type3"
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
-                    android:layout_margin="20dp"
-                    android:layout_toEndOf="@id/collection_card_pyraminx"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo3" />
-
-                </com.google.android.material.card.MaterialCardView>
+        </ScrollView>
 
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/collection_block_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/collection_block_2"
-                android:gravity="center">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_type4"
-                    android:layout_width="155dp"
-                    android:layout_height="155dp"
-                    android:layout_margin="20dp"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo4" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_type5"
-                    android:layout_width="155dp"
-                    android:layout_height="155dp"
-                    android:layout_margin="20dp"
-                    android:layout_toEndOf="@id/collection_card_type4"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_typo5" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/collection_block_4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/collection_block_3"
-                android:gravity="center">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_clock"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="20dp"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_clock" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_megaminx"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="20dp"
-                    android:layout_toEndOf="@id/collection_card_clock"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_megaminx" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/collection_card_square1"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_margin="20dp"
-                    android:layout_toEndOf="@id/collection_card_megaminx"
-                    android:orientation="vertical"
-                    android:theme="@style/AppTheme"
-                    app:cardBackgroundColor="@color/colorMsgRightItem"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/cube_square1" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-    </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

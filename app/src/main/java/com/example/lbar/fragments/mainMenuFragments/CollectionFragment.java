@@ -26,11 +26,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.Message;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -89,6 +92,9 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
     private GestureDetector gestureDetector;
 
+    private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
+    private SwipeRefreshLayout srl;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -103,10 +109,13 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         initItems(view);
 
         realiseClickListenerOnCards();
+        //setCollectionValueEventListener(); TODO: Разобраться с свайпрефрешлайаутами. (создают новый листенер, хотя он и так риалтайме)
 
         collectionReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.VISIBLE);
+
                 allCubesArray.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -115,6 +124,8 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
                     Log.d("Cube_getter", "*start*" + cube.getCube_name() + "*+*" + cube.avgInfo() + "*close*");
                     allCubesArray.add(cube);
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -131,6 +142,10 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     }
 
     private void initItems(View v) {
+        progressBar = v.findViewById(R.id.prog_bar_collection);
+        srl = v.findViewById(R.id.pull_to_refresh_collection);
+        progressBar.setVisibility(View.VISIBLE);
+
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         collectionReference = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                 .getReference("Users").child(userID).child("Collection");
@@ -228,8 +243,15 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
             mdBuilder.setView(rl);
 
             mdBuilder.setPositiveButton("APPlY", (dialogInterface, i) -> {
+                progressBar.setVisibility(View.VISIBLE);
+
                 tv.setText(et.getText().toString());
-                collectionReference.child(String.valueOf(n)).child("cube_name").setValue(et.getText().toString());
+                collectionReference.child(String.valueOf(n)).child("cube_name").setValue(et.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
             });
 
             mdBuilder.show();
