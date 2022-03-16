@@ -49,5 +49,6 @@
     <string name="title_collection">Collection</string>
     <string name="title_messages">Messages</string>
     <string name="title_people">People</string>
+    <string name="assembly_rooms">Assembly rooms</string>
 
 </resources>

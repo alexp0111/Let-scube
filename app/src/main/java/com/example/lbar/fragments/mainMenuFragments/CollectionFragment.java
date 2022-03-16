@@ -37,6 +37,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -107,6 +109,11 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);
+
+        srl.setOnRefreshListener(() -> {
+            Snackbar.make(view, "All is up do date", BaseTransientBottomBar.LENGTH_SHORT).show();
+            srl.setRefreshing(false);
+        });
 
         realiseClickListenerOnCards();
         //setCollectionValueEventListener(); TODO: Разобраться с свайпрефрешлайаутами. (создают новый листенер, хотя он и так риалтайме)

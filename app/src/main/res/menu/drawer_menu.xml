@@ -20,6 +20,9 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_profile"
             android:title="@string/profile" />
+        <item android:id="@+id/nav_rooms"
+            android:icon="@drawable/competition"
+            android:title="@string/assembly_rooms"/>
         <item
             android:id="@+id/nav_collection"
             android:icon="@drawable/cube_typo1"

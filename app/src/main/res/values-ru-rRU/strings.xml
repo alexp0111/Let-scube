@@ -49,4 +49,5 @@
     <string name="title_collection">Коллекция</string>
     <string name="title_messages">Сообщения</string>
     <string name="title_people">Люди</string>
+    <string name="assembly_rooms">Комнаты сборки</string>
 </resources>
