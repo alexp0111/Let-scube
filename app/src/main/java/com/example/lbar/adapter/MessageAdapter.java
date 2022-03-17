@@ -119,10 +119,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         mdBuilder.setView(rl);
 
         mdBuilder.setPositiveButton("APPlY", (dialogInterface, i) -> {
-            isFirstEnter = true;
             FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                     .getReference().child("Chats").child(chat.getAddress()).child("message")
                     .setValue(et.getText().toString());
+        });
+
+        mdBuilder.setNegativeButton("DELETE MESSAGE", (dialogInterface, i) -> {
+            FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                    .getReference().child("Chats").child(chat.getAddress()).removeValue();
         });
 
         mdBuilder.show();

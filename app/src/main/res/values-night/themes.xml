@@ -8,6 +8,7 @@
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">#263238</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
     <style name="AppTheme_2" parent="Theme.MaterialComponents.Light.Bridge">
