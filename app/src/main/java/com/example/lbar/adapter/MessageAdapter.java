@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,9 @@ import com.example.lbar.R;
 import com.example.lbar.fragments.DialogueFragment;
 import com.example.lbar.helpClasses.Message;
 import com.example.lbar.helpClasses.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -38,15 +42,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private String imageURI;
     private boolean animationStart = true;
     private boolean isFirstEnter = true;
+    private View rl;
 
     private FirebaseUser fUser;
 
-    public MessageAdapter(Context mContext, List<Message> mMessages, String imageURI, boolean animationStart, boolean isFirstEnter) {
+    public MessageAdapter(Context mContext, List<Message> mMessages, String imageURI, boolean animationStart, boolean isFirstEnter, View rl) {
         this.mChat = mMessages;
         this.mContext = mContext;
         this.imageURI = imageURI;
         this.animationStart = animationStart;
         this.isFirstEnter = isFirstEnter;
+        this.rl = rl;
     }
 
     @NonNull
@@ -68,16 +74,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         Message chat = mChat.get(position);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/").getReference();
-
 
         holder.message.setText(chat.getMessage());
         Glide.with(mContext).load(imageURI).into(holder.profile_image);
 
         if (holder.getItemViewType() == MSG_TYPE_RIGHT){
             holder.message.setOnLongClickListener(view -> {
-                reference.child("Chats").child(chat.getAddress()).child("message").setValue("Test-1543");
-                Toast.makeText(mContext, holder.message.getText(), Toast.LENGTH_SHORT).show();
+
+                showCorrectionDialog(chat);
                 return false;
             });
         }
@@ -96,6 +100,34 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         if (animationStart){
             holder.itemView.startAnimation(animation);
         }
+    }
+
+    private void showCorrectionDialog(Message chat) {
+        EditText et = rl.findViewById(R.id.et_corrected_name);
+
+        et.setText(chat.getMessage());
+        et.setSelection(et.getText().length());
+
+        MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(mContext);
+        mdBuilder.setTitle("Correcting...");
+        mdBuilder.setMessage("Here you can change your message");
+        mdBuilder.setBackground(mContext.getResources().getDrawable(R.drawable.dialog_drawable, null));
+
+        if (rl.getParent() != null) {
+            ((ViewGroup) rl.getParent()).removeView(rl);
+        }
+        mdBuilder.setView(rl);
+
+        mdBuilder.setPositiveButton("APPlY", (dialogInterface, i) -> {
+            isFirstEnter = true;
+            FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                    .getReference().child("Chats").child(chat.getAddress()).child("message")
+                    .setValue(et.getText().toString());
+        });
+
+        mdBuilder.show();
+        //TODO: Разобраться с обновлением спика после изменения текста сообщения
+        // (нижнее сообщение стартует анимацию, а этого делать бы не надо)
     }
 
     @Override

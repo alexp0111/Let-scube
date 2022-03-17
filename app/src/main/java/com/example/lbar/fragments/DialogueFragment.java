@@ -66,6 +66,8 @@ public class DialogueFragment extends Fragment {
     private List<Message> mChat;
     private RecyclerView recyclerView;
 
+    private View rl;
+
     private boolean isFriend;
     private boolean isFirstEnter = true;
 
@@ -73,6 +75,7 @@ public class DialogueFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialogue, container, false);
+        rl = inflater.inflate(R.layout.dialog_renaming, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
@@ -288,7 +291,7 @@ public class DialogueFragment extends Fragment {
                     }
                 }
 
-                messageAdapter = new MessageAdapter(getContext(), mChat, imageURI, false, isFirstEnter);
+                messageAdapter = new MessageAdapter(getContext(), mChat, imageURI, false, isFirstEnter, rl);
                 recyclerView.setAdapter(messageAdapter);
                 isFirstEnter = false;
             }

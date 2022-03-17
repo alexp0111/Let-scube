@@ -1,7 +1,5 @@
 package com.example.lbar.fragments.mainMenuFragments;
 
-import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -9,18 +7,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -31,7 +23,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Cube;
-import com.example.lbar.helpClasses.Message;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -40,7 +31,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,11 +42,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
-import static com.example.lbar.MainActivity.reference;
 
 public class CollectionFragment extends Fragment implements GestureDetector.OnGestureListener {
 
@@ -158,7 +146,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
                 .getReference("Users").child(userID).child("Collection");
 
         sv = v.findViewById(R.id.scrollView_in_collection);
-        et = rl.findViewById(R.id.et_puzzle_name);
+        et = rl.findViewById(R.id.et_corrected_name);
 
         cubeType0 = v.findViewById(R.id.collection_card_type0);
         cubeType1 = v.findViewById(R.id.collection_card_type1);
