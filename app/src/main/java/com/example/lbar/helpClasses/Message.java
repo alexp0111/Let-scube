@@ -4,11 +4,21 @@ public class Message {
     private String senderUserId;
     private String receiverUserId;
     private String message;
+    private String address;
 
-    public Message(String senderUserId, String receiverUserId, String message) {
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Message(String senderUserId, String receiverUserId, String message, String address) {
         this.senderUserId = senderUserId;
         this.receiverUserId = receiverUserId;
         this.message = message;
+        this.address = address;
     }
 
     public Message() {

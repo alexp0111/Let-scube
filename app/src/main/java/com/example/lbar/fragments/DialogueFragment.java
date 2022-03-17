@@ -129,8 +129,8 @@ public class DialogueFragment extends Fragment {
             SendersFriends.add(receiverUserID);
             ReceiversFriends.add(senderUserID);
 
-            SendersFriends.set(0, String.valueOf(SendersFriends.size()-1));
-            ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size()-1));
+            SendersFriends.set(0, String.valueOf(SendersFriends.size() - 1));
+            ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size() - 1));
 
             SendersFriendsRef.setValue(SendersFriends);
             ReceiversFriendsRef.setValue(ReceiversFriends);
@@ -141,12 +141,12 @@ public class DialogueFragment extends Fragment {
     private void removeFriend() {
         Toast.makeText(getContext(), "Not a friend yet", Toast.LENGTH_SHORT).show();
 
-        if (SendersFriends != null){
+        if (SendersFriends != null) {
             SendersFriends.remove(receiverUserID);
             ReceiversFriends.remove(senderUserID);
 
-            SendersFriends.set(0, String.valueOf(SendersFriends.size()-1));
-            ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size()-1));
+            SendersFriends.set(0, String.valueOf(SendersFriends.size() - 1));
+            ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size() - 1));
 
             SendersFriendsRef.setValue(SendersFriends);
             ReceiversFriendsRef.setValue(ReceiversFriends);
@@ -243,7 +243,7 @@ public class DialogueFragment extends Fragment {
         username.setText(username_txt);
         try {
             Glide.with(DialogueFragment.this).load(urll).into(profileImg);
-        } catch (NullPointerException exception){
+        } catch (NullPointerException exception) {
             Log.d("FriendSwapping", "setToolbarProfileInfo() error");
         }
 
@@ -260,8 +260,9 @@ public class DialogueFragment extends Fragment {
 
         DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
 
-        Message msg = new Message(sender, receiver, message_text);
-        reference.child("Chats").push().setValue(msg);
+        String newRef = reference.child("Chats").push().getKey();
+        Message msg = new Message(sender, receiver, message_text, newRef);
+        reference.child("Chats").child(newRef).setValue(msg);
     }
 
     private void readMessages(final String myID, final String userID, String imageURI) {

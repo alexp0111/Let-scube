@@ -23,6 +23,8 @@ import com.example.lbar.helpClasses.Message;
 import com.example.lbar.helpClasses.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -66,8 +68,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         Message chat = mChat.get(position);
 
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/").getReference();
+
+
         holder.message.setText(chat.getMessage());
         Glide.with(mContext).load(imageURI).into(holder.profile_image);
+
+        if (holder.getItemViewType() == MSG_TYPE_RIGHT){
+            holder.message.setOnLongClickListener(view -> {
+                reference.child("Chats").child(chat.getAddress()).child("message").setValue("Test-1543");
+                Toast.makeText(mContext, holder.message.getText(), Toast.LENGTH_SHORT).show();
+                return false;
+            });
+        }
 
 
         // Жуткий костыль. Другого решения пока найти не смог.
