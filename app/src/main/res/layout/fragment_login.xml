@@ -25,6 +25,22 @@
         android:indeterminate="true"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout_for_lottie_login"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_below="@id/prog_bar_log_in"
+        android:gravity="center">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/login" />
+
+    </LinearLayout>
+<!--
     <TextView
         android:id="@+id/txt_view_enter_your_account"
         android:layout_width="match_parent"
@@ -35,12 +51,12 @@
         android:text="@string/enter_n_your_n_account"
         android:textSize="48dp"
         android:theme="@style/Elegant_font" />
-
+-->
     <LinearLayout
         android:id="@+id/layout_with_login_and_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_view_enter_your_account"
+        android:layout_below="@id/linearLayout_for_lottie_login"
         android:layout_above="@id/bottom_register_reset_buttons_layout"
         android:orientation="vertical"
         android:gravity="center"

@@ -1,5 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments.accountFragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,9 +12,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.User;
@@ -45,11 +49,12 @@ public class RegistrationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
+        AppCompatActivity main_activity = (MainActivity) getActivity();
 
         mAuth = FirebaseAuth.getInstance();
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_registr);
-        setToolbarSettings(toolbar);
+        setToolbarSettings(toolbar, main_activity);
 
         initItems(view);
 
@@ -82,11 +87,13 @@ public class RegistrationFragment extends Fragment {
         textView2 = v.findViewById(R.id.textView2);                            // textView
     }
 
-    private void setToolbarSettings(Toolbar tbar) {
+    private void setToolbarSettings(Toolbar tbar, Activity main_activity) {
         if (tbar != null) {
 
             tbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
             tbar.setTitle(R.string.title_registration);
+
+            DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
 
             tbar.setNavigationOnClickListener(view1 -> {
                 try {
@@ -98,6 +105,8 @@ public class RegistrationFragment extends Fragment {
                     Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                 }
             });
+
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 

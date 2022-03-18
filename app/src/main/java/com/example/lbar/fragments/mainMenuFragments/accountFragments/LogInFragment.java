@@ -108,6 +108,7 @@ public class LogInFragment extends Fragment {
 
             toggle.syncState();
             drawer.addDrawerListener(toggle);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 
