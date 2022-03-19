@@ -23,18 +23,43 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.airbnb.lottie.LottieAnimationView
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/rooms_start_collective"
             android:layout_width="280dp"
             android:layout_height="280dp"
-            android:layout_marginBottom="20dp"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/cube_loading" />
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical"
+            android:theme="@style/AppTheme"
+            app:cardBackgroundColor="@color/colorMsgRightItem"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="В разработке" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:src="@drawable/swords" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/rooms_start_solo"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:orientation="vertical"
+            android:layout_marginTop="30dp"
+            android:theme="@style/AppTheme"
+            app:cardBackgroundColor="@color/colorMsgRightItem"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:src="@drawable/house" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

@@ -7,10 +7,25 @@
     android:background="@drawable/dialog_bottom_sheet_background"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/decor_line"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:paddingTop="15dp"
+            android:src="@drawable/line"
+            android:layout_height="20dp" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/text_test"
         android:layout_width="match_parent"
         android:layout_height="128dp"
+        android:layout_below="@id/decor_line"
         android:gravity="center"
         android:autoSizeTextType="uniform"
         android:paddingHorizontal="20dp"

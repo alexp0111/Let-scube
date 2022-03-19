@@ -29,14 +29,14 @@
     <LinearLayout
         android:id="@+id/linearLayout_for_lottie_reg"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="130dp"
         android:layout_below="@id/prog_bar_reg"
         android:gravity="center">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_registration"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/registration" />
@@ -198,7 +198,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:text="@string/ver_mail_has_sent_"
-        android:textSize="14dp" />
+        android:textSize="12dp" />
 
 
 </RelativeLayout>

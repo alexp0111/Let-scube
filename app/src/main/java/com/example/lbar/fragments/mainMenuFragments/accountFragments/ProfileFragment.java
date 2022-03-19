@@ -195,6 +195,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
             toggle.syncState();
             drawer.addDrawerListener(toggle);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
     }
 

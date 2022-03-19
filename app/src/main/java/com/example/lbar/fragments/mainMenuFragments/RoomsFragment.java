@@ -15,8 +15,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 public class RoomsFragment extends Fragment {
+
+    private static MaterialCardView collective;
+    private static MaterialCardView solo;
 
     private DrawerLayout drawer;
 
@@ -31,12 +37,23 @@ public class RoomsFragment extends Fragment {
         setToolbarSettings(toolbar, activity, main_activity);
 
         initItems(view);
+        realiseClickListenerOnCards();
 
         return view;
     }
 
-    private void initItems(View view) {
+    private void initItems(View v) {
+        collective = v.findViewById(R.id.rooms_start_collective);
+        solo = v.findViewById(R.id.rooms_start_solo);
+    }
 
+    private void realiseClickListenerOnCards() {
+        collective.setOnClickListener(view -> {
+            Snackbar.make(getView(), "Battle with anyone!", BaseTransientBottomBar.LENGTH_LONG).show();
+        });
+        solo.setOnClickListener(view -> {
+            Snackbar.make(getView(), "Training with yourself!", BaseTransientBottomBar.LENGTH_LONG).show();
+        });
     }
 
 
