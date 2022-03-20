@@ -11,4 +11,6 @@
     <color name="colorMsgText">#000</color>
     <color name="colorMsgLeftItem">#84afcb</color>
     <color name="colorMsgRightItem">#a1c5db</color>
+
+    <color name="colorChronometerPress">#8BC34A</color>
 </resources>

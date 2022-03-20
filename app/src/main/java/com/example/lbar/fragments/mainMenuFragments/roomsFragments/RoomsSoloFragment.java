@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,10 +33,12 @@ public class RoomsSoloFragment extends Fragment {
 
     private TextView chronometer;
     private LinearLayout layout;
+    private ImageView backView;
+    private ImageView settingsView;
 
-    private MaterialButton plusTwo;
-    private MaterialButton buttonStart;
-    private MaterialButton buttonStop;
+    private MaterialButton btnPlusTwo;
+    private MaterialButton btnDNF;
+    private MaterialButton btnDeleteResult;
 
     private Handler customHandler;
     private Runnable updateTimerThread;
@@ -52,10 +55,14 @@ public class RoomsSoloFragment extends Fragment {
 
         chronometer = view.findViewById(R.id.chronometer_solo);
 
-        plusTwo = view.findViewById(R.id.button_plus_two);
-        buttonStart = view.findViewById(R.id.rooms_solo_start_btn);
-        buttonStop = view.findViewById(R.id.rooms_solo_stop_btn);
+        btnPlusTwo = view.findViewById(R.id.button_plus_two);
+        btnDNF = view.findViewById(R.id.button_DNF);
+        btnDeleteResult = view.findViewById(R.id.button_delete_result);
+
         layout = view.findViewById(R.id.layout_solo_main);
+
+        backView = view.findViewById(R.id.rooms_back_iv);
+        settingsView = view.findViewById(R.id.rooms_settings);
 
         customHandler = new Handler(Looper.getMainLooper());
 
@@ -69,7 +76,7 @@ public class RoomsSoloFragment extends Fragment {
             }
         };
 
-        plusTwo.setOnClickListener(view1 -> {
+        backView.setOnClickListener(view13 -> {
             try {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.alpha_to_high_1000, R.anim.to_top)
@@ -85,13 +92,25 @@ public class RoomsSoloFragment extends Fragment {
                 case MotionEvent.ACTION_DOWN:
                     if (isRunning == false){
                         chronometer.setText("00:000");
-                        layout.setBackgroundColor(Color.GREEN); // pressed state
+
+                        btnPlusTwo.setVisibility(View.INVISIBLE);
+                        btnDNF.setVisibility(View.INVISIBLE);
+                        btnDeleteResult.setVisibility(View.INVISIBLE);
+
+                        layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
+
                         startTime = 0L;
                         timeInMS = 0L;
                         timeSwapBuffer = 0L;
                         updateTime = 0L;
+
+                        btnPlusTwo.setVisibility(View.VISIBLE);
+                        btnDNF.setVisibility(View.VISIBLE);
+                        btnDeleteResult.setVisibility(View.VISIBLE);
+
+
                         customHandler.removeCallbacks(updateTimerThread);
                     }
                     break;
@@ -108,33 +127,6 @@ public class RoomsSoloFragment extends Fragment {
             }
             return true;
         });
-
-        //layout.setOnLongClickListener(view14 -> {
-        //    startTime = SystemClock.uptimeMillis();
-        //    customHandler.postDelayed(updateTimerThread, 0);
-        //    return true;
-        //});
-//
-        //layout.setOnClickListener(view15 -> {
-        //    Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
-        //    startTime = 0L;
-        //    timeInMS = 0L;
-        //    timeSwapBuffer = 0L;
-        //    updateTime = 0L;
-        //    customHandler.removeCallbacks(updateTimerThread);
-        //});
-
-
-        //buttonStart.setOnClickListener(view13 -> {
-        //    startTime = SystemClock.uptimeMillis();
-        //    customHandler.postDelayed(updateTimerThread, 0);
-        //});
-//
-        //buttonStop.setOnClickListener(view12 -> {
-        //    Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
-        //    timeSwapBuffer+=timeInMS;
-        //    customHandler.removeCallbacks(updateTimerThread);
-        //});
 
         return view;
     }

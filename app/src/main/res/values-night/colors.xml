@@ -10,4 +10,6 @@
     <color name="colorMsgText">#fff</color>
     <color name="colorMsgLeftItem">#263238</color>
     <color name="colorMsgRightItem">#37474f</color>
+
+    <color name="colorChronometerPress">#33691E</color>
 </resources>
