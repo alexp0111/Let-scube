@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.lbar.fragments.mainMenuFragments.EventFragments.AnyEventFragment;
-import com.example.lbar.fragments.mainMenuFragments.EventFragments.FriendsEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.eventFragments.AnyEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.eventFragments.FriendsEventFragment;
 
 public class ViewPagerFragmentAdapter extends FragmentStateAdapter {
 

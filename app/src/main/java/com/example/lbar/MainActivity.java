@@ -17,11 +17,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.adapter.StatusAdapter;
-import com.example.lbar.fragments.mainMenuFragments.EventFragments.MainEventFragment;
-import com.example.lbar.fragments.mainMenuFragments.RoomsFragment;
+import com.example.lbar.fragments.mainMenuFragments.eventFragments.MainEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.example.lbar.helpClasses.User;
 import com.example.lbar.fragments.mainMenuFragments.CollectionFragment;
-import com.example.lbar.fragments.mainMenuFragments.EventFragments.AnyEventFragment;
 import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
 import com.example.lbar.fragments.mainMenuFragments.MessageFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.ProfileFragment;
@@ -194,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_rooms:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new RoomsFragment()).commit();
+                        new RoomsStartFragment()).commit();
                 break;
             case R.id.nav_collection:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

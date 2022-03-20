@@ -1,4 +1,4 @@
-package com.example.lbar.fragments.mainMenuFragments.EventFragments;
+package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
