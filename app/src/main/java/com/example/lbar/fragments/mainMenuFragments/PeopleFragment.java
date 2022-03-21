@@ -146,6 +146,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
 
             toggle.syncState();
             drawer.addDrawerListener(toggle);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
     }
 

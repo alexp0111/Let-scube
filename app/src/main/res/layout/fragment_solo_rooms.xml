@@ -7,7 +7,7 @@
     android:background="@color/colorPrimary">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bar"
+        android:id="@+id/rooms_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -19,8 +19,19 @@
             android:layout_height="30dp"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
             android:tint="#000"
-            app:layout_constraintStart_toStartOf="@id/bar"
-            app:layout_constraintTop_toTopOf="@id/bar" />
+            app:layout_constraintStart_toStartOf="@id/rooms_bar"
+            app:layout_constraintTop_toTopOf="@id/rooms_bar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/rooms_puzzle_mode"
+            app:layout_constraintStart_toEndOf="@id/rooms_back_iv"
+            app:layout_constraintEnd_toStartOf="@id/rooms_settings"
+            android:gravity="center"
+            android:text="3 x 3"
+            android:textSize="28dp"
+            android:textColor="#000"
+            android:layout_height="match_parent" />
 
         <ImageView
             android:id="@+id/rooms_settings"
@@ -29,7 +40,7 @@
             android:src="@drawable/ic_settings"
             android:tint="#000"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/bar" />
+            app:layout_constraintTop_toTopOf="@id/rooms_bar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -37,7 +48,7 @@
         android:id="@+id/layout_solo_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/bar"
+        android:layout_below="@id/rooms_bar"
         android:gravity="center"
         android:orientation="vertical">
 

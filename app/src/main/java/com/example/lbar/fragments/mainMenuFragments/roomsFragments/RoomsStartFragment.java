@@ -112,6 +112,7 @@ public class RoomsStartFragment extends Fragment {
 
             toggle.syncState();
             drawer.addDrawerListener(toggle);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
     }
 }

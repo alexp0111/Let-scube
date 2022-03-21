@@ -1,5 +1,6 @@
 package com.example.lbar.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,7 +88,7 @@ public class DialogueFragment extends Fragment {
         isFriend = false;
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
-        setToolbarSettings(toolbar);
+        setToolbarSettings(toolbar, main_activity);
 
         initItems(view);
 
@@ -219,9 +221,12 @@ public class DialogueFragment extends Fragment {
         ReceiversFriendsRef = reference.child(receiverUserID).child("us_friends");
     }
 
-    private void setToolbarSettings(Toolbar tbar) {
+    private void setToolbarSettings(Toolbar tbar, Activity main_activity) {
         if (tbar != null) {
             tbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
+
+            DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
+
             tbar.setNavigationOnClickListener(view1 -> {
                 try {
                     getActivity().getSupportFragmentManager().beginTransaction()
@@ -232,6 +237,8 @@ public class DialogueFragment extends Fragment {
                     Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                 }
             });
+
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 

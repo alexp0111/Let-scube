@@ -18,8 +18,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
 import com.example.lbar.helpClasses.Cube;
@@ -32,9 +36,11 @@ public class RoomsSoloFragment extends Fragment {
     private boolean isRunning = false;
 
     private TextView chronometer;
+    private TextView pMode;
     private LinearLayout layout;
     private ImageView backView;
     private ImageView settingsView;
+    private ConstraintLayout bar;
 
     private MaterialButton btnPlusTwo;
     private MaterialButton btnDNF;
@@ -48,23 +54,18 @@ public class RoomsSoloFragment extends Fragment {
     private long timeSwapBuffer = 0L;
     private long updateTime = 0L;
 
-    @SuppressLint("ClickableViewAccessibility")
+    private boolean buttonflag = true;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_solo_rooms, container, false);
+        AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        chronometer = view.findViewById(R.id.chronometer_solo);
+        initItems(view);
+        realiseClickListners();
 
-        btnPlusTwo = view.findViewById(R.id.button_plus_two);
-        btnDNF = view.findViewById(R.id.button_DNF);
-        btnDeleteResult = view.findViewById(R.id.button_delete_result);
-
-        layout = view.findViewById(R.id.layout_solo_main);
-
-        backView = view.findViewById(R.id.rooms_back_iv);
-        settingsView = view.findViewById(R.id.rooms_settings);
-
-        customHandler = new Handler(Looper.getMainLooper());
+        DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         updateTimerThread = new Runnable() {
             @Override
@@ -76,6 +77,11 @@ public class RoomsSoloFragment extends Fragment {
             }
         };
 
+        return view;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void realiseClickListners() {
         backView.setOnClickListener(view13 -> {
             try {
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -90,35 +96,44 @@ public class RoomsSoloFragment extends Fragment {
         layout.setOnTouchListener((view12, motionEvent) -> {
             switch (motionEvent.getAction() ) {
                 case MotionEvent.ACTION_DOWN:
-                    if (isRunning == false){
+                    if (!isRunning){
+                        buttonflag = true;
                         chronometer.setText("00:000");
-
-                        btnPlusTwo.setVisibility(View.INVISIBLE);
-                        btnDNF.setVisibility(View.INVISIBLE);
-                        btnDeleteResult.setVisibility(View.INVISIBLE);
-
-                        layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
-                    } else {
-                        Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
                         startTime = 0L;
                         timeInMS = 0L;
                         timeSwapBuffer = 0L;
                         updateTime = 0L;
 
+                        btnPlusTwo.setVisibility(View.INVISIBLE);
+                        btnDNF.setVisibility(View.INVISIBLE);
+                        btnDeleteResult.setVisibility(View.INVISIBLE);
+                        backView.setVisibility(View.INVISIBLE);
+                        settingsView.setVisibility(View.INVISIBLE);
+                        pMode.setVisibility(View.INVISIBLE);
+
+                        layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
+                        bar.setBackgroundResource(R.color.colorChronometerPress); // pressed state
+                    } else {
+                        Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
+
                         btnPlusTwo.setVisibility(View.VISIBLE);
                         btnDNF.setVisibility(View.VISIBLE);
                         btnDeleteResult.setVisibility(View.VISIBLE);
+                        backView.setVisibility(View.VISIBLE);
+                        settingsView.setVisibility(View.VISIBLE);
+                        pMode.setVisibility(View.VISIBLE);
 
 
                         customHandler.removeCallbacks(updateTimerThread);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (isRunning == false){
+                    if (!isRunning){
                         startTime = SystemClock.uptimeMillis();
                         customHandler.postDelayed(updateTimerThread, 0);
                         layout.setBackgroundResource(R.color.colorPrimary);
+                        bar.setBackgroundResource(R.color.colorPrimary);
                         isRunning = true;
                     } else {
                         isRunning = false;
@@ -128,7 +143,38 @@ public class RoomsSoloFragment extends Fragment {
             return true;
         });
 
-        return view;
+        btnPlusTwo.setOnClickListener(view -> {
+            if (buttonflag){
+                updateTime += 2000;
+                chronometer.setText(convertFromMStoString(updateTime));
+                buttonflag = false;
+            }
+        });
+
+        btnDNF.setOnClickListener(view -> {
+
+        });
+
+        btnDeleteResult.setOnClickListener(view -> {
+
+        });
+    }
+
+    private void initItems(View v) {
+        chronometer = v.findViewById(R.id.chronometer_solo);
+        pMode = v.findViewById(R.id.rooms_puzzle_mode);
+
+        btnPlusTwo = v.findViewById(R.id.button_plus_two);
+        btnDNF = v.findViewById(R.id.button_DNF);
+        btnDeleteResult = v.findViewById(R.id.button_delete_result);
+
+        layout = v.findViewById(R.id.layout_solo_main);
+
+        backView = v.findViewById(R.id.rooms_back_iv);
+        settingsView = v.findViewById(R.id.rooms_settings);
+        bar = v.findViewById(R.id.rooms_bar);
+
+        customHandler = new Handler(Looper.getMainLooper());
     }
 
     private String convertFromMStoString(long ms) {
