@@ -55,9 +55,9 @@ public class RoomsStartFragment extends Fragment {
         collective.setOnClickListener(view -> {
             Snackbar.make(getView(), "Battle with anyone!", BaseTransientBottomBar.LENGTH_LONG).show();
 
-            collective.setTranslationX(0);
-            collective.setAlpha(1);
-            collective.animate().translationX(-1*dp_width).alpha(1).setDuration(400).setStartDelay(0).start();
+            //collective.setTranslationX(0);
+            //collective.setAlpha(1);
+            //collective.animate().translationX(-1*dp_width).alpha(1).setDuration(400).setStartDelay(0).start();
 
         });
         solo.setOnClickListener(view -> {

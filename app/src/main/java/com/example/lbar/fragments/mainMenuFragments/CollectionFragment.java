@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -73,6 +74,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private TextView txt_avg;
     private TextView txt_best;
     private TextView tv;
+    private ImageView deleteInfo;
 
     private MaterialAlertDialogBuilder mdBuilder;
     private View rl;
@@ -174,6 +176,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         tv = bottomSheetView.findViewById(R.id.text_test);
         txt_avg = bottomSheetView.findViewById(R.id.info_in_collection_avg);
         txt_best = bottomSheetView.findViewById(R.id.info_in_collection_best);
+        deleteInfo = bottomSheetView.findViewById(R.id.delete_puzzle_info);
     }
 
     private void realiseClickListenerOnCards() {
@@ -252,9 +255,58 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
             mdBuilder.show();
         });
 
+        deleteInfo.setOnClickListener(view2 -> {
+            mdBuilder = new MaterialAlertDialogBuilder(getContext());
+
+            mdBuilder.setTitle("Delete statistic");
+            mdBuilder.setMessage("Are you sure you want to delete all statistics for this puzzle?");
+            mdBuilder.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
+
+            mdBuilder.setNegativeButton("Yes, i'm sure", (dialogInterface, i) -> {
+                clearPuzzleStatisic(n);
+            });
+
+            mdBuilder.show();
+        });
+
         bottomSheetDialog.setContentView(bottomSheetView);
 
         bottomSheetDialog.show();
+    }
+
+    private void clearPuzzleStatisic(int n) {
+        ArrayList<Long> arrBest = new ArrayList<Long>(5);
+        ArrayList<Long> arrAvg = new ArrayList<Long>(100);
+
+        for (int i = 0; i < 100; i++) {
+            arrAvg.add(-1L);
+        }
+        for (int i = 0; i < 5; i++) {
+            arrBest.add(-1L);
+        }
+
+        FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                .getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Collection").child(String.valueOf(n)).child("puzzle_build_avg_statistics")
+                .setValue(arrAvg)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("clear_avg_statistics", "success");
+                    } else {
+                        Log.d("clear_avg_statistics", "failure");
+                    }
+                });
+        FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                .getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Collection").child(String.valueOf(n)).child("puzzle_build_pb_statistics")
+                .setValue(arrBest)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("clear_pb_statistics", "success");
+                    } else {
+                        Log.d("clear_pb_statistics", "failure");
+                    }
+                });
     }
 
     private void SwipeMenuOpenerControl(View v) {

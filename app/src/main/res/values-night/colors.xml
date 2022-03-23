@@ -12,4 +12,8 @@
     <color name="colorMsgRightItem">#37474f</color>
 
     <color name="colorChronometerPress">#33691E</color>
+
+    <color name="colorNegativeBtn">#D84315</color>
+    <color name="colorPositiveBtn">#b6b195</color>
+    <color name="colorNeutralBtn">#FB8C00</color>
 </resources>
