@@ -261,8 +261,13 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
         txt_on_log_hi.setText("Здравствуйте,\n" + name + "!");
 
-        Glide.with(ProfileFragment.this).load(urll).into(pr_img);
-        Glide.with(headerView).load(urll).into(nav_img);
+        try {
+            Glide.with(ProfileFragment.this).load(urll).into(pr_img);
+            Glide.with(headerView).load(urll).into(nav_img);
+        } catch (NullPointerException e){
+            Log.d("ProfileInfo", "WTF exception");
+            Toast.makeText(getContext(), "WTF exception", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void createLauncherForChoosingRomAlbum() {

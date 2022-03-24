@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -208,13 +209,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_switch:
                 try {
+                    //TODO: Code inspection for shared pref.
                     MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_switch);
                     SwitchMaterial switchMaterial = (SwitchMaterial) menuItem.getActionView().findViewById(R.id.nav_switch_id);
+
+                    boolean value = false;
+                    final SharedPreferences preferences = getSharedPreferences("isChecked", 0);
+
+                    value = preferences.getBoolean("isChecked", value);
+                    switchMaterial.setChecked(value);
+
+                    // Doubled code
+                    if (switchMaterial.isChecked()){
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+
+                    // Doubled code
                     switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         if (isChecked) {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            preferences.edit().putBoolean("isChecked", true).apply();
                         } else {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            preferences.edit().putBoolean("isChecked", false).apply();
                         }
                         if (mAuth.getCurrentUser() == null) {
                             navigationView.setCheckedItem(R.id.nav_profile);
