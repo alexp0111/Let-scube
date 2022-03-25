@@ -180,40 +180,12 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     }
 
     private void realiseClickListenerOnCards() {
-        cubeType0.setOnClickListener(view -> {
-            Log.d("Cube_getter_onclick", allCubesArray.get(0).avgInfo());
-            showDialog(0);
-        });
-        cubeType1.setOnClickListener(view -> {
-            showDialog(1);
-        });
-        cubeType2.setOnClickListener(view -> {
-            showDialog(2);
-        });
-        cubeType3.setOnClickListener(view -> {
-            showDialog(3);
-        });
-        cubeType4.setOnClickListener(view -> {
-            showDialog(4);
-        });
-        cubeType5.setOnClickListener(view -> {
-            showDialog(5);
-        });
-        cubeClock.setOnClickListener(view -> {
-            showDialog(6);
-        });
-        cubePyraminx.setOnClickListener(view -> {
-            showDialog(7);
-        });
-        cubeMegaminx.setOnClickListener(view -> {
-            showDialog(8);
-        });
-        cubeSqube.setOnClickListener(view -> {
-            showDialog(9);
-        });
-        cubeSquare1.setOnClickListener(view -> {
-            showDialog(10);
-        });
+        for (int i = 0; i < mcvList.size(); i++) {
+            int finalI = i;
+            mcvList.get(i).setOnClickListener(view -> {
+                showDialog(finalI);
+            });
+        }
     }
 
     private void showDialog(int n) {
