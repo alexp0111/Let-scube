@@ -1,7 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments.roomsFragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -25,15 +24,22 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
-import com.example.lbar.helpClasses.Cube;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
 
 public class RoomsSoloFragment extends Fragment {
 
     private boolean isRunning = false;
+
+    private ArrayList<MaterialCardView> mcdList;
+    private MaterialAlertDialogBuilder mdBuilderPuzzleChoice;
+    private AlertDialog dialog;
+    private View puzzlesView;
 
     private TextView chronometer;
     private TextView pMode;
@@ -55,14 +61,18 @@ public class RoomsSoloFragment extends Fragment {
     private long updateTime = 0L;
 
     private boolean buttonflag = true;
+    private String[] puzzleNames = {"2 x 2", "3 x 3", "4 x 4", "5 x 5", "6 x 6", "7 x 7",
+            "Pyraminx", "Sqube", "Clock", "Megaminx", "Square-1"};
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_solo_rooms, container, false);
+        puzzlesView = inflater.inflate(R.layout.dialog_puzzle_choice, container, false);
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         initItems(view);
         realiseClickListners();
+        realiseClickListnersForDialog();
 
         DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -80,8 +90,39 @@ public class RoomsSoloFragment extends Fragment {
         return view;
     }
 
+    private void initItems(View v) {
+        chronometer = v.findViewById(R.id.chronometer_solo);
+        pMode = v.findViewById(R.id.rooms_puzzle_mode);
+
+        btnPlusTwo = v.findViewById(R.id.button_plus_two);
+        btnDNF = v.findViewById(R.id.button_DNF);
+        btnDeleteResult = v.findViewById(R.id.button_delete_result);
+
+        layout = v.findViewById(R.id.layout_solo_main);
+
+        backView = v.findViewById(R.id.rooms_back_iv);
+        settingsView = v.findViewById(R.id.rooms_settings);
+        bar = v.findViewById(R.id.rooms_bar);
+
+        customHandler = new Handler(Looper.getMainLooper());
+
+        mcdList = new ArrayList<>();
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_0));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_1));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_2));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_3));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_4));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_5));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_pyraminx));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_sqube));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_clock));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_megaminx));
+        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_square1));
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void realiseClickListners() {
+        // Кнопка возврата
         backView.setOnClickListener(view13 -> {
             try {
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -93,6 +134,7 @@ public class RoomsSoloFragment extends Fragment {
             }
         });
 
+        // Фон, считывающий нажатия
         layout.setOnTouchListener((view12, motionEvent) -> {
             switch (motionEvent.getAction() ) {
                 case MotionEvent.ACTION_DOWN:
@@ -143,6 +185,21 @@ public class RoomsSoloFragment extends Fragment {
             return true;
         });
 
+        // Выбор дисциплины
+        pMode.setOnClickListener(view -> {
+            mdBuilderPuzzleChoice = new MaterialAlertDialogBuilder(getContext());
+
+            mdBuilderPuzzleChoice.setTitle("Discipline");
+            mdBuilderPuzzleChoice.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
+
+            if (puzzlesView.getParent() != null) {
+                ((ViewGroup) puzzlesView.getParent()).removeView(puzzlesView);
+            }
+            mdBuilderPuzzleChoice.setView(puzzlesView);
+            dialog = mdBuilderPuzzleChoice.show();
+        });
+
+        // Кнопка штрафа
         btnPlusTwo.setOnClickListener(view -> {
             if (buttonflag){
                 updateTime += 2000;
@@ -151,30 +208,25 @@ public class RoomsSoloFragment extends Fragment {
             }
         });
 
+        // Кнопка незачёта сборки
         btnDNF.setOnClickListener(view -> {
 
         });
 
+        // Кнопка удаления результата
         btnDeleteResult.setOnClickListener(view -> {
 
         });
     }
 
-    private void initItems(View v) {
-        chronometer = v.findViewById(R.id.chronometer_solo);
-        pMode = v.findViewById(R.id.rooms_puzzle_mode);
-
-        btnPlusTwo = v.findViewById(R.id.button_plus_two);
-        btnDNF = v.findViewById(R.id.button_DNF);
-        btnDeleteResult = v.findViewById(R.id.button_delete_result);
-
-        layout = v.findViewById(R.id.layout_solo_main);
-
-        backView = v.findViewById(R.id.rooms_back_iv);
-        settingsView = v.findViewById(R.id.rooms_settings);
-        bar = v.findViewById(R.id.rooms_bar);
-
-        customHandler = new Handler(Looper.getMainLooper());
+    private void realiseClickListnersForDialog() {
+        for (int i = 0; i < mcdList.size(); i++) {
+            int finalI = i;
+            mcdList.get(i).setOnClickListener(view -> {
+                pMode.setText(puzzleNames[finalI]);
+                dialog.dismiss();
+            });
+        }
     }
 
     private String convertFromMStoString(long ms) {

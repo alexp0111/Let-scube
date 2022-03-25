@@ -119,6 +119,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         mdBuilder.setView(rl);
 
         mdBuilder.setPositiveButton("APPlY", (dialogInterface, i) -> {
+            //animationStart = false; - не работет, так как адаптер пересоздаётся;
             FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                     .getReference().child("Chats").child(chat.getAddress()).child("message")
                     .setValue(et.getText().toString());
