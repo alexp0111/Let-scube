@@ -14,6 +14,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class Cube {
+    private Long lastElementOfListBuffer;
+
     private int cube_type;
     private String cube_name;
 
@@ -58,7 +60,7 @@ public class Cube {
         Long result = 0L;
         int realNumber = 0;
         for (int i = puzzle_build_avg_statistics.size() - 1; i >= puzzle_build_avg_statistics.size() - number; i--) {
-            if (puzzle_build_avg_statistics.get(i) != -1L) {
+            if (puzzle_build_avg_statistics.get(i) >= 0L) {
                 result += puzzle_build_avg_statistics.get(i);
                 realNumber++;
             }
@@ -111,7 +113,7 @@ public class Cube {
         return num.toString();
     }
 
-    public void updateAvgStatistics(Long newElement) {
+    public void updateAvgStatistics(Long newElement, int mode) {
         Log.d("Cube", "enter");
         ArrayList<Long> dbArray = new ArrayList<>();
         FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
@@ -137,11 +139,9 @@ public class Cube {
                             }
                             if (elementOfArray != null) {
                                 dbArray.add(elementOfArray);
-                            } else {
-                                dbArray.add(-2L);
                             }
                         }
-                        downloadInfo(dbArray, newElement);
+                        downloadInfo(dbArray, newElement, mode);
                     }
 
                     @Override
@@ -151,15 +151,48 @@ public class Cube {
                 });
     }
 
-    private void downloadInfo(ArrayList<Long> list, Long newElement) {
-        list.add(newElement);
-        list.remove(0);
-        FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
-                .getReference("Users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("Collection")
-                .child(String.valueOf(cube_type)).
-                child("puzzle_build_avg_statistics").
-                setValue(list);
+    /**
+     *  mode 0 - add to list
+     *
+     *  mode 1 - refactor last element
+     *
+     *  mode 2 - delete element
+     */
+    private void downloadInfo(ArrayList<Long> list, Long newElement, int mode) {
+        lastElementOfListBuffer = list.get(0);
+        switch (mode){
+            case 0:{
+                list.add(newElement);
+                list.remove(0);
+                FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                        .getReference("Users")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child("Collection")
+                        .child(String.valueOf(cube_type))
+                        .child("puzzle_build_avg_statistics").setValue(list);
+                break;
+            }
+            case 1:{
+                FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                        .getReference("Users")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child("Collection")
+                        .child(String.valueOf(cube_type))
+                        .child("puzzle_build_avg_statistics").child("99").setValue(newElement);
+                break;
+            }
+            case 2: {
+                list.add(0, lastElementOfListBuffer);
+                list.remove(100);
+                FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                        .getReference("Users")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child("Collection")
+                        .child(String.valueOf(cube_type))
+                        .child("puzzle_build_avg_statistics").setValue(list);
+                break;
+            }
+            default: break;
+        }
     }
 }

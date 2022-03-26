@@ -141,6 +141,7 @@ public class RoomsSoloFragment extends Fragment {
             switch (motionEvent.getAction() ) {
                 case MotionEvent.ACTION_DOWN:
                     if (!isRunning){
+
                         buttonflag = true;
                         chronometer.setText("00:000");
 
@@ -168,7 +169,7 @@ public class RoomsSoloFragment extends Fragment {
                         settingsView.setVisibility(View.VISIBLE);
                         pMode.setVisibility(View.VISIBLE);
 
-                        updateDataBaseStatistic();
+                        updateDataBaseStatistic(0);
 
                         customHandler.removeCallbacks(updateTimerThread);
                     }
@@ -207,24 +208,34 @@ public class RoomsSoloFragment extends Fragment {
             if (buttonflag){
                 updateTime += 2000;
                 chronometer.setText(convertFromMStoString(updateTime));
+                updateDataBaseStatistic(1);
                 buttonflag = false;
             }
         });
 
         // Кнопка незачёта сборки
         btnDNF.setOnClickListener(view -> {
-
+            if (buttonflag){
+                updateTime = -2L;
+                updateDataBaseStatistic(1);
+                chronometer.setText("DNF");
+                buttonflag = false;
+            }
         });
 
         // Кнопка удаления результата
         btnDeleteResult.setOnClickListener(view -> {
-
+            if (buttonflag){
+                chronometer.setText("00:000");
+                updateDataBaseStatistic(2);
+                buttonflag = false;
+            }
         });
     }
 
-    private void updateDataBaseStatistic() {
+    private void updateDataBaseStatistic(int mode) {
         Cube cube = new Cube(PUZZLE_DISCIPLINE);
-        cube.updateAvgStatistics(updateTime);
+        cube.updateAvgStatistics(updateTime, mode);
     }
 
     private void realiseClickListnersForDialog() {
