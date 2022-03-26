@@ -217,7 +217,8 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
+    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity
+            main_activity) {
         if (tbar != null) {
             activity.setSupportActionBar(tbar);
             tbar.setTitle(R.string.title_profile);
@@ -263,13 +264,17 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
             // Верификация через email          begin
             fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            fUser.sendEmailVerification()
-                    .addOnSuccessListener(aVoid ->
-                            Toast.makeText(getContext(), R.string.ver_mail_has_sent,
-                                    Toast.LENGTH_LONG).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(getContext(), R.string.sww,
-                                    Toast.LENGTH_SHORT).show());
+            //FIXME: Вылетает null при загрузке иногда - не ясно почему (в Toast [269 - 275])
+
+            //fUser.sendEmailVerification()
+            //        .addOnSuccessListener(aVoid ->
+            //                Toast.makeText(getContext(), R.string.ver_mail_has_sent,
+            //                        Toast.LENGTH_LONG).show())
+            //        .addOnFailureListener(e ->
+            //                Toast.makeText(getContext(), R.string.sww,
+            //                        Toast.LENGTH_SHORT).show());
+
+
             // Верификация через email          end
         });
     }
@@ -298,7 +303,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
         try {
             Glide.with(ProfileFragment.this).load(urll).into(pr_img);
             Glide.with(headerView).load(urll).into(nav_img);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Log.d("ProfileInfo", "WTF exception");
             Toast.makeText(getContext(), "WTF exception", Toast.LENGTH_SHORT).show();
         }
@@ -377,7 +382,8 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
     }
 
     @Override
-    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX,
+                           float velocityY) {
         boolean res = false;
         float diffY = moveEvent.getY() - downEvent.getY();
         float diffX = moveEvent.getX() - downEvent.getX();

@@ -52,7 +52,7 @@
         android:layout_below="@id/sheet_divider_1"
         android:layout_marginVertical="20dp"
         android:gravity="center"
-        android:text="Average results"
+        android:text="Current results"
         android:textColor="@color/colorAccent"
         android:textSize="28sp" />
 

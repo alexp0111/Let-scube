@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 public class Cube {
     private Long lastElementOfListBuffer;
+    private DatabaseReference ref;
 
     private int cube_type;
     private String cube_name;
@@ -32,6 +34,15 @@ public class Cube {
 
     public Cube(int cube_type) {
         this.cube_type = cube_type;
+
+        puzzle_build_pb_statistics = new ArrayList<Long>();
+        puzzle_build_avg_statistics = new ArrayList<Long>();
+
+        ref = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                .getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("Collection")
+                .child(String.valueOf(cube_type));
     }
 
     public Cube() {
@@ -113,19 +124,15 @@ public class Cube {
         return num.toString();
     }
 
-    public void updateAvgStatistics(Long newElement, int mode) {
+    public void updateStatistics(Long newElement, int mode) {
         Log.d("Cube", "enter");
-        ArrayList<Long> dbArray = new ArrayList<>();
-        FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
-                .getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser()
-                .getUid()).child("Collection").child(String.valueOf(cube_type))
-                .child("puzzle_build_avg_statistics")
+        ref.child("puzzle_build_avg_statistics")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Log.d("Cube", "in dataChange");
                         Log.d("Cube", dataSnapshot.getValue().toString());
-                        dbArray.clear();
+                        puzzle_build_avg_statistics.clear();
 
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Log.d("Cube", "in for");
@@ -138,10 +145,10 @@ public class Cube {
                                 elementOfArray = -1L;
                             }
                             if (elementOfArray != null) {
-                                dbArray.add(elementOfArray);
+                                puzzle_build_avg_statistics.add(elementOfArray);
                             }
                         }
-                        downloadInfo(dbArray, newElement, mode);
+                        downloadInfo(newElement, mode);
                     }
 
                     @Override
@@ -152,47 +159,81 @@ public class Cube {
     }
 
     /**
-     *  mode 0 - add to list
-     *
-     *  mode 1 - refactor last element
-     *
-     *  mode 2 - delete element
+     * mode 0 - add to list
+     * <p>
+     * mode 1 - refactor last element
+     * <p>
+     * mode 2 - delete element
      */
-    private void downloadInfo(ArrayList<Long> list, Long newElement, int mode) {
-        lastElementOfListBuffer = list.get(0);
-        switch (mode){
-            case 0:{
-                list.add(newElement);
-                list.remove(0);
-                FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
-                        .getReference("Users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("Collection")
-                        .child(String.valueOf(cube_type))
-                        .child("puzzle_build_avg_statistics").setValue(list);
+    private void downloadInfo(Long newElement, int mode) {
+        lastElementOfListBuffer = puzzle_build_avg_statistics.get(0);
+        switch (mode) {
+            case 0: {
+                puzzle_build_avg_statistics.add(newElement);
+                puzzle_build_avg_statistics.remove(0);
+                ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
+
+                checkForPBUpdates();
                 break;
             }
-            case 1:{
-                FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
-                        .getReference("Users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("Collection")
-                        .child(String.valueOf(cube_type))
-                        .child("puzzle_build_avg_statistics").child("99").setValue(newElement);
+            case 1: {
+                puzzle_build_avg_statistics.set(99, newElement);
+                ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
+
+                checkForPBUpdates();
                 break;
             }
             case 2: {
-                list.add(0, lastElementOfListBuffer);
-                list.remove(100);
-                FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
-                        .getReference("Users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("Collection")
-                        .child(String.valueOf(cube_type))
-                        .child("puzzle_build_avg_statistics").setValue(list);
+                puzzle_build_avg_statistics.add(0, lastElementOfListBuffer);
+                puzzle_build_avg_statistics.remove(100);
+                ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
+
+                checkForPBUpdates();
                 break;
             }
-            default: break;
+            default:
+                break;
+        }
+
+
+    }
+
+    private void checkForPBUpdates() {
+        ref.child("puzzle_build_pb_statistics").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                puzzle_build_pb_statistics.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Long elementOfArray;
+                    try {
+                        elementOfArray = snapshot.getValue(Long.class);
+                    } catch (Exception e) {
+                        elementOfArray = -1L;
+                    }
+                    if (elementOfArray != null) {
+                        puzzle_build_pb_statistics.add(elementOfArray);
+                    }
+                }
+                downloadPBInfo();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void downloadPBInfo() {
+        int[] tmp = {1, 3, 5, 12, 100};
+        for (int i = 0; i < tmp.length; i++) {
+            if ((puzzle_build_pb_statistics.get(i) == -1L) ||
+                    getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i)){
+                ref.child("puzzle_build_pb_statistics")
+                        .child(String.valueOf(i))
+                        .setValue(getThisAvg(tmp[i]));
+            }
         }
     }
 }

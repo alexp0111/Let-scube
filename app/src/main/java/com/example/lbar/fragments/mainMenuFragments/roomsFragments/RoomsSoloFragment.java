@@ -235,7 +235,7 @@ public class RoomsSoloFragment extends Fragment {
 
     private void updateDataBaseStatistic(int mode) {
         Cube cube = new Cube(PUZZLE_DISCIPLINE);
-        cube.updateAvgStatistics(updateTime, mode);
+        cube.updateStatistics(updateTime, mode);
     }
 
     private void realiseClickListnersForDialog() {
