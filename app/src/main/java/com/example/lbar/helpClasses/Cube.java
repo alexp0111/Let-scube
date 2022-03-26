@@ -1,6 +1,16 @@
 package com.example.lbar.helpClasses;
 
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class Cube {
@@ -16,6 +26,10 @@ public class Cube {
 
         this.puzzle_build_pb_statistics = puzzle_build_pb_statistics;
         this.puzzle_build_avg_statistics = puzzle_build_avg_statistics;
+    }
+
+    public Cube(int cube_type) {
+        this.cube_type = cube_type;
     }
 
     public Cube() {
@@ -44,7 +58,7 @@ public class Cube {
         Long result = 0L;
         int realNumber = 0;
         for (int i = puzzle_build_avg_statistics.size() - 1; i >= puzzle_build_avg_statistics.size() - number; i--) {
-            if (puzzle_build_avg_statistics.get(i) != -1L){
+            if (puzzle_build_avg_statistics.get(i) != -1L) {
                 result += puzzle_build_avg_statistics.get(i);
                 realNumber++;
             }
@@ -69,11 +83,8 @@ public class Cube {
         return result;
     }
 
-    private String strCorrection(long numToCorrect, int digits) {
-        StringBuilder num = new StringBuilder(Long.toString(numToCorrect));
-        while (num.length() < digits) num.insert(0, "0");
-        return num.toString();
-    }
+    // For DataBase
+    // For DataBase
 
     public int getCube_type() {
         return cube_type;
@@ -83,23 +94,72 @@ public class Cube {
         return cube_name;
     }
 
-    public void setCube_name(String cube_name) {
-        this.cube_name = cube_name;
-    }
-
     public ArrayList<Long> getPuzzle_build_pb_statistics() {
         return puzzle_build_pb_statistics;
-    }
-
-    public void setPuzzle_build_pb_statistics(ArrayList<Long> puzzle_build_pb_statistics) {
-        this.puzzle_build_pb_statistics = puzzle_build_pb_statistics;
     }
 
     public ArrayList<Long> getPuzzle_build_avg_statistics() {
         return puzzle_build_avg_statistics;
     }
 
-    public void setPuzzle_build_avg_statistics(ArrayList<Long> puzzle_build_avg_statistics) {
-        this.puzzle_build_avg_statistics = puzzle_build_avg_statistics;
+    // For DataBase
+    // For DataBase
+
+    private String strCorrection(long numToCorrect, int digits) {
+        StringBuilder num = new StringBuilder(Long.toString(numToCorrect));
+        while (num.length() < digits) num.insert(0, "0");
+        return num.toString();
+    }
+
+    public void updateAvgStatistics(Long newElement) {
+        Log.d("Cube", "enter");
+        ArrayList<Long> dbArray = new ArrayList<>();
+        FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                .getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser()
+                .getUid()).child("Collection").child(String.valueOf(cube_type))
+                .child("puzzle_build_avg_statistics")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.d("Cube", "in dataChange");
+                        Log.d("Cube", dataSnapshot.getValue().toString());
+                        dbArray.clear();
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Log.d("Cube", "in for");
+                            Long elementOfArray;
+                            try {
+                                elementOfArray = snapshot.getValue(Long.class);
+                                Log.d("Cube", String.valueOf(snapshot.getValue()));
+                            } catch (Exception e) {
+                                Log.d("Cube_error", String.valueOf(snapshot.getValue()));
+                                elementOfArray = -1L;
+                            }
+                            if (elementOfArray != null) {
+                                dbArray.add(elementOfArray);
+                            } else {
+                                dbArray.add(-2L);
+                            }
+                        }
+                        downloadInfo(dbArray, newElement);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void downloadInfo(ArrayList<Long> list, Long newElement) {
+        list.add(newElement);
+        list.remove(0);
+        FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                .getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("Collection")
+                .child(String.valueOf(cube_type)).
+                child("puzzle_build_avg_statistics").
+                setValue(list);
     }
 }

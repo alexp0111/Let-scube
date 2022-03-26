@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.helpClasses.Cube;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 public class RoomsSoloFragment extends Fragment {
 
     private boolean isRunning = false;
+    private int PUZZLE_DISCIPLINE = 1;
 
     private ArrayList<MaterialCardView> mcdList;
     private MaterialAlertDialogBuilder mdBuilderPuzzleChoice;
@@ -166,6 +168,7 @@ public class RoomsSoloFragment extends Fragment {
                         settingsView.setVisibility(View.VISIBLE);
                         pMode.setVisibility(View.VISIBLE);
 
+                        updateDataBaseStatistic();
 
                         customHandler.removeCallbacks(updateTimerThread);
                     }
@@ -219,11 +222,17 @@ public class RoomsSoloFragment extends Fragment {
         });
     }
 
+    private void updateDataBaseStatistic() {
+        Cube cube = new Cube(PUZZLE_DISCIPLINE);
+        cube.updateAvgStatistics(updateTime);
+    }
+
     private void realiseClickListnersForDialog() {
         for (int i = 0; i < mcdList.size(); i++) {
             int finalI = i;
             mcdList.get(i).setOnClickListener(view -> {
                 pMode.setText(puzzleNames[finalI]);
+                PUZZLE_DISCIPLINE = finalI;
                 dialog.dismiss();
             });
         }
