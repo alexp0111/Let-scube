@@ -68,20 +68,42 @@ public class Cube {
     }
 
     private Long getThisAvg(int number) {
-        Long result = 0L;
-        int realNumber = 0;
+        long result = 0L;
+        long minValue = 360000000L;
+        long maxValue = -100L;
+        int numOfDNF = 0;
+
         for (int i = puzzle_build_avg_statistics.size() - 1; i >= puzzle_build_avg_statistics.size() - number; i--) {
-            if (puzzle_build_avg_statistics.get(i) >= 0L) {
-                result += puzzle_build_avg_statistics.get(i);
-                realNumber++;
+            if (puzzle_build_avg_statistics.get(i) == -1L) {
+                return -1L;
+            } else if (puzzle_build_avg_statistics.get(i) == -2L){
+                numOfDNF++;
+            }
+            else if (puzzle_build_avg_statistics.get(i) > 0L) {
+                long tmp = puzzle_build_avg_statistics.get(i);
+                result += tmp;
+                if (tmp <= minValue) minValue = tmp;
+                if (tmp >= maxValue) maxValue = tmp;
+                Log.d("CubeAvg", "cycle " + i + ": " + tmp + "; minValue: " + minValue + "; maxValue: " + maxValue);
             }
         }
-        if (realNumber < number) return -1L;
-        return result / number;
+        Log.d("CubeAvg", "================================");
+        if ((number == 100 && numOfDNF >= 5) || (number != 100 && numOfDNF >= 2)
+                || ((number == 1 || number == 3) && numOfDNF == 1)){
+            return -2L;
+        }
+        if (numOfDNF == 1){
+            return (result - minValue) / (number - 2);
+        }
+        if (number == 1 || number == 3){
+            return result / number;
+        }
+        return (result-minValue-maxValue) / number;
     }
 
     private String convertFromMStoString(long ms) {
         if (ms == -1L) return "Not enough info";
+        if (ms == -2L) return "DNF";
         String result = "";
         if (ms / 3600000 != 0) {
             result += strCorrection(ms / 3600000, 2) + ":";
@@ -173,14 +195,15 @@ public class Cube {
                 puzzle_build_avg_statistics.remove(0);
                 ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
 
-                checkForPBUpdates();
+                checkForPBUpdates(0);
                 break;
             }
             case 1: {
+                //TODO: Bug when personal best updating (1:000 -> pb -> +2 -> 3:000 -> 3:000 < 1:000 -> not matching)
                 puzzle_build_avg_statistics.set(99, newElement);
                 ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
 
-                checkForPBUpdates();
+                checkForPBUpdates(1);
                 break;
             }
             case 2: {
@@ -188,7 +211,7 @@ public class Cube {
                 puzzle_build_avg_statistics.remove(100);
                 ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
 
-                checkForPBUpdates();
+                checkForPBUpdates(2);
                 break;
             }
             default:
@@ -198,11 +221,15 @@ public class Cube {
 
     }
 
-    private void checkForPBUpdates() {
+    private void checkForPBUpdates(int mode) {
+        ArrayList<Long> buffer = new ArrayList<Long>(puzzle_build_pb_statistics);
+        Log.d("Cube pb", "buffering" + buffer);
         ref.child("puzzle_build_pb_statistics").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 puzzle_build_pb_statistics.clear();
+
+                Log.d("Cube pb", "dc - start" + buffer);
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Long elementOfArray;
@@ -215,7 +242,10 @@ public class Cube {
                         puzzle_build_pb_statistics.add(elementOfArray);
                     }
                 }
-                downloadPBInfo();
+
+                Log.d("Cube pb", "dc - end" + buffer);
+
+                downloadPBInfo(mode, buffer);
             }
 
             @Override
@@ -225,15 +255,39 @@ public class Cube {
         });
     }
 
-    private void downloadPBInfo() {
+    private void downloadPBInfo(int mode, ArrayList<Long> buffer) {
         int[] tmp = {1, 3, 5, 12, 100};
-        for (int i = 0; i < tmp.length; i++) {
-            if ((puzzle_build_pb_statistics.get(i) == -1L) ||
-                    getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i)){
-                ref.child("puzzle_build_pb_statistics")
-                        .child(String.valueOf(i))
-                        .setValue(getThisAvg(tmp[i]));
+        switch(mode){
+            case 0:{
+                for (int i = 0; i < tmp.length; i++) {
+                    if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
+                            ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
+                        ref.child("puzzle_build_pb_statistics")
+                                .child(String.valueOf(i))
+                                .setValue(getThisAvg(tmp[i]));
+                    }
+                }
+                break;
             }
+            case 1:{
+                ref.child("puzzle_build_pb_statistics").setValue(buffer);
+                puzzle_build_pb_statistics = buffer;
+                for (int i = 0; i < tmp.length; i++) {
+                    if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
+                            ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
+                        ref.child("puzzle_build_pb_statistics")
+                                .child(String.valueOf(i))
+                                .setValue(getThisAvg(tmp[i]));
+                    }
+                }
+                break;
+            }
+            case 2:{
+                Log.d("Cube pb", "deleting _ pb" + buffer);
+                ref.child("puzzle_build_pb_statistics").setValue(buffer);
+                break;
+            }
+            default: break;
         }
     }
 }

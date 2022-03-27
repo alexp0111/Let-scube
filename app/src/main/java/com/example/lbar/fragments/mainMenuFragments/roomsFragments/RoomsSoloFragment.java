@@ -31,12 +31,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class RoomsSoloFragment extends Fragment {
 
     private boolean isRunning = false;
     private int PUZZLE_DISCIPLINE = 1;
+    private Cube cube = new Cube(PUZZLE_DISCIPLINE);
 
     private ArrayList<MaterialCardView> mcdList;
     private MaterialAlertDialogBuilder mdBuilderPuzzleChoice;
@@ -234,7 +236,6 @@ public class RoomsSoloFragment extends Fragment {
     }
 
     private void updateDataBaseStatistic(int mode) {
-        Cube cube = new Cube(PUZZLE_DISCIPLINE);
         cube.updateStatistics(updateTime, mode);
     }
 
@@ -244,6 +245,7 @@ public class RoomsSoloFragment extends Fragment {
             mcdList.get(i).setOnClickListener(view -> {
                 pMode.setText(puzzleNames[finalI]);
                 PUZZLE_DISCIPLINE = finalI;
+                cube = new Cube(PUZZLE_DISCIPLINE);
                 dialog.dismiss();
             });
         }

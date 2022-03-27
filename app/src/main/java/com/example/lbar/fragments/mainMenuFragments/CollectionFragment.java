@@ -236,6 +236,8 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
             mdBuilder.setNegativeButton("Yes, i'm sure", (dialogInterface, i) -> {
                 clearPuzzleStatisic(n);
+                txt_avg.setText("Not enough info\nNot enough info\nNot enough info\nNot enough info\nNot enough info");
+                txt_best.setText("Not enough info\nNot enough info\nNot enough info\nNot enough info\nNot enough info");
             });
 
             mdBuilder.show();
