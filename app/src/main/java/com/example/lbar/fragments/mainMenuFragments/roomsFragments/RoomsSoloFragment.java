@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,8 +32,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class RoomsSoloFragment extends Fragment {
 
@@ -51,6 +52,9 @@ public class RoomsSoloFragment extends Fragment {
     private ImageView backView;
     private ImageView settingsView;
     private ConstraintLayout bar;
+
+    private String[] scrambleArrayForType1;
+    private TextView scrambleTextView;
 
     private MaterialButton btnPlusTwo;
     private MaterialButton btnDNF;
@@ -78,6 +82,10 @@ public class RoomsSoloFragment extends Fragment {
         realiseClickListners();
         realiseClickListnersForDialog();
 
+        // Experiments with scramble generator
+        scrambleTextView.setText(getRandomScrable(PUZZLE_DISCIPLINE));
+        //
+
         DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
@@ -101,6 +109,9 @@ public class RoomsSoloFragment extends Fragment {
         btnPlusTwo = v.findViewById(R.id.button_plus_two);
         btnDNF = v.findViewById(R.id.button_DNF);
         btnDeleteResult = v.findViewById(R.id.button_delete_result);
+
+        scrambleTextView = v.findViewById(R.id.scramble_textView);
+        scrambleArrayForType1 = getResources().getStringArray(R.array.scrambles_for_3x3);
 
         layout = v.findViewById(R.id.layout_solo_main);
 
@@ -158,6 +169,7 @@ public class RoomsSoloFragment extends Fragment {
                         backView.setVisibility(View.INVISIBLE);
                         settingsView.setVisibility(View.INVISIBLE);
                         pMode.setVisibility(View.INVISIBLE);
+                        scrambleTextView.setVisibility(View.INVISIBLE);
 
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
                         bar.setBackgroundResource(R.color.colorChronometerPress); // pressed state
@@ -170,6 +182,8 @@ public class RoomsSoloFragment extends Fragment {
                         backView.setVisibility(View.VISIBLE);
                         settingsView.setVisibility(View.VISIBLE);
                         pMode.setVisibility(View.VISIBLE);
+                        scrambleTextView.setText(getRandomScrable(PUZZLE_DISCIPLINE));
+                        scrambleTextView.setVisibility(View.VISIBLE);
 
                         updateDataBaseStatistic(0);
 
@@ -271,5 +285,33 @@ public class RoomsSoloFragment extends Fragment {
         StringBuilder num = new StringBuilder(Long.toString(numToCorrect));
         while (num.length() < digits) num.insert(0, "0");
         return num.toString();
+    }
+
+    private String getRandomScrable(int puzzle_discipline) {
+        StringBuilder result = new StringBuilder();
+        Random random = new Random();
+        int prevInd = -1;
+        int counter = 0;
+
+        while (true){
+            int ind = (int) Math.round(20*random.nextGaussian() + 9);
+            if (ind >= 0 && ind <= 17){
+                if (!((Math.abs(prevInd - ind) % 6 == 0)
+                        || ((Math.abs(prevInd - ind) == 1) && (Math.min(prevInd, ind) % 2 == 0))
+                        || ((Math.abs(prevInd - ind) == 7) && (Math.min(prevInd, ind) % 2 == 0))
+                        || ((Math.abs(prevInd - ind) == 5) && (Math.min(prevInd, ind) % 2 == 1))))
+                { // Проверяем повторения, ходы <->, ходы <<- ->, ходы параллельных граней;
+                    Log.d("RoomsSoloFragment ++++++++", String.valueOf(ind));
+                    prevInd = ind;
+                    result.append(scrambleArrayForType1[ind]).append(" ");
+                    counter++;
+                } else {
+                    Log.d("RoomsSoloFragment collision", String.valueOf(ind));
+                }
+            } else {
+                Log.d("RoomsSoloFragment bad", String.valueOf(ind));
+            }
+            if (counter == 19) return result.toString();
+        }
     }
 }
