@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -76,10 +78,9 @@ public class Cube {
         for (int i = puzzle_build_avg_statistics.size() - 1; i >= puzzle_build_avg_statistics.size() - number; i--) {
             if (puzzle_build_avg_statistics.get(i) == -1L) {
                 return -1L;
-            } else if (puzzle_build_avg_statistics.get(i) == -2L){
+            } else if (puzzle_build_avg_statistics.get(i) == -2L) {
                 numOfDNF++;
-            }
-            else if (puzzle_build_avg_statistics.get(i) > 0L) {
+            } else if (puzzle_build_avg_statistics.get(i) > 0L) {
                 long tmp = puzzle_build_avg_statistics.get(i);
                 result += tmp;
                 if (tmp <= minValue) minValue = tmp;
@@ -89,16 +90,16 @@ public class Cube {
         }
         Log.d("CubeAvg", "================================");
         if ((number == 100 && numOfDNF >= 5) || (number != 100 && numOfDNF >= 2)
-                || ((number == 1 || number == 3) && numOfDNF == 1)){
+                || ((number == 1 || number == 3) && numOfDNF == 1)) {
             return -2L;
         }
-        if (numOfDNF == 1){
+        if (numOfDNF == 1) {
             return (result - minValue) / (number - 2);
         }
-        if (number == 1 || number == 3){
+        if (number == 1 || number == 3) {
             return result / number;
         }
-        return (result-minValue-maxValue) / number;
+        return (result - minValue - maxValue) / number;
     }
 
     private String convertFromMStoString(long ms) {
@@ -180,30 +181,20 @@ public class Cube {
                 });
     }
 
-    /**
-     * mode 0 - add to list
-     * <p>
-     * mode 1 - refactor last element
-     * <p>
-     * mode 2 - delete element
-     */
     private void downloadInfo(Long newElement) {
         puzzle_build_avg_statistics.add(newElement);
         puzzle_build_avg_statistics.remove(0);
-        ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
-
-        checkForPBUpdates();
+        ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics)
+                .addOnCompleteListener(task -> {
+                    checkForPBUpdates();
+                });
     }
 
     private void checkForPBUpdates() {
-        ArrayList<Long> buffer = new ArrayList<Long>(puzzle_build_pb_statistics);
-        Log.d("Cube pb", "buffering" + buffer);
         ref.child("puzzle_build_pb_statistics").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 puzzle_build_pb_statistics.clear();
-
-                Log.d("Cube pb", "dc - start" + buffer);
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Long elementOfArray;
@@ -217,9 +208,7 @@ public class Cube {
                     }
                 }
 
-                Log.d("Cube pb", "dc - end" + buffer);
-
-                downloadPBInfo(buffer);
+                downloadPBInfo();
             }
 
             @Override
@@ -229,39 +218,16 @@ public class Cube {
         });
     }
 
-    private void downloadPBInfo(ArrayList<Long> buffer) {
+    private void downloadPBInfo() {
         int[] tmp = {1, 3, 5, 12, 100};
-        //switch(mode){
-        //    case 0:{
-        //        for (int i = 0; i < tmp.length; i++) {
-        //            if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
-        //                    ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
-        //                ref.child("puzzle_build_pb_statistics")
-        //                        .child(String.valueOf(i))
-        //                        .setValue(getThisAvg(tmp[i]));
-        //            }
-        //        }
-        //        break;
-        //    }
-        //    case 1:{
-        //        ref.child("puzzle_build_pb_statistics").setValue(buffer);
-        //        puzzle_build_pb_statistics = buffer;
-        //        for (int i = 0; i < tmp.length; i++) {
-        //            if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
-        //                    ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
-        //                ref.child("puzzle_build_pb_statistics")
-        //                        .child(String.valueOf(i))
-        //                        .setValue(getThisAvg(tmp[i]));
-        //            }
-        //        }
-        //        break;
-        //    }
-        //    case 2:{
-        //        Log.d("Cube pb", "deleting _ pb" + buffer);
-        //        ref.child("puzzle_build_pb_statistics").setValue(buffer);
-        //        break;
-        //    }
-        //    default: break;
-        //}
+
+        for (int i = 0; i < tmp.length; i++) {
+            if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
+                    ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))) {
+                ref.child("puzzle_build_pb_statistics")
+                        .child(String.valueOf(i))
+                        .setValue(getThisAvg(tmp[i]));
+            }
+        }
     }
 }

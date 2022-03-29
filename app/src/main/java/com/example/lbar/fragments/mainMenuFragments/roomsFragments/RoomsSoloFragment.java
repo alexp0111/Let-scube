@@ -238,7 +238,6 @@ public class RoomsSoloFragment extends Fragment {
             }
         });
 
-        //TODO:
         // Кнопка удаления результата
         btnDeleteResult.setOnClickListener(view -> {
             if (buttonflag){
