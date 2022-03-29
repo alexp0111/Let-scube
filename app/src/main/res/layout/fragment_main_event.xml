@@ -30,6 +30,7 @@
             android:layout_height="28dp"
             android:visibility="visible"
             app:tabBackground="@color/colorBackground"
+            android:backgroundTint="@color/colorBackground"
             app:tabGravity="fill" />
     </com.google.android.material.appbar.AppBarLayout>
 
