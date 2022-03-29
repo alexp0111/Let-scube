@@ -39,6 +39,9 @@ public class MessageFragment extends Fragment implements GestureDetector.OnGestu
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
+
+        Log.d("Loading:", "Images_loaded");
+
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_mess);
         setToolbarSettings(toolbar, activity, main_activity);
 

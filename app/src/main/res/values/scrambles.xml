@@ -3,24 +3,24 @@
     <string-array
         name="scrambles_for_3x3">
         <item>F</item>
-        <item>B</item>
-        <item>R</item>
-        <item>L</item>
         <item>U</item>
+        <item>R</item>
+        <item>B</item>
         <item>D</item>
+        <item>L</item>
 
         <item>F\'</item>
-        <item>B\'</item>
-        <item>R\'</item>
-        <item>L\'</item>
         <item>U\'</item>
+        <item>R\'</item>
+        <item>B\'</item>
         <item>D\'</item>
+        <item>L\'</item>
 
         <item>F2</item>
-        <item>B2</item>
-        <item>R2</item>
-        <item>L2</item>
         <item>U2</item>
+        <item>R2</item>
+        <item>B2</item>
         <item>D2</item>
+        <item>L2</item>
     </string-array>
 </resources>

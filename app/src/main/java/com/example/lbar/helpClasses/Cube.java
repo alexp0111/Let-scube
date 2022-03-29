@@ -146,7 +146,7 @@ public class Cube {
         return num.toString();
     }
 
-    public void updateStatistics(Long newElement, int mode) {
+    public void updateStatistics(Long newElement) {
         Log.d("Cube", "enter");
         ref.child("puzzle_build_avg_statistics")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -170,7 +170,7 @@ public class Cube {
                                 puzzle_build_avg_statistics.add(elementOfArray);
                             }
                         }
-                        downloadInfo(newElement, mode);
+                        downloadInfo(newElement);
                     }
 
                     @Override
@@ -187,41 +187,15 @@ public class Cube {
      * <p>
      * mode 2 - delete element
      */
-    private void downloadInfo(Long newElement, int mode) {
-        lastElementOfListBuffer = puzzle_build_avg_statistics.get(0);
-        switch (mode) {
-            case 0: {
-                puzzle_build_avg_statistics.add(newElement);
-                puzzle_build_avg_statistics.remove(0);
-                ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
+    private void downloadInfo(Long newElement) {
+        puzzle_build_avg_statistics.add(newElement);
+        puzzle_build_avg_statistics.remove(0);
+        ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
 
-                checkForPBUpdates(0);
-                break;
-            }
-            case 1: {
-                //TODO: Bug when personal best updating (1:000 -> pb -> +2 -> 3:000 -> 3:000 < 1:000 -> not matching)
-                puzzle_build_avg_statistics.set(99, newElement);
-                ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
-
-                checkForPBUpdates(1);
-                break;
-            }
-            case 2: {
-                puzzle_build_avg_statistics.add(0, lastElementOfListBuffer);
-                puzzle_build_avg_statistics.remove(100);
-                ref.child("puzzle_build_avg_statistics").setValue(puzzle_build_avg_statistics);
-
-                checkForPBUpdates(2);
-                break;
-            }
-            default:
-                break;
-        }
-
-
+        checkForPBUpdates();
     }
 
-    private void checkForPBUpdates(int mode) {
+    private void checkForPBUpdates() {
         ArrayList<Long> buffer = new ArrayList<Long>(puzzle_build_pb_statistics);
         Log.d("Cube pb", "buffering" + buffer);
         ref.child("puzzle_build_pb_statistics").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -245,7 +219,7 @@ public class Cube {
 
                 Log.d("Cube pb", "dc - end" + buffer);
 
-                downloadPBInfo(mode, buffer);
+                downloadPBInfo(buffer);
             }
 
             @Override
@@ -255,39 +229,39 @@ public class Cube {
         });
     }
 
-    private void downloadPBInfo(int mode, ArrayList<Long> buffer) {
+    private void downloadPBInfo(ArrayList<Long> buffer) {
         int[] tmp = {1, 3, 5, 12, 100};
-        switch(mode){
-            case 0:{
-                for (int i = 0; i < tmp.length; i++) {
-                    if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
-                            ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
-                        ref.child("puzzle_build_pb_statistics")
-                                .child(String.valueOf(i))
-                                .setValue(getThisAvg(tmp[i]));
-                    }
-                }
-                break;
-            }
-            case 1:{
-                ref.child("puzzle_build_pb_statistics").setValue(buffer);
-                puzzle_build_pb_statistics = buffer;
-                for (int i = 0; i < tmp.length; i++) {
-                    if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
-                            ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
-                        ref.child("puzzle_build_pb_statistics")
-                                .child(String.valueOf(i))
-                                .setValue(getThisAvg(tmp[i]));
-                    }
-                }
-                break;
-            }
-            case 2:{
-                Log.d("Cube pb", "deleting _ pb" + buffer);
-                ref.child("puzzle_build_pb_statistics").setValue(buffer);
-                break;
-            }
-            default: break;
-        }
+        //switch(mode){
+        //    case 0:{
+        //        for (int i = 0; i < tmp.length; i++) {
+        //            if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
+        //                    ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
+        //                ref.child("puzzle_build_pb_statistics")
+        //                        .child(String.valueOf(i))
+        //                        .setValue(getThisAvg(tmp[i]));
+        //            }
+        //        }
+        //        break;
+        //    }
+        //    case 1:{
+        //        ref.child("puzzle_build_pb_statistics").setValue(buffer);
+        //        puzzle_build_pb_statistics = buffer;
+        //        for (int i = 0; i < tmp.length; i++) {
+        //            if ((puzzle_build_pb_statistics.get(i) <= -1L) ||
+        //                    ((getThisAvg(tmp[i]) != -2L) && getThisAvg(tmp[i]) < puzzle_build_pb_statistics.get(i))){
+        //                ref.child("puzzle_build_pb_statistics")
+        //                        .child(String.valueOf(i))
+        //                        .setValue(getThisAvg(tmp[i]));
+        //            }
+        //        }
+        //        break;
+        //    }
+        //    case 2:{
+        //        Log.d("Cube pb", "deleting _ pb" + buffer);
+        //        ref.child("puzzle_build_pb_statistics").setValue(buffer);
+        //        break;
+        //    }
+        //    default: break;
+        //}
     }
 }

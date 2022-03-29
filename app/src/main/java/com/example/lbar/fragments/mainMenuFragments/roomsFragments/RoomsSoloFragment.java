@@ -154,6 +154,9 @@ public class RoomsSoloFragment extends Fragment {
             switch (motionEvent.getAction() ) {
                 case MotionEvent.ACTION_DOWN:
                     if (!isRunning){
+                        if (updateTime != 0L){
+                            updateDataBaseStatistic();
+                        }
 
                         buttonflag = true;
                         chronometer.setText("00:000");
@@ -184,8 +187,6 @@ public class RoomsSoloFragment extends Fragment {
                         pMode.setVisibility(View.VISIBLE);
                         scrambleTextView.setText(getRandomScrable(PUZZLE_DISCIPLINE));
                         scrambleTextView.setVisibility(View.VISIBLE);
-
-                        updateDataBaseStatistic(0);
 
                         customHandler.removeCallbacks(updateTimerThread);
                     }
@@ -224,7 +225,6 @@ public class RoomsSoloFragment extends Fragment {
             if (buttonflag){
                 updateTime += 2000;
                 chronometer.setText(convertFromMStoString(updateTime));
-                updateDataBaseStatistic(1);
                 buttonflag = false;
             }
         });
@@ -233,24 +233,24 @@ public class RoomsSoloFragment extends Fragment {
         btnDNF.setOnClickListener(view -> {
             if (buttonflag){
                 updateTime = -2L;
-                updateDataBaseStatistic(1);
                 chronometer.setText("DNF");
                 buttonflag = false;
             }
         });
 
+        //TODO:
         // Кнопка удаления результата
         btnDeleteResult.setOnClickListener(view -> {
             if (buttonflag){
                 chronometer.setText("00:000");
-                updateDataBaseStatistic(2);
+                updateTime = 0L;
                 buttonflag = false;
             }
         });
     }
 
-    private void updateDataBaseStatistic(int mode) {
-        cube.updateStatistics(updateTime, mode);
+    private void updateDataBaseStatistic() {
+        cube.updateStatistics(updateTime);
     }
 
     private void realiseClickListnersForDialog() {
@@ -296,10 +296,7 @@ public class RoomsSoloFragment extends Fragment {
         while (true){
             int ind = (int) Math.round(20*random.nextGaussian() + 9);
             if (ind >= 0 && ind <= 17){
-                if (!((Math.abs(prevInd - ind) % 6 == 0)
-                        || ((Math.abs(prevInd - ind) == 1) && (Math.min(prevInd, ind) % 2 == 0))
-                        || ((Math.abs(prevInd - ind) == 7) && (Math.min(prevInd, ind) % 2 == 0))
-                        || ((Math.abs(prevInd - ind) == 5) && (Math.min(prevInd, ind) % 2 == 1))))
+                if (!((Math.abs(prevInd - ind) % 3) == 0))
                 { // Проверяем повторения, ходы <->, ходы <<- ->, ходы параллельных граней;
                     Log.d("RoomsSoloFragment ++++++++", String.valueOf(ind));
                     prevInd = ind;
@@ -313,5 +310,30 @@ public class RoomsSoloFragment extends Fragment {
             }
             if (counter == 19) return result.toString();
         }
+    }
+
+    @Override
+    public void onStart() {
+
+        chronometer.setText("00:000");
+
+        startTime = 0L;
+        timeInMS = 0L;
+        timeSwapBuffer = 0L;
+        updateTime = 0L;
+
+        scrambleTextView.setText(getRandomScrable(0));
+
+        Log.d("RoomsSoloFragment", "onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("RoomsSoloFragment", "onStop");
+        if (updateTime != 0L){
+            updateDataBaseStatistic();
+        }
+        super.onStop();
     }
 }
