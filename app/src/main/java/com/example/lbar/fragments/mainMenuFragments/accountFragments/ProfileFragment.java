@@ -52,6 +52,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 import static com.example.lbar.MainActivity.dp_height;
+import static com.example.lbar.MainActivity.dp_width;
 import static com.example.lbar.MainActivity.reference;
 import static com.example.lbar.MainActivity.storageReferenceAvatar;
 
@@ -140,8 +141,8 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
         });
 
         ViewGroup.LayoutParams params = image_layout.getLayoutParams();
-        params.height = dp_height / 4;
-        params.width = dp_height / 4;
+        params.height = Math.max(dp_height, dp_width) / 4;
+        params.width = Math.max(dp_height, dp_width) / 4;
 
         createLauncherForChoosingRomAlbum();
 
