@@ -31,6 +31,8 @@
             android:visibility="visible"
             app:tabBackground="@color/colorBackground"
             android:backgroundTint="@color/colorBackground"
+            app:tabMode="fixed"
+            app:tabIndicatorFullWidth="true"
             app:tabGravity="fill" />
     </com.google.android.material.appbar.AppBarLayout>
 

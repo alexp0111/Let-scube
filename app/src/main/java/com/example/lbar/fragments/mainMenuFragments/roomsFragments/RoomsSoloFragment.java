@@ -111,7 +111,7 @@ public class RoomsSoloFragment extends Fragment {
         btnDeleteResult = v.findViewById(R.id.button_delete_result);
 
         scrambleTextView = v.findViewById(R.id.scramble_textView);
-        scrambleArrayForType1 = getResources().getStringArray(R.array.scrambles_for_3x3);
+        scrambleArrayForType1 = getResources().getStringArray(R.array.scrambles_for_2x2_3x3);
 
         layout = v.findViewById(R.id.layout_solo_main);
 

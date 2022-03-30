@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array
-        name="scrambles_for_3x3">
+        name="scrambles_for_2x2_3x3">
         <item>F</item>
         <item>U</item>
         <item>R</item>
@@ -22,5 +22,103 @@
         <item>B2</item>
         <item>D2</item>
         <item>L2</item>
+    </string-array>
+
+    <string-array
+        name="scrambles_for_4x4_5x5">
+        <item>Fw</item>
+        <item>Uw</item>
+        <item>Rw</item>
+        <item>Bw</item>
+        <item>Dw</item>
+        <item>Lw</item>
+
+        <item>Fw\'</item>
+        <item>Uw\'</item>
+        <item>Rw\'</item>
+        <item>Bw\'</item>
+        <item>Dw\'</item>
+        <item>Lw\'</item>
+
+        <item>Fw2</item>
+        <item>Uw2</item>
+        <item>Rw2</item>
+        <item>Bw2</item>
+        <item>Dw2</item>
+        <item>Lw2</item>
+    </string-array>
+
+    <string-array
+        name="scrambles_for_6x6_7x7">
+        <item>3Fw</item>
+        <item>3Uw</item>
+        <item>3Rw</item>
+        <item>3Bw</item>
+        <item>3Dw</item>
+        <item>3Lw</item>
+
+        <item>3Fw\'</item>
+        <item>3Uw\'</item>
+        <item>3Rw\'</item>
+        <item>3Bw\'</item>
+        <item>3Dw\'</item>
+        <item>3Lw\'</item>
+
+        <item>3Fw2</item>
+        <item>3Uw2</item>
+        <item>3Rw2</item>
+        <item>3Bw2</item>
+        <item>3Dw2</item>
+        <item>3Lw2</item>
+    </string-array>
+
+    <string-array
+        name="scrambles_for_pyraminx">
+        <item>R</item>
+        <item>L</item>
+        <item>U</item>
+        <item>B</item>
+
+        <item>R'</item>
+        <item>L'</item>
+        <item>U'</item>
+        <item>B'</item>
+
+        <item>r</item>
+        <item>l</item>
+        <item>u</item>
+        <item>b</item>
+
+        <item>r'</item>
+        <item>l'</item>
+        <item>u'</item>
+        <item>b'</item>
+    </string-array>
+
+    <string-array
+        name="scrambles_for_scube">
+        <item>R</item>
+        <item>L</item>
+        <item>U</item>
+        <item>B</item>
+
+        <item>R'</item>
+        <item>L'</item>
+        <item>U'</item>
+        <item>B'</item>
+    </string-array>
+
+    <!-- clock - кучка всего; смотри 8:10  https://www.youtube.com/watch?v=sVboZmxuu8Q -->
+    <!-- square-1 - своя методика. Возможно и массив не нужен; смотри 8:10  https://www.youtube.com/watch?v=sVboZmxuu8Q -->
+
+    <string-array
+        name="scrambles_for_megaminx"> <!-- Необычная структура вывода - поять же, видео -->
+        <item>R++</item>
+        <item>R--</item>
+        <item>D++</item>
+        <item>D--</item>
+
+        <item>U</item>
+        <item>U'</item>
     </string-array>
 </resources>
