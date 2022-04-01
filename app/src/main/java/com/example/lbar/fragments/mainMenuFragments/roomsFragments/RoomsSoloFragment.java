@@ -259,6 +259,13 @@ public class RoomsSoloFragment extends Fragment {
         for (int i = 0; i < mcdList.size(); i++) {
             int finalI = i;
             mcdList.get(i).setOnClickListener(view -> {
+                chronometer.setText("00:000");
+
+                startTime = 0L;
+                timeInMS = 0L;
+                timeSwapBuffer = 0L;
+                updateTime = 0L;
+
                 pMode.setText(puzzleNames[finalI]);
                 PUZZLE_DISCIPLINE = finalI;
                 cube = new Cube(PUZZLE_DISCIPLINE);
