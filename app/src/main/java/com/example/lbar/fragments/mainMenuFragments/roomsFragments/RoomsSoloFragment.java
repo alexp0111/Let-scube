@@ -53,7 +53,7 @@ public class RoomsSoloFragment extends Fragment {
     private ImageView settingsView;
     private ConstraintLayout bar;
 
-    private String[] scrambleArrayForType1;
+    private String[] scrambleArray_classic;
     private TextView scrambleTextView;
 
     private MaterialButton btnPlusTwo;
@@ -68,7 +68,7 @@ public class RoomsSoloFragment extends Fragment {
     private long timeSwapBuffer = 0L;
     private long updateTime = 0L;
 
-    private boolean buttonflag = true;
+    private boolean buttonFlag = true;
     private String[] puzzleNames = {"2 x 2", "3 x 3", "4 x 4", "5 x 5", "6 x 6", "7 x 7",
             "Pyraminx", "Sqube", "Clock", "Megaminx", "Square-1"};
 
@@ -83,7 +83,8 @@ public class RoomsSoloFragment extends Fragment {
         realiseClickListnersForDialog();
 
         // Experiments with scramble generator
-        scrambleTextView.setText(getRandomScrable(PUZZLE_DISCIPLINE));
+        Log.d("RoomSoloFragment_disc", PUZZLE_DISCIPLINE + ";");
+        scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
         //
 
         DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
@@ -111,7 +112,6 @@ public class RoomsSoloFragment extends Fragment {
         btnDeleteResult = v.findViewById(R.id.button_delete_result);
 
         scrambleTextView = v.findViewById(R.id.scramble_textView);
-        scrambleArrayForType1 = getResources().getStringArray(R.array.scrambles_for_2x2_3x3);
 
         layout = v.findViewById(R.id.layout_solo_main);
 
@@ -133,6 +133,9 @@ public class RoomsSoloFragment extends Fragment {
         mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_clock));
         mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_megaminx));
         mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_square1));
+
+        // Scrambles from res
+        scrambleArray_classic = getResources().getStringArray(R.array.scrambles_for_classic);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -158,7 +161,7 @@ public class RoomsSoloFragment extends Fragment {
                             updateDataBaseStatistic();
                         }
 
-                        buttonflag = true;
+                        buttonFlag = true;
                         chronometer.setText("00:000");
 
                         startTime = 0L;
@@ -185,7 +188,7 @@ public class RoomsSoloFragment extends Fragment {
                         backView.setVisibility(View.VISIBLE);
                         settingsView.setVisibility(View.VISIBLE);
                         pMode.setVisibility(View.VISIBLE);
-                        scrambleTextView.setText(getRandomScrable(PUZZLE_DISCIPLINE));
+                        scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
                         scrambleTextView.setVisibility(View.VISIBLE);
 
                         customHandler.removeCallbacks(updateTimerThread);
@@ -222,28 +225,28 @@ public class RoomsSoloFragment extends Fragment {
 
         // Кнопка штрафа
         btnPlusTwo.setOnClickListener(view -> {
-            if (buttonflag){
+            if (buttonFlag){
                 updateTime += 2000;
                 chronometer.setText(convertFromMStoString(updateTime));
-                buttonflag = false;
+                buttonFlag = false;
             }
         });
 
         // Кнопка незачёта сборки
         btnDNF.setOnClickListener(view -> {
-            if (buttonflag){
+            if (buttonFlag){
                 updateTime = -2L;
                 chronometer.setText("DNF");
-                buttonflag = false;
+                buttonFlag = false;
             }
         });
 
         // Кнопка удаления результата
         btnDeleteResult.setOnClickListener(view -> {
-            if (buttonflag){
+            if (buttonFlag){
                 chronometer.setText("00:000");
                 updateTime = 0L;
-                buttonflag = false;
+                buttonFlag = false;
             }
         });
     }
@@ -259,6 +262,7 @@ public class RoomsSoloFragment extends Fragment {
                 pMode.setText(puzzleNames[finalI]);
                 PUZZLE_DISCIPLINE = finalI;
                 cube = new Cube(PUZZLE_DISCIPLINE);
+                scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
                 dialog.dismiss();
             });
         }
@@ -286,20 +290,42 @@ public class RoomsSoloFragment extends Fragment {
         return num.toString();
     }
 
-    private String getRandomScrable(int puzzle_discipline) {
+    private String getRandomScramble(int puzzle_discipline) {
+        if (puzzle_discipline >= 6){ return "Sorry, scrambles for this puzzle is currently unavailable"; }
         StringBuilder result = new StringBuilder();
         Random random = new Random();
+
+        Log.d("RoomSoloFragment_disc2", puzzle_discipline + ";");
+
+        String[] libArray = scrambleArray_classic;
+        int border = 17;
+        int scrambleLength = 0;
+
         int prevInd = -1;
         int counter = 0;
 
+        if (puzzle_discipline == 0){
+            scrambleLength = 9;
+        } else if (puzzle_discipline == 1){
+            scrambleLength = 19;
+        } else if (puzzle_discipline == 2){
+            scrambleLength = 47; border = 35;
+        } else if (puzzle_discipline == 3){
+            scrambleLength = 60; border = 35;
+        } else if (puzzle_discipline == 4){
+            scrambleLength = 80; border = 53;
+        } else if (puzzle_discipline == 5){
+            scrambleLength = 100; border = 53;
+        }
+
         while (true){
             int ind = (int) Math.round(20*random.nextGaussian() + 9);
-            if (ind >= 0 && ind <= 17){
+            if (ind >= 0 && ind <= border){
                 if (!((Math.abs(prevInd - ind) % 3) == 0))
                 { // Проверяем повторения, ходы <->, ходы <<- ->, ходы параллельных граней;
                     Log.d("RoomsSoloFragment ++++++++", String.valueOf(ind));
                     prevInd = ind;
-                    result.append(scrambleArrayForType1[ind]).append(" ");
+                    result.append(scrambleArray_classic[ind]).append(" ");
                     counter++;
                 } else {
                     Log.d("RoomsSoloFragment collision", String.valueOf(ind));
@@ -307,7 +333,7 @@ public class RoomsSoloFragment extends Fragment {
             } else {
                 Log.d("RoomsSoloFragment bad", String.valueOf(ind));
             }
-            if (counter == 19) return result.toString();
+            if (counter == scrambleLength) return result.toString();
         }
     }
 
@@ -321,7 +347,7 @@ public class RoomsSoloFragment extends Fragment {
         timeSwapBuffer = 0L;
         updateTime = 0L;
 
-        scrambleTextView.setText(getRandomScrable(0));
+        scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
 
         Log.d("RoomsSoloFragment", "onStart");
         super.onStart();

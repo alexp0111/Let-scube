@@ -74,7 +74,8 @@
         <TextView
             android:layout_width="match_parent"
             android:textColor="@color/colorAccent"
-            android:textSize="24sp"
+            android:textSize="20sp"
+            android:paddingHorizontal="20dp"
             android:gravity="center"
             android:id="@+id/scramble_textView"
             android:layout_height="wrap_content" />

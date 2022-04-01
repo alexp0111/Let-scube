@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array
-        name="scrambles_for_2x2_3x3">
+        name="scrambles_for_classic">
         <item>F</item>
         <item>U</item>
         <item>R</item>
@@ -22,10 +22,9 @@
         <item>B2</item>
         <item>D2</item>
         <item>L2</item>
-    </string-array>
 
-    <string-array
-        name="scrambles_for_4x4_5x5">
+
+
         <item>Fw</item>
         <item>Uw</item>
         <item>Rw</item>
@@ -46,10 +45,9 @@
         <item>Bw2</item>
         <item>Dw2</item>
         <item>Lw2</item>
-    </string-array>
 
-    <string-array
-        name="scrambles_for_6x6_7x7">
+
+
         <item>3Fw</item>
         <item>3Uw</item>
         <item>3Rw</item>
@@ -79,20 +77,20 @@
         <item>U</item>
         <item>B</item>
 
-        <item>R'</item>
-        <item>L'</item>
-        <item>U'</item>
-        <item>B'</item>
+        <item>R\'</item>
+        <item>L\'</item>
+        <item>U\'</item>
+        <item>B\'</item>
 
         <item>r</item>
         <item>l</item>
         <item>u</item>
         <item>b</item>
 
-        <item>r'</item>
-        <item>l'</item>
-        <item>u'</item>
-        <item>b'</item>
+        <item>r\'</item>
+        <item>l\'</item>
+        <item>u\'</item>
+        <item>b\'</item>
     </string-array>
 
     <string-array
@@ -102,10 +100,10 @@
         <item>U</item>
         <item>B</item>
 
-        <item>R'</item>
-        <item>L'</item>
-        <item>U'</item>
-        <item>B'</item>
+        <item>R\'</item>
+        <item>L\'</item>
+        <item>U\'</item>
+        <item>B\'</item>
     </string-array>
 
     <!-- clock - кучка всего; смотри 8:10  https://www.youtube.com/watch?v=sVboZmxuu8Q -->
@@ -119,6 +117,6 @@
         <item>D--</item>
 
         <item>U</item>
-        <item>U'</item>
+        <item>U\'</item>
     </string-array>
 </resources>
