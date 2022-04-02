@@ -8,7 +8,7 @@
         android:id="@+id/dialog_puzzle_choice_layout_1"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_height="90dp"
+        android:layout_height="80dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -128,7 +128,7 @@
     <LinearLayout
         android:id="@+id/dialog_puzzle_choice_layout_3"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:layout_marginBottom="30dp"
         android:layout_below="@id/dialog_puzzle_choice_layout_1"
         android:gravity="center"
