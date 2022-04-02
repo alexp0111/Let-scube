@@ -108,29 +108,6 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         realiseClickListenerOnCards();
         //setCollectionValueEventListener(); TODO: Разобраться с свайпрефрешлайаутами. (создают новый листенер, хотя он и так риалтайме)
 
-        collectionReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                progressBar.setVisibility(View.VISIBLE);
-
-                allCubesArray.clear();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Cube cube = snapshot.getValue(Cube.class);
-                    assert cube != null;
-                    Log.d("Cube_getter", "*start*" + cube.getCube_name() + "*+*" + cube.avgInfo() + "*close*");
-                    allCubesArray.add(cube);
-                }
-
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         gestureDetector = new GestureDetector(getContext(), this);
 
         SwipeMenuOpenerControl(sv);
@@ -141,7 +118,6 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private void initItems(View v) {
         progressBar = v.findViewById(R.id.prog_bar_collection);
         srl = v.findViewById(R.id.pull_to_refresh_collection);
-        progressBar.setVisibility(View.VISIBLE);
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         collectionReference = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
@@ -182,8 +158,30 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
     private void realiseClickListenerOnCards() {
         for (int i = 0; i < mcvList.size(); i++) {
             int finalI = i;
-            mcvList.get(i).setOnClickListener(view -> {
-                showDialog(finalI);
+            mcvList.get(i).setOnClickListener(view1 -> {
+                progressBar.setVisibility(View.VISIBLE);
+                collectionReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        allCubesArray.clear();
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Cube cube = snapshot.getValue(Cube.class);
+                            if (cube != null) {
+                                allCubesArray.add(cube);
+                            }
+                        }
+                        showDialog(finalI);
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Snackbar.make(getView(), "Похоже, отсутствует подключение к интернету",
+                                BaseTransientBottomBar.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
             });
         }
     }

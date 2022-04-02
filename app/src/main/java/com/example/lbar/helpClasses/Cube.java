@@ -89,8 +89,7 @@ public class Cube {
             }
         }
         Log.d("CubeAvg", "================================");
-        if ((number == 100 && numOfDNF >= 5) || (number != 100 && numOfDNF >= 2)
-                || ((number == 1 || number == 3) && numOfDNF == 1)) {
+        if ((number == 100 && numOfDNF >= 5) || (number != 100 && numOfDNF >= 2) || ((number == 1 || number == 3) && numOfDNF == 1)) {
             return -2L;
         }
         if (numOfDNF == 1) {
@@ -99,7 +98,7 @@ public class Cube {
         if (number == 1 || number == 3) {
             return result / number;
         }
-        return (result - minValue - maxValue) / number;
+        return (result - minValue - maxValue) / (number - 2);
     }
 
     private String convertFromMStoString(long ms) {

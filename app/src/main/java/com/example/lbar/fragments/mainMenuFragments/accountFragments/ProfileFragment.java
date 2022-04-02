@@ -306,7 +306,6 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
             Glide.with(headerView).load(urll).into(nav_img);
         } catch (NullPointerException e) {
             Log.d("ProfileInfo", "WTF exception");
-            Toast.makeText(getContext(), "WTF exception", Toast.LENGTH_SHORT).show();
         }
     }
 
