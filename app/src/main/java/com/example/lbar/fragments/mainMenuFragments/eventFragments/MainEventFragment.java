@@ -19,18 +19,13 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.adapter.ViewPagerFragmentAdapter;
-import com.example.lbar.fragments.AddingEventFragment;
+import com.example.lbar.adapter.ViewPagerEventFragmentAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainEventFragment extends Fragment {
-
-    // Кнопку + перекинуть сюда
-    // Посмотреть на прогрессбар
-    // Заниматься адаптерами и настройкой доступа в разных фрагментах
 
     private FloatingActionButton pullNewEvent;
     private View circle;
@@ -58,7 +53,7 @@ public class MainEventFragment extends Fragment {
         initItems(view);
         setItemAnimations();
 
-        viewPager2.setAdapter(new ViewPagerFragmentAdapter(getActivity()));
+        viewPager2.setAdapter(new ViewPagerEventFragmentAdapter(getActivity()));
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
@@ -125,7 +120,7 @@ public class MainEventFragment extends Fragment {
         }
 
         pullNewEvent = v.findViewById(R.id.event_pull_new);
-        circle = v.findViewById(R.id.circle);
+        circle = v.findViewById(R.id.circle_in_event);
     }
 
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {

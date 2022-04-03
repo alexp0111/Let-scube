@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBackground"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout_in_main_event"
+        android:id="@+id/app_bar_layout_in_main_battle_rooms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_in_event"
+            android:id="@+id/toolbar_in_main_battle_rooms"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
@@ -26,7 +24,7 @@
             app:titleTextColor="#000000" />
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/event_main_tablayout"
+            android:id="@+id/rooms_main_battle_tabLayout"
             android:layout_width="match_parent"
             android:layout_height="28dp"
             android:visibility="visible"
@@ -38,13 +36,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/event_main_viewpager"
+        android:id="@+id/rooms_main_battle_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/event_pull_new"
+        android:id="@+id/rooms_main_battle_pull_new"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -55,7 +53,7 @@
         app:srcCompat="@drawable/ic_plus" />
 
     <View
-        android:id="@+id/circle_in_event"
+        android:id="@+id/circle_in_rooms_main_battle"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|end"

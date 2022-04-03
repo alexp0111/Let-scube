@@ -7,11 +7,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.lbar.fragments.mainMenuFragments.eventFragments.AnyEventFragment;
 import com.example.lbar.fragments.mainMenuFragments.eventFragments.FriendsEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments.RoomsPrivateBattleFragment;
+import com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments.RoomsPublicBattleFragment;
 
-public class ViewPagerFragmentAdapter extends FragmentStateAdapter {
+public class ViewPagerRoomsFragmentAdapter extends FragmentStateAdapter {
 
-
-    public ViewPagerFragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public ViewPagerRoomsFragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
@@ -20,9 +21,9 @@ public class ViewPagerFragmentAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new AnyEventFragment();
+                return new RoomsPublicBattleFragment();
             case 1:
-                return new FriendsEventFragment();
+                return new RoomsPrivateBattleFragment();
             default:
                 return null;
 

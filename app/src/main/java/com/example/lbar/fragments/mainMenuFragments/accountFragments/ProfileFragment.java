@@ -385,16 +385,20 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
     public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX,
                            float velocityY) {
         boolean res = false;
-        float diffY = moveEvent.getY() - downEvent.getY();
-        float diffX = moveEvent.getX() - downEvent.getX();
+        try {
+            float diffY = moveEvent.getY() - downEvent.getY();
+            float diffX = moveEvent.getX() - downEvent.getX();
 
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                if (diffX > 0) {
-                    onSwipeRight();
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        onSwipeRight();
+                    }
+                    res = true;
                 }
-                res = true;
             }
+        } catch (NullPointerException npe){
+            //
         }
         return res;
     }

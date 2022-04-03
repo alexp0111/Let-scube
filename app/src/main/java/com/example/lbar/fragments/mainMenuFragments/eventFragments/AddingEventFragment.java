@@ -1,4 +1,4 @@
-package com.example.lbar.fragments;
+package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
 import android.content.Intent;
 import android.net.Uri;

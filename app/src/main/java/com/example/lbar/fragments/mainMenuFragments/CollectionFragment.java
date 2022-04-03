@@ -183,6 +183,13 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
                     }
                 });
             });
+
+            //Long clicks
+            mcvList.get(i).setOnLongClickListener(view -> {
+                Snackbar.make(getView(), "Here you can check your solving statistics",
+                        BaseTransientBottomBar.LENGTH_SHORT).show();
+                return true;
+            });
         }
     }
 
