@@ -259,6 +259,11 @@ public class RoomsSoloFragment extends Fragment {
         for (int i = 0; i < mcdList.size(); i++) {
             int finalI = i;
             mcdList.get(i).setOnClickListener(view -> {
+
+                if (updateTime != 0L){
+                    updateDataBaseStatistic();
+                }
+
                 chronometer.setText("00:000");
 
                 startTime = 0L;
@@ -326,7 +331,10 @@ public class RoomsSoloFragment extends Fragment {
         }
 
         while (true){
-            int ind = (int) Math.round(20*random.nextGaussian() + 9);
+            // 100 - чем больше число, тем равновероятнее событие
+            // + Math.round(scrambleLength / 2) - позиция пика вероятности
+            int ind = (int) Math.round(100*random.nextGaussian() + Math.round(scrambleLength / 2.0));
+
             if (ind >= 0 && ind <= border){
                 if (!((Math.abs(prevInd - ind) % 3) == 0))
                 { // Проверяем повторения, ходы <->, ходы <<- ->, ходы параллельных граней;
