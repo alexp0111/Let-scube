@@ -19,6 +19,7 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.ViewPagerEventFragmentAdapter;
 import com.example.lbar.adapter.ViewPagerRoomsFragmentAdapter;
+import com.example.lbar.fragments.mainMenuFragments.eventFragments.AddingEventFragment;
 import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -63,10 +64,15 @@ public class RoomsMainBattleFragment extends Fragment {
             }
         }).attach();
 
-        //pullNewRoom.setOnClickListener(view1 -> {
-        //    circle.setVisibility(View.VISIBLE);
-        //    circle.startAnimation(animationCircle);
-        //});
+        pullNewRoom.setOnClickListener(view1 -> {
+            try {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.from_bottom, R.anim.alpha_to_low).replace(R.id.fragment_container,
+                        new AddingRoomFragment()).commit();
+            } catch (Exception D) {
+                Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
