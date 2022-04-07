@@ -1,5 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments.accountFragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -397,7 +399,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
                     res = true;
                 }
             }
-        } catch (NullPointerException npe){
+        } catch (NullPointerException npe) {
             //
         }
         return res;
@@ -405,5 +407,17 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
 
     private void onSwipeRight() {
         drawer.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

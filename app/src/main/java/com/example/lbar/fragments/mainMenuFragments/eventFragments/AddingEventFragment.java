@@ -1,5 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.fragments.mainMenuFragments.eventFragments.MainEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.example.lbar.helpClasses.Event;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -267,5 +270,18 @@ public class AddingEventFragment extends Fragment {
         });
     }
 
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // TODO: fix buttons appearing bug
+                etText.setText("");
+                etHeader.setText("");
+                getBackAnimationsStart();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 }

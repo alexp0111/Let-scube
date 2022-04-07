@@ -1,17 +1,20 @@
 package com.example.lbar.fragments.mainMenuFragments.roomsFragments;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -93,7 +96,7 @@ public class RoomsStartFragment extends Fragment {
 
             collective.setTranslationX(0);
             collective.setAlpha(1);
-            collective.animate().translationX(-1*dp_width).alpha(1).setDuration(400).setStartDelay(0).start();
+            collective.animate().translationX(-1 * dp_width).alpha(1).setDuration(400).setStartDelay(0).start();
 
             solo.setTranslationX(0);
             solo.setAlpha(1);
@@ -155,5 +158,17 @@ public class RoomsStartFragment extends Fragment {
             drawer.addDrawerListener(toggle);
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

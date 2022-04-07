@@ -1,5 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -103,7 +105,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
 
         imgSearchUsers.setOnClickListener(view1 -> {
             TextInputLayout textInputLayout = view.findViewById(R.id.textField_search_users);
-            if (textInputLayout.getVisibility() == View.GONE){
+            if (textInputLayout.getVisibility() == View.GONE) {
                 textInputLayout.setVisibility(View.VISIBLE);
             } else {
                 textInputLayout.setVisibility(View.GONE);
@@ -258,7 +260,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
         try {
             diffY = moveEvent.getY() - downEvent.getY();
             diffX = moveEvent.getX() - downEvent.getX();
-        } catch (Exception e){
+        } catch (Exception e) {
             //Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
         }
 
@@ -275,5 +277,17 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
 
     private void onSwipeRight() {
         drawer.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

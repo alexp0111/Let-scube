@@ -1,5 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +9,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -20,6 +23,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.ViewPagerEventFragmentAdapter;
+import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -75,7 +79,7 @@ public class MainEventFragment extends Fragment {
     }
 
     private void setItemAnimations() {
-        if (isUnExploid){
+        if (isUnExploid) {
             Animation animationUnCircle = AnimationUtils.loadAnimation(getContext(), R.anim.circle_unexplosion);
 
             animationUnCircle.setDuration(700);
@@ -115,7 +119,7 @@ public class MainEventFragment extends Fragment {
 
         try {
             isUnExploid = this.getArguments().getBoolean("circle_anim");
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             isUnExploid = false;
         }
 
@@ -138,5 +142,15 @@ public class MainEventFragment extends Fragment {
         }
     }
 
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 }

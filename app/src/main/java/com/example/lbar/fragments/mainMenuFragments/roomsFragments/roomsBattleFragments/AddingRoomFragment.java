@@ -1,5 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.lbar.R;
+import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -153,5 +156,23 @@ public class AddingRoomFragment extends Fragment {
         puzzlesList.add(R.drawable.cube_megaminx);
         puzzlesList.add(R.drawable.cube_clock);
         puzzlesList.add(R.drawable.cube_square1);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                try {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.alpha_to_high_1000, R.anim.to_top).replace(R.id.fragment_container,
+                            new RoomsMainBattleFragment()).commit();
+                } catch (Exception D) {
+                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }
