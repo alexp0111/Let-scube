@@ -18,6 +18,8 @@ import com.example.lbar.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -55,6 +57,7 @@ public class AddingRoomFragment extends Fragment {
 
         initItems(view);
         realiseClickListenersOnCards();
+        realiseLongClickListenersOnCards();
 
         fab.setOnClickListener(view1 -> {
             try {
@@ -66,6 +69,29 @@ public class AddingRoomFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void realiseLongClickListenersOnCards() {
+        mcdDiscipline.setOnLongClickListener(view -> {
+            Snackbar.make(getView(), "Here you can choose discipline to compete!",
+                    BaseTransientBottomBar.LENGTH_LONG).show();
+            return true;
+        });
+        mcdMembers.setOnLongClickListener(view -> {
+            Snackbar.make(getView(), "Here you can choose maximum number of competitors!",
+                    BaseTransientBottomBar.LENGTH_LONG).show();
+            return true;
+        });
+        mcdSync.setOnLongClickListener(view -> {
+            Snackbar.make(getView(), "Set SYNC to synchronize results with collection, else - set ASYNC!",
+                    BaseTransientBottomBar.LENGTH_LONG).show();
+            return true;
+        });
+        mcdAccess.setOnLongClickListener(view -> {
+            Snackbar.make(getView(), "Here you can choose privacy of your room!",
+                    BaseTransientBottomBar.LENGTH_LONG).show();
+            return true;
+        });
     }
 
     private void realiseClickListenersOnCards() {

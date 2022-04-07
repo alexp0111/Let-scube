@@ -26,6 +26,8 @@ import com.example.lbar.R;
 import com.example.lbar.adapter.MessageAdapter;
 import com.example.lbar.helpClasses.Message;
 import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -110,6 +112,17 @@ public class DialogueFragment extends Fragment {
             } else {
                 makeFriend();
             }
+        });
+
+        addFriend.setOnLongClickListener(view13 -> {
+            if (SendersFriends.contains(receiverUserID)) {
+                Snackbar.make(getView(), "Here you can delete this user from your friends list!",
+                        BaseTransientBottomBar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(getView(), "Here you can add this user to your friends list!",
+                        BaseTransientBottomBar.LENGTH_LONG).show();
+            }
+            return true;
         });
 
         textInputLayout_send.setEndIconOnClickListener(view1 -> {

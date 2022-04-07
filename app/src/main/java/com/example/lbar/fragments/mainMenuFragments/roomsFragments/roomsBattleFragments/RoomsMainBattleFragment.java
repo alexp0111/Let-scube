@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,13 +66,36 @@ public class RoomsMainBattleFragment extends Fragment {
         }).attach();
 
         pullNewRoom.setOnClickListener(view1 -> {
-            try {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.from_bottom, R.anim.alpha_to_low).replace(R.id.fragment_container,
-                        new AddingRoomFragment()).commit();
-            } catch (Exception D) {
-                Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-            }
+            Animation miniUnExplosionAnimation =
+                    AnimationUtils.loadAnimation(getContext()
+                            , R.anim.mini_circle_unexplosion);
+
+            miniUnExplosionAnimation.setDuration(200);
+            pullNewRoom.startAnimation(miniUnExplosionAnimation);
+
+            miniUnExplosionAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    pullNewRoom.setVisibility(View.GONE);
+                    try {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.from_bottom, R.anim.alpha_to_low).replace(R.id.fragment_container,
+                                new AddingRoomFragment()).commit();
+                    } catch (Exception D) {
+                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         });
 
         return view;
@@ -101,7 +125,7 @@ public class RoomsMainBattleFragment extends Fragment {
             tbar.setNavigationOnClickListener(view1 -> {
                 try {
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.alpha_to_high_1000, R.anim.to_top)
+                            .setCustomAnimations(R.anim.from_left, R.anim.to_left)
                             .replace(R.id.fragment_container,
                                     new RoomsStartFragment()).commit();
                 } catch (Exception D) {

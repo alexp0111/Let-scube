@@ -56,7 +56,7 @@ public class RoomsStartFragment extends Fragment {
         collective.setOnClickListener(view -> {
             collective.setTranslationX(0);
             collective.setAlpha(1);
-            collective.animate().translationX(-1*dp_width).alpha(1).setDuration(400).setStartDelay(0).start();
+            collective.animate().translationX(dp_width).alpha(1).setDuration(400).setStartDelay(0).start();
 
             solo.setTranslationX(0);
             solo.setAlpha(1);
@@ -70,7 +70,7 @@ public class RoomsStartFragment extends Fragment {
                 public void onAnimationEnd(Animator animator) {
                     try {
                         getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.from_bottom, R.anim.alpha_to_low)
+                                .setCustomAnimations(R.anim.to_right, R.anim.from_right)
                                 .replace(R.id.fragment_container,
                                         new RoomsMainBattleFragment()).commit();
                     } catch (Exception D) {
