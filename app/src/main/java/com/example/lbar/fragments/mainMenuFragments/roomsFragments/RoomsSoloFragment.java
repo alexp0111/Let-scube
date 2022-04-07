@@ -80,7 +80,7 @@ public class RoomsSoloFragment extends Fragment {
 
         initItems(view);
         realiseClickListners();
-        realiseClickListnersForDialog();
+        realiseClickListenersForDialog();
 
         // Experiments with scramble generator
         Log.d("RoomSoloFragment_disc", PUZZLE_DISCIPLINE + ";");
@@ -255,7 +255,7 @@ public class RoomsSoloFragment extends Fragment {
         cube.updateStatistics(updateTime);
     }
 
-    private void realiseClickListnersForDialog() {
+    private void realiseClickListenersForDialog() {
         for (int i = 0; i < mcdList.size(); i++) {
             int finalI = i;
             mcdList.get(i).setOnClickListener(view -> {
