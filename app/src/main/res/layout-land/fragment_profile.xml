@@ -14,6 +14,7 @@
         android:elevation="4dp"
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="_"
         app:titleTextColor="#000000" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -136,8 +137,8 @@
                         android:id="@+id/on_log_text_hi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/you_logged_in"
                         android:layout_marginBottom="20dp"
+                        android:text="@string/you_logged_in"
                         android:textColor="#FFFFFF"
                         android:textSize="32dp"
                         android:theme="@style/AppTheme_2" />

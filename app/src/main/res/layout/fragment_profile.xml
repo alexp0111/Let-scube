@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -11,16 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:titleTextColor="#000000"
         android:elevation="4dp"
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="_"
+        app:titleTextColor="#000000" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pull_to_refresh_profile"
-        android:layout_below="@id/toolbar_in_profile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_in_profile">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -39,8 +40,8 @@
                 android:id="@+id/ver_txtv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="top|center"
                 android:layout_below="@id/prog_bar_onlog"
+                android:gravity="top|center"
                 android:paddingTop="30dp"
                 android:text="@string/your_mail_has_not_been_verified"
                 android:textColor="#C62828"
@@ -67,19 +68,19 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:gravity="center"
                 android:id="@+id/container_for_profile_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/prog_bar_onlog"
-                android:layout_height="wrap_content">
+                android:gravity="center">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
                     android:id="@+id/layout_user_img"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="10dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/prof_img"
@@ -94,9 +95,9 @@
 
             <TextView
                 android:id="@+id/on_log_text_hi"
-                android:layout_below="@id/container_for_profile_img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/container_for_profile_img"
                 android:gravity="top|center"
                 android:paddingTop="30dp"
                 android:text="@string/you_logged_in"
@@ -106,9 +107,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_below="@id/on_log_text_hi"
-                android:layout_above="@id/container_for_log_out_button"
                 android:layout_height="300dp"
+                android:layout_above="@id/container_for_log_out_button"
+                android:layout_below="@id/on_log_text_hi"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingLeft="30dp"
@@ -126,7 +127,6 @@
                     android:theme="@style/AppTheme_2" />
 
 
-
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/on_log_birthday"
                     android:layout_width="match_parent"
@@ -141,8 +141,8 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:id="@+id/container_for_log_out_button"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="40dp"
@@ -151,13 +151,13 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/bt_logg_out"
-                    android:theme="@style/Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingLeft="14dp"
                     android:paddingRight="14dp"
-                    android:text="@string/log_out" />
+                    android:text="@string/log_out"
+                    android:theme="@style/Button" />
             </LinearLayout>
 
 

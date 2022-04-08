@@ -254,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
+            Log.d("qwerty", "poiuy");
             navigationView.setCheckedItem(R.id.nav_profile);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new LogInFragment()).commit();

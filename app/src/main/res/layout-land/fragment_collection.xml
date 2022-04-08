@@ -16,6 +16,7 @@
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="_"
         app:titleTextColor="#000000" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator

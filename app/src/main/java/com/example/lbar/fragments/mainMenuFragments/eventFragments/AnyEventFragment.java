@@ -72,7 +72,9 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Events");
 
         initItems(view);
-        getUserFriendsList();
+        if (fUser != null){
+            getUserFriendsList();
+        }
         SwipeMenuOpenerControl(view);
 
         mEvents = new ArrayList<>();
