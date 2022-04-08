@@ -1,6 +1,7 @@
 package com.example.lbar.fragments.mainMenuFragments.roomsFragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -25,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments.RoomsMainBattleFragment;
 import com.example.lbar.helpClasses.Cube;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -79,7 +82,7 @@ public class RoomsSoloFragment extends Fragment {
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         initItems(view);
-        realiseClickListners();
+        realiseClickListeners();
         realiseClickListenersForDialog();
 
         // Experiments with scramble generator
@@ -139,7 +142,7 @@ public class RoomsSoloFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void realiseClickListners() {
+    private void realiseClickListeners() {
         // Кнопка возврата
         backView.setOnClickListener(view13 -> {
             try {
@@ -375,5 +378,27 @@ public class RoomsSoloFragment extends Fragment {
             updateDataBaseStatistic();
         }
         super.onStop();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (updateTime != 0L){
+                    updateDataBaseStatistic();
+                }
+                try {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.alpha_to_high_1000, R.anim.to_top)
+                            .replace(R.id.fragment_container,
+                                    new RoomsStartFragment()).commit();
+                } catch (Exception D) {
+                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

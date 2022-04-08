@@ -155,23 +155,26 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:hintTextColor="@color/colorPrimaryDark"
         android:layout_below="@id/room_settings_layout"
         android:layout_marginHorizontal="20dp"
-        android:visibility="gone"
         android:layout_marginVertical="10dp"
         android:hint="@string/password"
+        android:textColorHint="@color/colorPrimaryDark"
+        android:visibility="gone"
         app:boxStrokeColor="@color/colorPrimaryDark"
         app:endIconMode="password_toggle"
         app:endIconTint="@color/colorPrimaryDark"
-        app:startIconTint="@color/colorPrimaryDark"
-        app:startIconDrawable="@drawable/ic_pass_key">
+        app:hintTextColor="@color/colorPrimaryDark"
+        app:startIconDrawable="@drawable/ic_pass_key"
+        app:startIconTint="@color/colorPrimaryDark">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/room_et_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <View

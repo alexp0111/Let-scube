@@ -23,8 +23,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.fragments.mainMenuFragments.eventFragments.MainEventFragment;
-import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.example.lbar.helpClasses.Event;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -98,25 +96,7 @@ public class AddingEventFragment extends Fragment {
         fabExtended.startAnimation(startExtendedFabAnimation);
 
         fabExtended.setOnClickListener(view1 -> {
-            if (!fabFlag) {
-                fabExtended.startAnimation(rotateExtendedFabAnimation);
-                fabApply.setVisibility(View.VISIBLE);
-                fabDisable.setVisibility(View.VISIBLE);
-
-                fabApply.startAnimation(startApplyFabAnimation);
-                fabDisable.startAnimation(startDisableFabAnimation);
-
-                fabFlag = true;
-            } else {
-                fabExtended.startAnimation(rotateBackExtendedFabAnimation);
-                fabApply.startAnimation(closeApplyFabAnimation);
-                fabDisable.startAnimation(closeDisableFabAnimation);
-
-                fabApply.setVisibility(View.INVISIBLE);
-                fabDisable.setVisibility(View.INVISIBLE);
-
-                fabFlag = false;
-            }
+            startFabExtended();
         });
 
         btPictureAdditing.setOnClickListener(view14 -> choosePictureFromAlbum());
@@ -132,6 +112,28 @@ public class AddingEventFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void startFabExtended() {
+        if (!fabFlag) {
+            fabExtended.startAnimation(rotateExtendedFabAnimation);
+            fabApply.setVisibility(View.VISIBLE);
+            fabDisable.setVisibility(View.VISIBLE);
+
+            fabApply.startAnimation(startApplyFabAnimation);
+            fabDisable.startAnimation(startDisableFabAnimation);
+
+            fabFlag = true;
+        } else {
+            fabExtended.startAnimation(rotateBackExtendedFabAnimation);
+            fabApply.startAnimation(closeApplyFabAnimation);
+            fabDisable.startAnimation(closeDisableFabAnimation);
+
+            fabApply.setVisibility(View.INVISIBLE);
+            fabDisable.setVisibility(View.INVISIBLE);
+
+            fabFlag = false;
+        }
     }
 
     private void packAndSendAllDataToDB(View v) {
@@ -195,7 +197,7 @@ public class AddingEventFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                closeFrgament();
+                closeFragment();
             }
 
             @Override
@@ -218,7 +220,7 @@ public class AddingEventFragment extends Fragment {
         fabFlag = false;
     }
 
-    private void closeFrgament() {
+    private void closeFragment() {
         MainEventFragment fragment = new MainEventFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("circle_anim", true);
@@ -276,10 +278,7 @@ public class AddingEventFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // TODO: fix buttons appearing bug
-                etText.setText("");
-                etHeader.setText("");
-                getBackAnimationsStart();
+                startFabExtended();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);

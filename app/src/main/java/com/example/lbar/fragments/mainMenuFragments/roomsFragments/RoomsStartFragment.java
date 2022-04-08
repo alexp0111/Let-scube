@@ -3,9 +3,13 @@ package com.example.lbar.fragments.mainMenuFragments.roomsFragments;
 import android.animation.Animator;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -25,9 +29,11 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
+import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
 import static com.example.lbar.MainActivity.dp_width;
 
-public class RoomsStartFragment extends Fragment {
+public class RoomsStartFragment extends Fragment{
 
     private static MaterialCardView collective;
     private static MaterialCardView solo;
