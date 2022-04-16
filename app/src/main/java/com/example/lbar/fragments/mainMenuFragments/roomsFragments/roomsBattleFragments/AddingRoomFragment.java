@@ -116,6 +116,7 @@ public class AddingRoomFragment extends Fragment {
         fabDisable.setOnClickListener(view13 -> {
             etDescription.setText("");
             etHeader.setText("");
+
             getBackAnimationsStart();
         });
 
