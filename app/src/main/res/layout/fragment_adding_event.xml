@@ -119,7 +119,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:textColor="@color/colorAccent"
-                android:id="@+id/event_adding_text_txt"
+                android:id="@+id/event_adding_description_txt"
                 android:cursorVisible="true"
                 android:textCursorDrawable="@null"
                 style="@style/AppTheme_2"

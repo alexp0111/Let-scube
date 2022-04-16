@@ -8,6 +8,11 @@ public class RoomMember {
     private ArrayList<Long> member_results;
     private boolean member_preparation;
 
+    public RoomMember(String member_id, boolean member_preparation) {
+        this.member_id = member_id;
+        this.member_preparation = member_preparation;
+    }
+
     public RoomMember(String member_id, ArrayList<Long> member_results, boolean member_preparation) {
         this.member_id = member_id;
         this.member_results = member_results;

@@ -212,7 +212,7 @@
             app:hintTextColor="@color/colorAccent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/event_adding_text_txt"
+                android:id="@+id/event_adding_description_txt"
                 style="@style/AppTheme_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -224,6 +224,42 @@
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/room_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/room_disable"
+        android:layout_alignStart="@+id/room_push"
+        android:layout_alignEnd="@+id/room_push"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/colorAccent"
+        android:elevation="4dp"
+        android:visibility="invisible"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_done"
+        app:tint="@color/colorPrimary" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/room_disable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/room_push"
+        android:layout_alignStart="@+id/room_push"
+        android:layout_alignEnd="@+id/room_push"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/colorAccent"
+        android:elevation="4dp"
+        android:visibility="invisible"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_delete"
+        app:tint="@color/colorPrimary" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/room_push"

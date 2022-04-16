@@ -12,9 +12,34 @@ public class Room {
     private String room_header;
     private String room_description;
     private String room_access;
+    private String room_password;
     private boolean room_collection_synchronization; // false - without // true - with
     private Integer room_puzzle_discipline;
     private Integer room_max_number_of_members;
+
+    public Room(String room_id,
+                String room_admin_id,
+                Long room_start_time,
+                ArrayList<RoomMember> room_members,
+                String room_header,
+                String room_description,
+                String room_access,
+                String room_password,
+                boolean room_collection_synchronization,
+                Integer room_puzzle_discipline,
+                Integer room_max_number_of_members) {
+        this.room_id = room_id;
+        this.room_admin_id = room_admin_id;
+        this.room_start_time = room_start_time;
+        this.room_members = room_members;
+        this.room_header = room_header;
+        this.room_description = room_description;
+        this.room_access = room_access;
+        this.room_password = room_password;
+        this.room_collection_synchronization = room_collection_synchronization;
+        this.room_puzzle_discipline = room_puzzle_discipline;
+        this.room_max_number_of_members = room_max_number_of_members;
+    }
 
     public Room(String room_id,
                 String room_admin_id,

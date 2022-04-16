@@ -167,7 +167,7 @@ public class AddingEventFragment extends Fragment {
         fabDisable = view.findViewById(R.id.event_disable);
 
         etHeader = view.findViewById(R.id.event_adding_header_txt);
-        etText = view.findViewById(R.id.event_adding_text_txt);
+        etText = view.findViewById(R.id.event_adding_description_txt);
         cbAccessibility = view.findViewById(R.id.event_adding_friends_checkBox);
         btPictureAdditing = view.findViewById(R.id.event_adding_picture_button);
     }
