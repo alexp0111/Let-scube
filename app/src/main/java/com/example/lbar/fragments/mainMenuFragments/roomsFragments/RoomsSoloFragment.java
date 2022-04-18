@@ -2,6 +2,7 @@ package com.example.lbar.fragments.mainMenuFragments.roomsFragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -89,8 +90,9 @@ public class RoomsSoloFragment extends Fragment {
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         initItems(view);
+        getSPInfo(main_activity);
         realiseClickListeners();
-        realiseClickListenersForDialog();
+        realiseClickListenersForDialog(main_activity);
 
         // Experiments with scramble generator
         Log.d("RoomSoloFragment_disc", PUZZLE_DISCIPLINE + ";");
@@ -111,6 +113,29 @@ public class RoomsSoloFragment extends Fragment {
         };
 
         return view;
+    }
+
+    private void getSPInfo(AppCompatActivity activity) {
+        boolean value = true;
+        final SharedPreferences preferencesSettings = activity.getSharedPreferences("roomSoloSettings", 0);
+        pointerSync = preferencesSettings.getBoolean("is sync", value);
+        if (pointerSync){
+            tvListSettings.get(0).setText("SYNC WITH COLLECTION");
+        } else {
+            tvListSettings.get(0).setText("DO NOT SYNC WITH COLLECTION");
+        }
+        pointerScrambles = preferencesSettings.getBoolean("is scramble", value);
+        if (pointerScrambles){
+            tvListSettings.get(1).setText("SHOW SCRAMBLES");
+        } else {
+            tvListSettings.get(1).setText("HIDE SCRAMBLES");
+        }
+        pointerButtons = preferencesSettings.getBoolean("is buttons", value);
+        if (pointerButtons){
+            tvListSettings.get(2).setText("SHOW FINE BUTTONS");
+        } else {
+            tvListSettings.get(2).setText("HIDE FINE BUTTONS");
+        }
     }
 
     private void initItems(View v) {
@@ -295,7 +320,10 @@ public class RoomsSoloFragment extends Fragment {
         }
     }
 
-    private void realiseClickListenersForDialog() {
+    private void realiseClickListenersForDialog(AppCompatActivity activity) {
+
+        final SharedPreferences preferencesSettings = activity.getSharedPreferences("roomSoloSettings", 0);
+
         for (int i = 0; i < mcdListPuzzleMode.size(); i++) {
             int finalI = i;
             mcdListPuzzleMode.get(i).setOnClickListener(view -> {
@@ -325,9 +353,11 @@ public class RoomsSoloFragment extends Fragment {
         mcdListSettings.get(0).setOnClickListener(view -> {
             if (pointerSync){
                 tvListSettings.get(0).setText("DO NOT SYNC WITH COLLECTION");
+                preferencesSettings.edit().putBoolean("is sync", false).apply();
                 pointerSync = false;
             } else {
                 tvListSettings.get(0).setText("SYNC WITH COLLECTION");
+                preferencesSettings.edit().putBoolean("is sync", true).apply();
                 pointerSync = true;
             }
         });
@@ -336,10 +366,12 @@ public class RoomsSoloFragment extends Fragment {
         mcdListSettings.get(1).setOnClickListener(view -> {
             if (pointerScrambles){
                 tvListSettings.get(1).setText("HIDE SCRAMBLES");
+                preferencesSettings.edit().putBoolean("is scrambles", false).apply();
                 scrambleTextView.setVisibility(View.INVISIBLE);
                 pointerScrambles = false;
             } else {
                 tvListSettings.get(1).setText("SHOW SCRAMBLES");
+                preferencesSettings.edit().putBoolean("is scrambles", true).apply();
                 scrambleTextView.setVisibility(View.VISIBLE);
                 pointerScrambles = true;
             }
@@ -349,12 +381,14 @@ public class RoomsSoloFragment extends Fragment {
         mcdListSettings.get(2).setOnClickListener(view -> {
             if (pointerButtons){
                 tvListSettings.get(2).setText("HIDE FINE BUTTONS");
+                preferencesSettings.edit().putBoolean("is buttons", false).apply();
                 btnPlusTwo.setVisibility(View.INVISIBLE);
                 btnDNF.setVisibility(View.INVISIBLE);
                 btnDeleteResult.setVisibility(View.INVISIBLE);
                 pointerButtons = false;
             } else {
                 tvListSettings.get(2).setText("SHOW FINE BUTTONS");
+                preferencesSettings.edit().putBoolean("is buttons", true).apply();
                 pointerButtons = true;
             }
         });
