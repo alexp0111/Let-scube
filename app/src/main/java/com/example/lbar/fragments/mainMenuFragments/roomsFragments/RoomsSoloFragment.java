@@ -27,7 +27,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments.RoomsMainBattleFragment;
 import com.example.lbar.helpClasses.Cube;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -44,16 +43,23 @@ public class RoomsSoloFragment extends Fragment {
     private int PUZZLE_DISCIPLINE = 1;
     private Cube cube = new Cube(PUZZLE_DISCIPLINE);
 
-    private ArrayList<MaterialCardView> mcdList;
+    private boolean pointerSync = true;
+    private boolean pointerScrambles = true;
+    private boolean pointerButtons = true;
+
+    private ArrayList<MaterialCardView> mcdListPuzzleMode;
+    private ArrayList<MaterialCardView> mcdListSettings;
+    private ArrayList<TextView> tvListSettings;
     private MaterialAlertDialogBuilder mdBuilderPuzzleChoice;
     private AlertDialog dialog;
     private View puzzlesView;
+    private View settingsSoloView;
 
     private TextView chronometer;
     private TextView pMode;
     private LinearLayout layout;
-    private ImageView backView;
-    private ImageView settingsView;
+    private ImageView backImageView;
+    private ImageView settingsImageView;
     private ConstraintLayout bar;
 
     private String[] scrambleArray_classic;
@@ -79,6 +85,7 @@ public class RoomsSoloFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_solo_rooms, container, false);
         puzzlesView = inflater.inflate(R.layout.dialog_puzzle_choice, container, false);
+        settingsSoloView = inflater.inflate(R.layout.dialog_solo_settings, container, false);
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         initItems(view);
@@ -118,24 +125,34 @@ public class RoomsSoloFragment extends Fragment {
 
         layout = v.findViewById(R.id.layout_solo_main);
 
-        backView = v.findViewById(R.id.rooms_back_iv);
-        settingsView = v.findViewById(R.id.rooms_settings);
+        backImageView = v.findViewById(R.id.rooms_back_iv);
+        settingsImageView = v.findViewById(R.id.rooms_settings);
         bar = v.findViewById(R.id.rooms_bar);
 
         customHandler = new Handler(Looper.getMainLooper());
 
-        mcdList = new ArrayList<>();
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_0));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_1));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_2));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_3));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_4));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_5));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_pyraminx));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_sqube));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_clock));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_megaminx));
-        mcdList.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_square1));
+        mcdListPuzzleMode = new ArrayList<>();
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_0));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_1));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_2));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_3));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_4));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_type_5));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_pyraminx));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_sqube));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_clock));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_megaminx));
+        mcdListPuzzleMode.add(puzzlesView.findViewById(R.id.dialog_puzzle_choice_square1));
+
+        mcdListSettings = new ArrayList<>();
+        mcdListSettings.add(settingsSoloView.findViewById(R.id.room_solo_dialog_settings_of_synchronization));
+        mcdListSettings.add(settingsSoloView.findViewById(R.id.room_solo_dialog_settings_of_scrambles));
+        mcdListSettings.add(settingsSoloView.findViewById(R.id.room_solo_dialog_settings_of_buttons));
+
+        tvListSettings = new ArrayList<>();
+        tvListSettings.add(settingsSoloView.findViewById(R.id.room_solo_dialog_settings_of_synchronization_txt));
+        tvListSettings.add(settingsSoloView.findViewById(R.id.room_solo_dialog_settings_of_scrambles_txt));
+        tvListSettings.add(settingsSoloView.findViewById(R.id.room_solo_dialog_settings_of_buttons_txt));
 
         // Scrambles from res
         scrambleArray_classic = getResources().getStringArray(R.array.scrambles_for_classic);
@@ -144,7 +161,7 @@ public class RoomsSoloFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void realiseClickListeners() {
         // Кнопка возврата
-        backView.setOnClickListener(view13 -> {
+        backImageView.setOnClickListener(view13 -> {
             try {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.alpha_to_high_1000, R.anim.to_top)
@@ -175,8 +192,8 @@ public class RoomsSoloFragment extends Fragment {
                         btnPlusTwo.setVisibility(View.INVISIBLE);
                         btnDNF.setVisibility(View.INVISIBLE);
                         btnDeleteResult.setVisibility(View.INVISIBLE);
-                        backView.setVisibility(View.INVISIBLE);
-                        settingsView.setVisibility(View.INVISIBLE);
+                        backImageView.setVisibility(View.INVISIBLE);
+                        settingsImageView.setVisibility(View.INVISIBLE);
                         pMode.setVisibility(View.INVISIBLE);
                         scrambleTextView.setVisibility(View.INVISIBLE);
 
@@ -185,14 +202,18 @@ public class RoomsSoloFragment extends Fragment {
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
-                        btnPlusTwo.setVisibility(View.VISIBLE);
-                        btnDNF.setVisibility(View.VISIBLE);
-                        btnDeleteResult.setVisibility(View.VISIBLE);
-                        backView.setVisibility(View.VISIBLE);
-                        settingsView.setVisibility(View.VISIBLE);
+                        if (pointerButtons){
+                            btnPlusTwo.setVisibility(View.VISIBLE);
+                            btnDNF.setVisibility(View.VISIBLE);
+                            btnDeleteResult.setVisibility(View.VISIBLE);
+                        }
+                        backImageView.setVisibility(View.VISIBLE);
+                        settingsImageView.setVisibility(View.VISIBLE);
                         pMode.setVisibility(View.VISIBLE);
-                        scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
-                        scrambleTextView.setVisibility(View.VISIBLE);
+                        if (pointerScrambles){
+                            scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
+                            scrambleTextView.setVisibility(View.VISIBLE);
+                        } else {scrambleTextView.setText("");}
 
                         customHandler.removeCallbacks(updateTimerThread);
                     }
@@ -226,6 +247,20 @@ public class RoomsSoloFragment extends Fragment {
             dialog = mdBuilderPuzzleChoice.show();
         });
 
+        // Кнопка вызова диалога настроек
+        settingsImageView.setOnClickListener(view -> {
+            mdBuilderPuzzleChoice = new MaterialAlertDialogBuilder(getContext());
+
+            mdBuilderPuzzleChoice.setTitle("Settings");
+            mdBuilderPuzzleChoice.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
+
+            if (settingsSoloView.getParent() != null) {
+                ((ViewGroup) settingsSoloView.getParent()).removeView(settingsSoloView);
+            }
+            mdBuilderPuzzleChoice.setView(settingsSoloView);
+            dialog = mdBuilderPuzzleChoice.show();
+        });
+
         // Кнопка штрафа
         btnPlusTwo.setOnClickListener(view -> {
             if (buttonFlag){
@@ -255,13 +290,15 @@ public class RoomsSoloFragment extends Fragment {
     }
 
     private void updateDataBaseStatistic() {
-        cube.updateStatistics(updateTime);
+        if (pointerSync){
+            cube.updateStatistics(updateTime);
+        }
     }
 
     private void realiseClickListenersForDialog() {
-        for (int i = 0; i < mcdList.size(); i++) {
+        for (int i = 0; i < mcdListPuzzleMode.size(); i++) {
             int finalI = i;
-            mcdList.get(i).setOnClickListener(view -> {
+            mcdListPuzzleMode.get(i).setOnClickListener(view -> {
 
                 if (updateTime != 0L){
                     updateDataBaseStatistic();
@@ -277,10 +314,50 @@ public class RoomsSoloFragment extends Fragment {
                 pMode.setText(puzzleNames[finalI]);
                 PUZZLE_DISCIPLINE = finalI;
                 cube = new Cube(PUZZLE_DISCIPLINE);
-                scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
+                if (pointerScrambles){
+                    scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
+                } else {scrambleTextView.setText("");}
                 dialog.dismiss();
             });
         }
+
+        // Sync settings
+        mcdListSettings.get(0).setOnClickListener(view -> {
+            if (pointerSync){
+                tvListSettings.get(0).setText("DO NOT SYNC WITH COLLECTION");
+                pointerSync = false;
+            } else {
+                tvListSettings.get(0).setText("SYNC WITH COLLECTION");
+                pointerSync = true;
+            }
+        });
+
+        //Scramble settings
+        mcdListSettings.get(1).setOnClickListener(view -> {
+            if (pointerScrambles){
+                tvListSettings.get(1).setText("HIDE SCRAMBLES");
+                scrambleTextView.setVisibility(View.INVISIBLE);
+                pointerScrambles = false;
+            } else {
+                tvListSettings.get(1).setText("SHOW SCRAMBLES");
+                scrambleTextView.setVisibility(View.VISIBLE);
+                pointerScrambles = true;
+            }
+        });
+
+        //Buttons settings
+        mcdListSettings.get(2).setOnClickListener(view -> {
+            if (pointerButtons){
+                tvListSettings.get(2).setText("HIDE FINE BUTTONS");
+                btnPlusTwo.setVisibility(View.INVISIBLE);
+                btnDNF.setVisibility(View.INVISIBLE);
+                btnDeleteResult.setVisibility(View.INVISIBLE);
+                pointerButtons = false;
+            } else {
+                tvListSettings.get(2).setText("SHOW FINE BUTTONS");
+                pointerButtons = true;
+            }
+        });
     }
 
     private String convertFromMStoString(long ms) {
@@ -365,7 +442,9 @@ public class RoomsSoloFragment extends Fragment {
         timeSwapBuffer = 0L;
         updateTime = 0L;
 
-        scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
+        if (pointerScrambles){
+            scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
+        } else {scrambleTextView.setText("");}
 
         Log.d("RoomsSoloFragment", "onStart");
         super.onStart();
