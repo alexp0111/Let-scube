@@ -2,29 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center">
+    android:background="@color/colorBackground">
 
-    <LinearLayout
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/prog_bar_public_rooms"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_in_mess"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="30dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:layout_width="280dp"
-            android:layout_height="280dp"
-            android:layout_marginBottom="20dp"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/cube_loading" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pull_to_refresh_public_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="В разработке" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_public_rooms"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/prog_bar_public_rooms" />
 
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
