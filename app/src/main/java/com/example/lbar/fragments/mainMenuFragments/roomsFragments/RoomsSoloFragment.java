@@ -366,12 +366,12 @@ public class RoomsSoloFragment extends Fragment {
         mcdListSettings.get(1).setOnClickListener(view -> {
             if (pointerScrambles){
                 tvListSettings.get(1).setText("HIDE SCRAMBLES");
-                preferencesSettings.edit().putBoolean("is scrambles", false).apply();
+                preferencesSettings.edit().putBoolean("is scramble", false).apply();
                 scrambleTextView.setVisibility(View.INVISIBLE);
                 pointerScrambles = false;
             } else {
                 tvListSettings.get(1).setText("SHOW SCRAMBLES");
-                preferencesSettings.edit().putBoolean("is scrambles", true).apply();
+                preferencesSettings.edit().putBoolean("is scramble", true).apply();
                 scrambleTextView.setVisibility(View.VISIBLE);
                 pointerScrambles = true;
             }
