@@ -23,17 +23,26 @@ import com.example.lbar.fragments.DialogueFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.TreeMap;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private List<User> mUsers;
     private Context mContext;
-    private boolean flag;
+    private boolean isFromMessage;
+    private TreeMap<String, String> treeMapLastMess;
 
-    public UserAdapter(Context mContext, List<User> mUsers, boolean flag){
+    public UserAdapter(Context mContext, List<User> mUsers, boolean isFromMessage){
         this.mUsers = mUsers;
         this.mContext = mContext;
-        this.flag = flag;
+        this.isFromMessage = isFromMessage;
+    }
+
+    public UserAdapter(Context mContext, List<User> mUsers, boolean isFromMessage, TreeMap<String, String> treeMapLastMess){
+        this.mUsers = mUsers;
+        this.mContext = mContext;
+        this.isFromMessage = isFromMessage;
+        this.treeMapLastMess = treeMapLastMess;
     }
 
     @NonNull
@@ -45,9 +54,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), android.R.anim.slide_in_left );
+        //Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), android.R.anim.slide_in_left );
 
         User user = mUsers.get(position);
+
+        if (isFromMessage){
+            holder.divider.setVisibility(View.VISIBLE);
+            holder.lastMessage.setVisibility(View.VISIBLE);
+            holder.lastMessage.setText(holder.lastMessage.getText() + treeMapLastMess.get(user.getUs_id()));
+        } else {
+            holder.divider.setVisibility(View.GONE);
+            holder.lastMessage.setVisibility(View.GONE);
+        }
 
         holder.username.setText(user.getUs_name());
         Glide.with(mContext).load(user.getImage()).into(holder.profile_image);
@@ -68,6 +86,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 bundle.putString("us_id", user.getUs_id());
                 bundle.putString("user_img", user.getImage());
                 bundle.putString("user_name", user.getUs_name());
+                bundle.putBoolean("isFromMessage", isFromMessage);
+
                 // Отправлять инфу сразу - друг или нет.
                 fragment.setArguments(bundle);
 
@@ -83,6 +103,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         } else {
             Toast.makeText(mContext, "To chat, firstly enter your account", Toast.LENGTH_SHORT).show();
         }
+        // TODO:
         // Надо отлаживать и думать над анимацией. Она обновляет список каждый раз, когда кто-то в приложении
         // выходит или меняет тему - так быть не должно. Или не должно приносить дискомфорт пользователю
 
@@ -102,12 +123,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public ImageView profile_image;
         public TextView status_line;
 
+        public View divider;
+        public TextView lastMessage;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             username = itemView.findViewById(R.id.user_item_name);
             profile_image = itemView.findViewById(R.id.user_item_profile_img);
             status_line = itemView.findViewById(R.id.status_list);
+
+            divider = itemView.findViewById(R.id.divider_under_user);
+            lastMessage = itemView.findViewById(R.id.user_item_last_mess);
         }
     }
 }

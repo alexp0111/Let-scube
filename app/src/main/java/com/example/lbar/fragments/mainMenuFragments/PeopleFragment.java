@@ -191,6 +191,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
                 if (searchUsers.getText().toString().equals("")) {
+                    //TODO: fUser == null???
                     if (fUser == null) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             User user = snapshot.getValue(User.class);

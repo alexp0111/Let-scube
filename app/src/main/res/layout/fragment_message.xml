@@ -17,27 +17,27 @@
         app:title="_"
         app:titleTextColor="#000000" />
 
-    <LinearLayout
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/prog_bar_in_mess"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/toolbar_in_mess"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pull_to_refresh_mess"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_in_mess"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_below="@id/toolbar_in_mess">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:layout_width="280dp"
-            android:layout_height="280dp"
-            android:layout_marginBottom="20dp"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/cube_loading" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_mess"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="В разработке" />
-
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </RelativeLayout>

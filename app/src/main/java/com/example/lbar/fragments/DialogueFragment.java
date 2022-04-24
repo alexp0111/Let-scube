@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.MessageAdapter;
+import com.example.lbar.fragments.mainMenuFragments.MessageFragment;
 import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.example.lbar.helpClasses.Message;
 import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
@@ -77,6 +78,7 @@ public class DialogueFragment extends Fragment {
 
     private boolean isFriend;
     private boolean isFirstEnter = true;
+    private boolean isFromMessage = false;
 
     @Nullable
     @Override
@@ -232,6 +234,7 @@ public class DialogueFragment extends Fragment {
         urll = this.getArguments().getString("user_img");
         receiverUserID = this.getArguments().getString("us_id");
         username_txt = this.getArguments().getString("user_name");
+        isFromMessage = this.getArguments().getBoolean("isFromMessage");
 
         SendersFriendsRef = reference.child(fUser.getUid()).child("us_friends");
         ReceiversFriendsRef = reference.child(receiverUserID).child("us_friends");
@@ -244,13 +247,24 @@ public class DialogueFragment extends Fragment {
             DrawerLayout drawer = main_activity.findViewById(R.id.drawer_layout);
 
             tbar.setNavigationOnClickListener(view1 -> {
-                try {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.from_left, R.anim.to_left)
-                            .replace(R.id.fragment_container,
-                                    new PeopleFragment()).commit();
-                } catch (Exception D) {
-                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                if (isFromMessage) {
+                    try {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                                .replace(R.id.fragment_container,
+                                        new MessageFragment()).commit();
+                    } catch (Exception D) {
+                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                                .replace(R.id.fragment_container,
+                                        new PeopleFragment()).commit();
+                    } catch (Exception D) {
+                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -332,13 +346,24 @@ public class DialogueFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                try {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.from_left, R.anim.to_left)
-                            .replace(R.id.fragment_container,
-                                    new PeopleFragment()).commit();
-                } catch (Exception D) {
-                    Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                if (isFromMessage) {
+                    try {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                                .replace(R.id.fragment_container,
+                                        new MessageFragment()).commit();
+                    } catch (Exception D) {
+                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    try {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                                .replace(R.id.fragment_container,
+                                        new PeopleFragment()).commit();
+                    } catch (Exception D) {
+                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };
