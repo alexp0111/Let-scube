@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,12 +60,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         User user = mUsers.get(position);
 
         if (isFromMessage){
-            holder.divider.setVisibility(View.VISIBLE);
-            holder.lastMessage.setVisibility(View.VISIBLE);
-            holder.lastMessage.setText(holder.lastMessage.getText() + treeMapLastMess.get(user.getUs_id()));
+            holder.linearLayout.setVisibility(View.VISIBLE);
+            holder.lastMessage.setText(treeMapLastMess.get(user.getUs_id()));
         } else {
-            holder.divider.setVisibility(View.GONE);
-            holder.lastMessage.setVisibility(View.GONE);
+            holder.linearLayout.setVisibility(View.GONE);
         }
 
         holder.username.setText(user.getUs_name());
@@ -123,7 +122,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public ImageView profile_image;
         public TextView status_line;
 
-        public View divider;
+        public LinearLayout linearLayout;
         public TextView lastMessage;
 
         public ViewHolder(@NonNull View itemView) {
@@ -133,7 +132,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             profile_image = itemView.findViewById(R.id.user_item_profile_img);
             status_line = itemView.findViewById(R.id.status_list);
 
-            divider = itemView.findViewById(R.id.divider_under_user);
+            linearLayout = itemView.findViewById(R.id.user_item_last_mess_ll);
             lastMessage = itemView.findViewById(R.id.user_item_last_mess);
         }
     }
