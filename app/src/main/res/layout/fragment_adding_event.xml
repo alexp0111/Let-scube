@@ -6,132 +6,163 @@
     android:background="@color/colorPrimary">
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:id="@+id/event_adding_header_layout"
-        android:orientation="vertical"
-        android:layout_height="180dp">
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="vertical">
 
         <TextView
-        android:layout_width="wrap_content"
-        android:gravity="center_vertical"
-        android:textSize="16sp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        style="@style/AppTheme_2"
-        android:textColor="@color/colorAccent"
-        android:text="Header:"
-        android:layout_height="wrap_content" />
+            style="@style/AppTheme_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="Header:"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            app:boxBackgroundMode="none"
+            android:layout_height="match_parent"
             android:gravity="start"
-            app:hintTextColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
             android:hint="..."
-            android:layout_height="match_parent">
+            android:textColorHint="@color/colorAccent"
+            app:boxBackgroundMode="none"
+            app:hintTextColor="@color/colorAccent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
                 android:id="@+id/event_adding_header_txt"
-                android:textColor="@color/colorAccent"
                 style="@style/AppTheme_2"
-                android:textSize="28sp"
-                android:textCursorDrawable="@null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="start"
-                android:layout_height="match_parent" />
+                android:textColor="@color/colorAccent"
+                android:textCursorDrawable="@null"
+                android:textSize="28sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <View
         android:id="@+id/divider_under_header"
-        android:layout_below="@id/event_adding_header_layout"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@id/event_adding_header_layout"
         android:background="?android:attr/listDivider" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_below="@id/divider_under_header"
         android:id="@+id/event_settings_of_acces"
-        android:orientation="horizontal"
-        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider_under_header"
         android:gravity="center"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:gravity="center_vertical"
-            android:textSize="16sp"
             style="@style/AppTheme_2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/colorAccent"
+            android:gravity="center_vertical"
             android:text="Only for friends:"
-            android:layout_height="match_parent" />
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp" />
 
         <CheckBox
             android:id="@+id/event_adding_friends_checkBox"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
             android:layout_width="36dp"
-            android:layout_height="36dp"/>
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
 
 
     </LinearLayout>
 
     <View
         android:id="@+id/divider_below_text"
-        android:layout_below="@id/event_settings_of_acces"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@id/event_settings_of_acces"
         android:background="?android:attr/listDivider" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_below="@id/divider_below_text"
         android:id="@+id/event_adding_text_layout"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/divider_below_text"
         android:layout_marginBottom="96dp"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
 
         <TextView
+            style="@style/AppTheme_2"
             android:layout_width="wrap_content"
-            android:gravity="center_vertical"
-            android:textSize="16sp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            style="@style/AppTheme_2"
-            android:textColor="@color/colorAccent"
+            android:gravity="center_vertical"
             android:text="Text:"
-            android:layout_height="wrap_content" />
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            app:boxBackgroundMode="none"
-            app:hintTextColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
+            android:layout_height="match_parent"
             android:hint="..."
-            android:layout_height="match_parent">
+            android:textColorHint="@color/colorAccent"
+            app:boxBackgroundMode="none"
+            app:hintTextColor="@color/colorAccent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:textColor="@color/colorAccent"
                 android:id="@+id/event_adding_description_txt"
-                android:cursorVisible="true"
-                android:textCursorDrawable="@null"
                 style="@style/AppTheme_2"
-                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cursorVisible="true"
                 android:gravity="start"
-                android:layout_height="match_parent" />
+                android:textColor="@color/colorAccent"
+                android:textCursorDrawable="@null"
+                android:textSize="20sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
 
-    <com.google.android.material.button.MaterialButton
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/event_adding_picture_cdv"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp">
+
+        <ImageView
+            android:id="@+id/event_adding_picture_cdv_img"
+            android:layout_width="wrap_content"
+            android:maxWidth="200dp"
+            android:layout_height="48dp"
+            android:padding="0dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/event_adding_picture_cdv_txt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/add_picture"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!--<com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:id="@+id/event_adding_picture_button"
@@ -141,9 +172,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="20dp" />
-
-
+        android:layout_marginBottom="20dp" />-->
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

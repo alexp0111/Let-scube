@@ -2,8 +2,12 @@ package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -21,12 +27,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Event;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +43,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.lbar.MainActivity.storage;
@@ -58,7 +73,10 @@ public class AddingEventFragment extends Fragment {
     private TextInputEditText etHeader;
     private TextInputEditText etText;
     private CheckBox cbAccessibility;
-    private MaterialButton btPictureAdditing;
+    //picture block
+    private MaterialCardView cdPictureAdding;
+    private TextView txtPictureAdding;
+    private ImageView imgPictureAdding;
 
     private String textHeader;
     private String textText;
@@ -91,7 +109,7 @@ public class AddingEventFragment extends Fragment {
 
         initItems(view);
         setItemAnimations();
-        createLauncherForChoosingRomAlbum();
+        createLauncherForChoosingRomAlbum(view);
 
         fabExtended.startAnimation(startExtendedFabAnimation);
 
@@ -99,7 +117,18 @@ public class AddingEventFragment extends Fragment {
             startFabExtended();
         });
 
-        btPictureAdditing.setOnClickListener(view14 -> choosePictureFromAlbum());
+        cdPictureAdding.setOnClickListener(view14 -> {
+            if (imageUri == null){
+                choosePictureFromAlbum();
+            } else {
+                txtPictureAdding.setText(R.string.add_picture);
+
+                imgPictureAdding.setVisibility(View.GONE);
+                txtPictureAdding.setVisibility(View.VISIBLE);
+
+                imageUri = null;
+            }
+        });
 
         fabApply.setOnClickListener(view12 -> {
             packAndSendAllDataToDB(view);
@@ -161,15 +190,18 @@ public class AddingEventFragment extends Fragment {
         }
     }
 
-    private void initItems(View view) {
-        fabExtended = view.findViewById(R.id.event_push);
-        fabApply = view.findViewById(R.id.event_apply);
-        fabDisable = view.findViewById(R.id.event_disable);
+    private void initItems(View v) {
+        fabExtended = v.findViewById(R.id.event_push);
+        fabApply = v.findViewById(R.id.event_apply);
+        fabDisable = v.findViewById(R.id.event_disable);
 
-        etHeader = view.findViewById(R.id.event_adding_header_txt);
-        etText = view.findViewById(R.id.event_adding_description_txt);
-        cbAccessibility = view.findViewById(R.id.event_adding_friends_checkBox);
-        btPictureAdditing = view.findViewById(R.id.event_adding_picture_button);
+        etHeader = v.findViewById(R.id.event_adding_header_txt);
+        etText = v.findViewById(R.id.event_adding_description_txt);
+        cbAccessibility = v.findViewById(R.id.event_adding_friends_checkBox);
+        //picture block
+        cdPictureAdding = v.findViewById(R.id.event_adding_picture_cdv);
+        txtPictureAdding = v.findViewById(R.id.event_adding_picture_cdv_txt);
+        imgPictureAdding = v.findViewById(R.id.event_adding_picture_cdv_img);
     }
 
     private void setItemAnimations() {
@@ -241,14 +273,37 @@ public class AddingEventFragment extends Fragment {
         launcher.launch(intent);
     }
 
-    private void createLauncherForChoosingRomAlbum() {
+    private void createLauncherForChoosingRomAlbum(View view) {
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     Intent data = result.getData();
 
+                    assert data != null;
                     if (data.getData() != null && result.getResultCode() == RESULT_OK) {
                         imageUri = data.getData();
+
+                        /*
+                        File file = new File(imageUri.getPath());
+                        Log.d("imageUri ", imageUri.getPath());
+                        Log.d("imageUri ", file.canRead() + "");
+                        try {
+                            File compressed = new Compressor(getContext())
+                                    .compressToFile(file);
+                            //imageUri = Uri.fromFile(compressed);
+                            Log.d("imageUri ", imageUri.getPath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.d("imageUri ", "errrrror");
+                        }
+                         */
+
+
+                        // TODO: Compressing - didn't get it
+
+                        txtPictureAdding.setVisibility(View.GONE);
+                        imgPictureAdding.setVisibility(View.VISIBLE);
+                        Glide.with(view).load(imageUri).into(imgPictureAdding);
                     } else {
                         Log.d("imageUri", "error");
                     }

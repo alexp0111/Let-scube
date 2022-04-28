@@ -37,7 +37,7 @@
     <string name="my_collection">Моя коллекция</string>
     <string name="people">Люди</string>
     <string name="author">Автор: </string>
-    <string name="add_picture">add picture</string>
+    <string name="add_picture">ADD PICTURE</string>
     <string name="message_hint">Сообщение…</string>
     <string name="search_hint">Поиск…</string>
     <string name="add_url"><![CDATA[https://firebasestorage.googleapis.com/v0/b/lbar-messenger.appspot.com/o/camera.png?alt=media&token=8ea07bde-1246-40ab-b3b6-340b9c7f81ec]]></string>
