@@ -34,6 +34,7 @@ import com.example.lbar.helpClasses.Event;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -97,6 +98,8 @@ public class AddingEventFragment extends Fragment {
 
     private boolean fabFlag = false;
 
+    private CircularProgressIndicator indicator;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -122,7 +125,6 @@ public class AddingEventFragment extends Fragment {
                 choosePictureFromAlbum();
             } else {
                 txtPictureAdding.setText(R.string.add_picture);
-
                 imgPictureAdding.setVisibility(View.GONE);
                 txtPictureAdding.setVisibility(View.VISIBLE);
 
@@ -131,6 +133,9 @@ public class AddingEventFragment extends Fragment {
         });
 
         fabApply.setOnClickListener(view12 -> {
+            startFabExtended();
+            //fabExtended.setAlpha(0f);
+            indicator.setVisibility(View.VISIBLE);
             packAndSendAllDataToDB(view);
         });
 
@@ -160,6 +165,7 @@ public class AddingEventFragment extends Fragment {
 
             fabApply.setVisibility(View.INVISIBLE);
             fabDisable.setVisibility(View.INVISIBLE);
+            fabExtended.setVisibility(View.INVISIBLE);
 
             fabFlag = false;
         }
@@ -172,9 +178,11 @@ public class AddingEventFragment extends Fragment {
 
         if (fUser == null){
             Snackbar.make(v, "It looks like you haven't entered your account. It is necessary, to make an event.", Snackbar.LENGTH_SHORT).show();
+            indicator.setVisibility(View.INVISIBLE);
         } else {
             if (textHeader == null || textText == null || textHeader.equals("") || textText.equals("")){
                 Snackbar.make(v, "Please, do not let <Header> or <Text> fields empty.", Snackbar.LENGTH_SHORT).show();
+                indicator.setVisibility(View.INVISIBLE);
             } else {
                 DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
 
@@ -184,13 +192,16 @@ public class AddingEventFragment extends Fragment {
                     picture = "none";
                     Event event = new Event(fUser.getUid(), textHeader, textText, picture, 0, accessibility);
                     reference.child("Events").push().setValue(event);
-                    getBackAnimationsStart();
+                    indicator.setVisibility(View.INVISIBLE);
+                    closeFragment();
                 }
             }
         }
     }
 
     private void initItems(View v) {
+        indicator = v.findViewById(R.id.event_adding_prog_bar);
+
         fabExtended = v.findViewById(R.id.event_push);
         fabApply = v.findViewById(R.id.event_apply);
         fabDisable = v.findViewById(R.id.event_disable);
@@ -237,7 +248,6 @@ public class AddingEventFragment extends Fragment {
 
             }
         });
-
     }
 
     private void getBackAnimationsStart() {
@@ -320,7 +330,10 @@ public class AddingEventFragment extends Fragment {
                 DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
                 Event event = new Event(fUser.getUid(), textHeader, textText, picture, 0, accessibility);
                 reference.child("Events").push().setValue(event);
-                getBackAnimationsStart();
+                //getBackAnimationsStart();
+                indicator.setVisibility(View.INVISIBLE);
+                //fabExtended.setAlpha(0f);
+                closeFragment();
             });
         }).addOnFailureListener(e -> {
             Log.d("uploading", "f");

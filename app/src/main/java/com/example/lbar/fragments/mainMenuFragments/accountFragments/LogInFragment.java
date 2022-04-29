@@ -168,11 +168,11 @@ public class LogInFragment extends Fragment {
                                     new ProfileFragment()).commit();
                             progressBar.setVisibility(View.GONE);
                         } catch (Exception D) {
-                            Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     } else {
-                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                     }
                 }

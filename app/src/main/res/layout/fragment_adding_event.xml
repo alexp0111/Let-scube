@@ -5,6 +5,23 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/event_adding_prog_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/event_push"
+        android:layout_alignTop="@+id/event_push"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="-8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:indicatorSize="64dp"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:indicatorColor="@color/colorPrimaryDark" />
+
     <LinearLayout
         android:id="@+id/event_adding_header_layout"
         android:layout_width="match_parent"
@@ -134,7 +151,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/event_adding_picture_cdv"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
@@ -143,10 +160,10 @@
         <ImageView
             android:id="@+id/event_adding_picture_cdv_img"
             android:layout_width="wrap_content"
-            android:maxWidth="200dp"
             android:layout_height="48dp"
-            android:padding="0dp"
             android:adjustViewBounds="true"
+            android:maxWidth="200dp"
+            android:padding="0dp"
             android:scaleType="fitCenter"
             android:visibility="gone" />
 
@@ -221,7 +238,6 @@
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/colorPrimary"
         android:elevation="20dp"
-        android:visibility="visible"
         app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_arrow_up" />
 
