@@ -145,4 +145,12 @@ public class Room {
     public void setRoom_max_number_of_members(Integer room_max_number_of_members) {
         this.room_max_number_of_members = room_max_number_of_members;
     }
+
+    public String getRoom_password() {
+        return room_password;
+    }
+
+    public void setRoom_password(String room_password) {
+        this.room_password = room_password;
+    }
 }

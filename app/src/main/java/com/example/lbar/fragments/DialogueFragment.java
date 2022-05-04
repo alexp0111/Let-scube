@@ -300,8 +300,11 @@ public class DialogueFragment extends Fragment {
 
         DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
 
+        // Getting auto-generated reference
         String newRef = reference.child("Chats").push().getKey();
+        // Creating object [with field: key]
         Message msg = new Message(sender, receiver, message_text, newRef);
+        // Sending to DataBase
         reference.child("Chats").child(newRef).setValue(msg);
     }
 
