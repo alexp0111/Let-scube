@@ -107,7 +107,7 @@ public class RoomsPublicBattleFragment extends Fragment {
                 }
 
                 Collections.reverse(mRooms);
-                roomAdapter = new RoomAdapter(getContext(), mRooms);
+                roomAdapter = new RoomAdapter(getContext(), mRooms, fUser.getUid());
                 recyclerViewInRooms.setAdapter(roomAdapter);
                 progressBar.setVisibility(View.GONE);
             }

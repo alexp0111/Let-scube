@@ -121,10 +121,10 @@ public class DialogueFragment extends Fragment {
 
         addFriend.setOnLongClickListener(view13 -> {
             if (SendersFriends.contains(receiverUserID)) {
-                Snackbar.make(getView(), "Here you can delete this user from your friends list!",
+                Snackbar.make(getView(), R.string.add_friend_discr_del,
                         BaseTransientBottomBar.LENGTH_LONG).show();
             } else {
-                Snackbar.make(getView(), "Here you can add this user to your friends list!",
+                Snackbar.make(getView(), R.string.add_friend_discr_add,
                         BaseTransientBottomBar.LENGTH_LONG).show();
             }
             return true;
@@ -135,7 +135,7 @@ public class DialogueFragment extends Fragment {
             if (!text.equals("")) {
                 sendMessage(senderUserID, receiverUserID, text);
             } else {
-                Toast.makeText(main_activity, "Please, enter a message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(main_activity, R.string.pls_enter_mess, Toast.LENGTH_SHORT).show();
             }
             text_to_send.setText("");
         });
@@ -146,7 +146,7 @@ public class DialogueFragment extends Fragment {
     }
 
     private void makeFriend() {
-        Toast.makeText(getContext(), "Now, you are friends!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.now_u_r_friends, Toast.LENGTH_SHORT).show();
 
         if (SendersFriends != null) {
             SendersFriends.add(receiverUserID);
@@ -162,7 +162,7 @@ public class DialogueFragment extends Fragment {
     }
 
     private void removeFriend() {
-        Toast.makeText(getContext(), "Not a friend yet", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.not_a_friend_yet, Toast.LENGTH_SHORT).show();
 
         if (SendersFriends != null) {
             SendersFriends.remove(receiverUserID);

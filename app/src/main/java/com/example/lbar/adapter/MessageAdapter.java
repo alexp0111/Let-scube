@@ -109,8 +109,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         et.setSelection(et.getText().length());
 
         MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(mContext);
-        mdBuilder.setTitle("Correcting...");
-        mdBuilder.setMessage("Here you can change your message");
+        mdBuilder.setTitle(R.string.header_correcting);
+        mdBuilder.setMessage(R.string.change_mess_discr);
         mdBuilder.setBackground(mContext.getResources().getDrawable(R.drawable.dialog_drawable, null));
 
         if (rl.getParent() != null) {
@@ -118,14 +118,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         mdBuilder.setView(rl);
 
-        mdBuilder.setPositiveButton("APPlY", (dialogInterface, i) -> {
+        mdBuilder.setPositiveButton(R.string.apply, (dialogInterface, i) -> {
             //animationStart = false; - не работет, так как адаптер пересоздаётся;
             FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                     .getReference().child("Chats").child(chat.getAddress()).child("message")
                     .setValue(et.getText().toString());
         });
 
-        mdBuilder.setNegativeButton("DELETE MESSAGE", (dialogInterface, i) -> {
+        mdBuilder.setNegativeButton(R.string.del_mess, (dialogInterface, i) -> {
             FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                     .getReference().child("Chats").child(chat.getAddress()).removeValue();
         });

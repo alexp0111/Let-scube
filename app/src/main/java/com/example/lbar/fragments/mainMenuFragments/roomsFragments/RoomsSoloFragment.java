@@ -490,6 +490,26 @@ public class RoomsSoloFragment extends Fragment {
         if (updateTime != 0L){
             updateDataBaseStatistic();
         }
+        if (isRunning){
+            Snackbar.make(getView(), getString(R.string.leave_app_while_stopwatch), BaseTransientBottomBar.LENGTH_LONG).show();
+
+            if (pointerButtons){
+                btnPlusTwo.setVisibility(View.VISIBLE);
+                btnDNF.setVisibility(View.VISIBLE);
+                btnDeleteResult.setVisibility(View.VISIBLE);
+            }
+            backImageView.setVisibility(View.VISIBLE);
+            settingsImageView.setVisibility(View.VISIBLE);
+            pMode.setVisibility(View.VISIBLE);
+            if (pointerScrambles){
+                scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
+                scrambleTextView.setVisibility(View.VISIBLE);
+            } else {scrambleTextView.setText("");}
+
+            isRunning = false;
+
+            customHandler.removeCallbacks(updateTimerThread);
+        }
         super.onStop();
     }
 

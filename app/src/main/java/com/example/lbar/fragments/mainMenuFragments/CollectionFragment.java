@@ -103,7 +103,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         initItems(view);
 
         srl.setOnRefreshListener(() -> {
-            Snackbar.make(view, "All is up do date", BaseTransientBottomBar.LENGTH_SHORT).show();
+            Snackbar.make(view, R.string.all_is_up_to_date, BaseTransientBottomBar.LENGTH_SHORT).show();
             srl.setRefreshing(false);
         });
 
@@ -179,7 +179,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Snackbar.make(getView(), "Похоже, отсутствует подключение к интернету",
+                        Snackbar.make(getView(), R.string.internet_connection_lost,
                                 BaseTransientBottomBar.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                     }
@@ -188,7 +188,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
             //Long clicks
             mcvList.get(i).setOnLongClickListener(view -> {
-                Snackbar.make(getView(), "Here you can check your solving statistics",
+                Snackbar.make(getView(), R.string.mcvList_discr,
                         BaseTransientBottomBar.LENGTH_SHORT).show();
                 return true;
             });
@@ -210,8 +210,8 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
             et.setText(tv.getText());
             et.setSelection(et.getText().length());
 
-            mdBuilder.setTitle("Cube name");
-            mdBuilder.setMessage("Here you can set the name of your puzzle");
+            mdBuilder.setTitle(R.string.cube_name);
+            mdBuilder.setMessage(R.string.cube_name_discr);
             mdBuilder.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
 
             if (rl.getParent() != null) {
@@ -219,16 +219,13 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
             }
             mdBuilder.setView(rl);
 
-            mdBuilder.setPositiveButton("APPlY", (dialogInterface, i) -> {
+            mdBuilder.setPositiveButton(R.string.apply, (dialogInterface, i) -> {
                 progressBar.setVisibility(View.VISIBLE);
 
                 tv.setText(et.getText().toString());
-                collectionReference.child(String.valueOf(n)).child("cube_name").setValue(et.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+                collectionReference.child(String.valueOf(n)).child("cube_name")
+                        .setValue(et.getText().toString()).addOnCompleteListener(task ->
+                        progressBar.setVisibility(View.GONE));
             });
 
             mdBuilder.show();
@@ -237,14 +234,14 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         deleteInfo.setOnClickListener(view2 -> {
             mdBuilder = new MaterialAlertDialogBuilder(getContext());
 
-            mdBuilder.setTitle("Delete statistic");
-            mdBuilder.setMessage("Are you sure you want to delete all statistics for this puzzle?");
+            mdBuilder.setTitle(R.string.del_stat);
+            mdBuilder.setMessage(R.string.shure_del_stat);
             mdBuilder.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
 
-            mdBuilder.setNegativeButton("Yes, i'm sure", (dialogInterface, i) -> {
+            mdBuilder.setNegativeButton(R.string.i_am_shure, (dialogInterface, i) -> {
                 clearPuzzleStatisic(n);
-                txt_avg.setText("Not enough info\nNot enough info\nNot enough info\nNot enough info\nNot enough info");
-                txt_best.setText("Not enough info\nNot enough info\nNot enough info\nNot enough info\nNot enough info");
+                txt_avg.setText(R.string.cube_not_enough_info);
+                txt_best.setText(R.string.cube_not_enough_info);
             });
 
             mdBuilder.show();

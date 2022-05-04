@@ -51,4 +51,26 @@
     <string name="title_people">Люди</string>
     <string name="assembly_rooms">Комнаты сборки</string>
     <string name="commandSolving">Совместная сборка</string>
+    <string name="change_mess_discr">Here you can change your message</string>
+    <string name="header_correcting">Correcting…</string>
+    <string name="apply">APPlY</string>
+    <string name="del_mess">DELETE MESSAGE</string>
+    <string name="enter_pass">Enter password</string>
+    <string name="priv_room_discr">It is necessary if you want to join private room</string>
+    <string name="add_friend_discr_del">Here you can delete this user from your friends list!</string>
+    <string name="pls_enter_mess">Please, enter a message</string>
+    <string name="now_u_r_friends">Now, you are friends!</string>
+    <string name="not_a_friend_yet">Not a friend yet</string>
+    <string name="all_is_up_to_date">All is up do date</string>
+    <string name="internet_connection_lost">It seems, there is no internet connection</string>
+    <string name="mcvList_discr">Here you can check your solving statistics</string>
+    <string name="cube_name">Cube name</string>
+    <string name="cube_name_discr">Here you can set the name of your puzzle</string>
+    <string name="del_stat">Delete statistic</string>
+    <string name="shure_del_stat">Are you sure you want to delete all statistics for this puzzle?</string>
+    <string name="i_am_shure">Yes, i\'m sure</string>
+    <string name="cube_not_enough_info">Not enough info\nNot enough info\nNot enough info\nNot enough info\nNot enough info</string>
+    <string name="last_mess">\last message: \</string>
+    <string name="add_friend_discr_add">Here you can add this user to your friends list!</string>
+    <string name="leave_app_while_stopwatch">Don\'t leave the app while the stopwatch is running</string>
 </resources>
