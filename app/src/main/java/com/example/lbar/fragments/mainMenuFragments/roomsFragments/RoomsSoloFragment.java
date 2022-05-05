@@ -199,11 +199,11 @@ public class RoomsSoloFragment extends Fragment {
 
         // Фон, считывающий нажатия
         layout.setOnTouchListener((view12, motionEvent) -> {
-            switch (motionEvent.getAction() ) {
+            switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    if (!isRunning){
-                        if (updateTime != 0L){
-                            updateDataBaseStatistic();
+                    if (!isRunning) {
+                        if (updateTime != 0L) {
+                            RoomsSoloFragment.this.updateDataBaseStatistic();
                         }
 
                         buttonFlag = true;
@@ -225,9 +225,9 @@ public class RoomsSoloFragment extends Fragment {
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
                         bar.setBackgroundResource(R.color.colorChronometerPress); // pressed state
                     } else {
-                        Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
+                        Snackbar.make(RoomsSoloFragment.this.getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
-                        if (pointerButtons){
+                        if (pointerButtons) {
                             btnPlusTwo.setVisibility(View.VISIBLE);
                             btnDNF.setVisibility(View.VISIBLE);
                             btnDeleteResult.setVisibility(View.VISIBLE);
@@ -235,16 +235,18 @@ public class RoomsSoloFragment extends Fragment {
                         backImageView.setVisibility(View.VISIBLE);
                         settingsImageView.setVisibility(View.VISIBLE);
                         pMode.setVisibility(View.VISIBLE);
-                        if (pointerScrambles){
-                            scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
+                        if (pointerScrambles) {
+                            scrambleTextView.setText(RoomsSoloFragment.this.getRandomScramble(PUZZLE_DISCIPLINE));
                             scrambleTextView.setVisibility(View.VISIBLE);
-                        } else {scrambleTextView.setText("");}
+                        } else {
+                            scrambleTextView.setText("");
+                        }
 
                         customHandler.removeCallbacks(updateTimerThread);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (!isRunning){
+                    if (!isRunning) {
                         startTime = SystemClock.uptimeMillis();
                         customHandler.postDelayed(updateTimerThread, 0);
                         layout.setBackgroundResource(R.color.colorPrimary);

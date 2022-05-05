@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/rooms_key_battle_bar"
-        android:background="?android:attr/listDivider" />
+        android:background="#1F000000" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/key_battle_members_list"
@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="50dp"
-            android:background="?android:attr/listDivider" />
+            android:background="#1F000000" />
 
         <TextView
             android:id="@+id/chronometer_key_battle"
@@ -105,6 +105,7 @@
             android:paddingHorizontal="20dp"
             android:textColor="@color/colorAccent"
             android:text="Scramble"
+            android:visibility="visible"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -112,6 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="20dp"
+            android:visibility="invisible"
             android:gravity="center">
 
             <com.google.android.material.button.MaterialButton
