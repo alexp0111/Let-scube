@@ -36,7 +36,7 @@ public class RoomsPrivateBattleFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
 
-    private DatabaseReference eventReference;
+    private DatabaseReference roomsReference;
     private DatabaseReference mFriendsRef;
 
     private RecyclerView recyclerViewInRooms;
@@ -61,7 +61,7 @@ public class RoomsPrivateBattleFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         fUser = mAuth.getCurrentUser();
 
-        eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Rooms");
+        roomsReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Rooms");
 
         initItems(view);
 
@@ -70,7 +70,7 @@ public class RoomsPrivateBattleFragment extends Fragment {
         recyclerViewInRooms.setHasFixedSize(true);
         recyclerViewInRooms.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (fUser != null && eventReference != null){
+        if (fUser != null && roomsReference != null){
             progressBar.setVisibility(View.VISIBLE);
             readRooms();
         }
@@ -93,7 +93,7 @@ public class RoomsPrivateBattleFragment extends Fragment {
     }
 
     private void readRooms() {
-        eventReference.addValueEventListener(new ValueEventListener() {
+        roomsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mRooms.clear();

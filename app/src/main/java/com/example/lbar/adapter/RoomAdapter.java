@@ -173,6 +173,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         RoomsKeyBattleFragment fragment = new RoomsKeyBattleFragment();
         Bundle bundle = new Bundle();
         bundle.putString("room_id", room.getRoom_id());
+        bundle.putString("newMember_id", usID);
         fragment.setArguments(bundle);
 
         try {

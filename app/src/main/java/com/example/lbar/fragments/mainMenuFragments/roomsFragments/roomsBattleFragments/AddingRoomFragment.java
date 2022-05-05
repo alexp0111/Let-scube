@@ -36,6 +36,7 @@ import static com.example.lbar.MainActivity.reference;
 public class AddingRoomFragment extends Fragment {
 
     private String userID;
+    private String newRef;
 
     private TextInputEditText etHeader;
     private TextInputEditText etDescription;
@@ -69,7 +70,8 @@ public class AddingRoomFragment extends Fragment {
     private FloatingActionButton fabApply;
     private FloatingActionButton fabDisable;
 
-    private Animation miniUnExplosionAnimation;
+    private Animation miniUnExplosionAnimationClose;
+    private Animation miniUnExplosionAnimationGoToRoom;
     private Animation rotateExtendedFabAnimation;
     private Animation rotateBackExtendedFabAnimation;
     private Animation startApplyFabAnimation;
@@ -118,7 +120,7 @@ public class AddingRoomFragment extends Fragment {
             etDescription.setText("");
             etHeader.setText("");
 
-            getBackAnimationsStart();
+            getBackAnimationsStart(false);
         });
 
         return view;
@@ -126,7 +128,7 @@ public class AddingRoomFragment extends Fragment {
 
     private void packAndSendAllDataToDB() {
         // Getting address of room
-        String newRef = reference.child("Rooms").push().getKey();
+        newRef = reference.child("Rooms").push().getKey();
 
         // First room member is Admin
         RoomMember adminMember = new RoomMember(userID, false);
@@ -157,13 +159,19 @@ public class AddingRoomFragment extends Fragment {
                 .getReference("Rooms")
                 .child(newRef)
                 .setValue(newRoom)
-                .addOnCompleteListener(task -> getBackAnimationsStart());
+                .addOnCompleteListener(task -> getBackAnimationsStart(true));
     }
 
-    private void getBackAnimationsStart() {
-        fabApply.startAnimation(miniUnExplosionAnimation);
-        fabDisable.startAnimation(miniUnExplosionAnimation);
-        fabExtended.startAnimation(miniUnExplosionAnimation);
+    private void getBackAnimationsStart(boolean isRoomCreated) {
+        if (isRoomCreated){
+            fabApply.startAnimation(miniUnExplosionAnimationGoToRoom);
+            fabDisable.startAnimation(miniUnExplosionAnimationGoToRoom);
+            fabExtended.startAnimation(miniUnExplosionAnimationGoToRoom);
+        } else {
+            fabApply.startAnimation(miniUnExplosionAnimationClose);
+            fabDisable.startAnimation(miniUnExplosionAnimationClose);
+            fabExtended.startAnimation(miniUnExplosionAnimationClose);
+        }
 
         fabApply.setVisibility(View.INVISIBLE);
         fabDisable.setVisibility(View.INVISIBLE);
@@ -173,7 +181,8 @@ public class AddingRoomFragment extends Fragment {
     }
 
     private void setItemAnimations() {
-        miniUnExplosionAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.mini_circle_unexplosion);
+        miniUnExplosionAnimationClose = AnimationUtils.loadAnimation(getContext(), R.anim.mini_circle_unexplosion);
+        miniUnExplosionAnimationGoToRoom = AnimationUtils.loadAnimation(getContext(), R.anim.mini_circle_unexplosion);
 
         rotateExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate);
         rotateBackExtendedFabAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_back);
@@ -186,9 +195,10 @@ public class AddingRoomFragment extends Fragment {
 
         rotateExtendedFabAnimation.setDuration(200);
         rotateBackExtendedFabAnimation.setDuration(200);
-        miniUnExplosionAnimation.setDuration(200);
+        miniUnExplosionAnimationClose.setDuration(200);
+        miniUnExplosionAnimationGoToRoom.setDuration(200);
 
-        miniUnExplosionAnimation.setAnimationListener(new Animation.AnimationListener() {
+        miniUnExplosionAnimationClose.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -204,6 +214,23 @@ public class AddingRoomFragment extends Fragment {
 
             }
         });
+
+        miniUnExplosionAnimationGoToRoom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                goToCreatedRoom();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     private void closeFragment() {
@@ -211,6 +238,22 @@ public class AddingRoomFragment extends Fragment {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.alpha_to_high_1000, R.anim.to_top).replace(R.id.fragment_container,
                     new RoomsMainBattleFragment()).commit();
+        } catch (Exception D) {
+            Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void goToCreatedRoom(){
+        RoomsKeyBattleFragment fragment = new RoomsKeyBattleFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("room_id", newRef);
+        bundle.putString("newMember_id", userID);
+        fragment.setArguments(bundle);
+
+        try {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.to_right, R.anim.from_right)
+                    .replace(R.id.fragment_container,
+                            fragment).commit();
         } catch (Exception D) {
             Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
         }
