@@ -101,6 +101,10 @@ public class RoomsKeyBattleFragment extends Fragment {
         return view;
     }
 
+    private void setUpAdminControl() {
+
+    }
+
     private void initItems(View v) {
         roomID = this.getArguments().getString("room_id");
         newMemberID = this.getArguments().getString("newMember_id");
@@ -133,6 +137,8 @@ public class RoomsKeyBattleFragment extends Fragment {
                         updateTime = 0L;
 
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
+
+                        updatePreparation(true);
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
                         customHandler.removeCallbacks(updateTimerThread);
@@ -140,6 +146,8 @@ public class RoomsKeyBattleFragment extends Fragment {
                     break;
                 case MotionEvent.ACTION_UP:
                     if (!isRunning) {
+                        updatePreparation(false);
+
                         startTime = SystemClock.uptimeMillis();
                         customHandler.postDelayed(updateTimerThread, 0);
                         layout.setBackgroundResource(R.color.colorPrimary);
@@ -151,6 +159,24 @@ public class RoomsKeyBattleFragment extends Fragment {
             }
             return true;
         });
+    }
+
+    private void updatePreparation(boolean preparation) {
+        thisRoomMember.setMember_preparation(preparation);
+
+        int index = thisRoom.indexOfMember(thisRoomMember.getMember_id());
+
+        for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
+            Log.d("KeyBattle-members", thisRoom.getRoom_members().get(i).getMember_id());
+        }
+
+        if (index != -1) {
+            Log.d("KeyBattle", "indexFound");
+            ref.child(roomID).child("room_members").child(Integer.toString(index))
+                    .setValue(thisRoomMember);
+        } else {
+            Log.d("KeyBattle", "indexNotFound");
+        }
     }
 
     private void getRoomClass() {
@@ -166,6 +192,9 @@ public class RoomsKeyBattleFragment extends Fragment {
                 if (thisRoom != null)
                     pMode.setText(puzzleNames[thisRoom.getRoom_puzzle_discipline()]);
                 thisRoomMember = new RoomMember(newMemberID, false);
+
+                if (thisRoomMember.getMember_id().equals(thisRoom.getRoom_admin_id()))
+                    setUpAdminControl();
             }
 
             @Override
