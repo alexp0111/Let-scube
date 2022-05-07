@@ -51,15 +51,6 @@ public class RoomsStartFragment extends Fragment{
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        SNTPClient.getDate(TimeZone.getDefault(), new SNTPClient.Listener() {
-            @Override
-            public void onTimeResponse(String rawDate, Date date, Exception ex) {
-                Log.d("SNTP", System.currentTimeMillis() + "");
-                Log.d("SNTP", date.getTime() + "");
-                Log.d("SNTP", rawDate);
-            }
-        });
-
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_rooms);
         setToolbarSettings(toolbar, activity, main_activity);
 

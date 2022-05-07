@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,6 +33,7 @@ import com.example.lbar.adapter.RoomAdapter;
 import com.example.lbar.adapter.RoomMemberAdapter;
 import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.helpClasses.Cube;
+import com.example.lbar.helpClasses.LinearLayoutManagerWrapper;
 import com.example.lbar.helpClasses.Room;
 import com.example.lbar.helpClasses.RoomMember;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -72,7 +74,9 @@ public class RoomsKeyBattleFragment extends Fragment {
     private Room thisRoom = null;
     private RoomMember thisRoomMember = null;
     private ArrayList<Long> results;
+
     private RoomMemberAdapter roomMemberAdapter;
+    private ArrayList<RoomMember> newList = new ArrayList<>();
 
     private Handler customHandlerForTimer;
     private Runnable updateTimerThread;
@@ -105,8 +109,12 @@ public class RoomsKeyBattleFragment extends Fragment {
         realiseClickListeners();
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        roomMemberAdapter = new RoomMemberAdapter(getContext(), new ArrayList<>());
+        LinearLayoutManagerWrapper linearLayoutManager =
+                new LinearLayoutManagerWrapper(getContext(), LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
         recyclerView.setAdapter(roomMemberAdapter);
 
         updateTimerThread = new Runnable() {
@@ -243,7 +251,7 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private void updateRecyclerView() {
         int maxLen = -1;
-        List<RoomMember> newList = new ArrayList<>();
+        newList.clear();
         for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
             if (thisRoom.getRoom_members().get(i).getMember_results() != null
                     && thisRoom.getRoom_members().get(i).getMember_results().size() > maxLen)
@@ -259,9 +267,12 @@ public class RoomsKeyBattleFragment extends Fragment {
                 newList.add(listItem);
             }
         }
-        Collections.reverse(newList);
-        roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
-        recyclerView.setAdapter(roomMemberAdapter);
+        //Collections.reverse(newList);
+        roomMemberAdapter.notifyItemInserted(newList.size()-1);
+        //roomMemberAdapter.notifyDataSetChanged();
+        //TODO: Коряво отображается [думоть]
+        //roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
+        //recyclerView.setAdapter(roomMemberAdapter);
     }
 
     private void startSureDialog() {

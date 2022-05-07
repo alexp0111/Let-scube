@@ -3,6 +3,7 @@ package com.example.lbar.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -63,6 +65,9 @@ public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.Vi
                                 holder.time.setText(convertFromMStoString(
                                         member.getMember_results()
                                                 .get((member.getIndex()))));
+                                if (holder.time.getText() != null
+                                        && holder.time.getText().equals("......"))
+                                    notifyItemChanged(holder.getAdapterPosition());
                             } else {
                                 holder.time.setText("......");
                             }
