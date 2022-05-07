@@ -38,7 +38,7 @@ public class RoomMember {
         this.member_results = member_results;
     }
 
-    public boolean isMember_preparation() {
+    public boolean getMember_preparation() {
         return member_preparation;
     }
 

@@ -66,6 +66,14 @@ public class Room {
     public Room() {
     }
 
+    public boolean isAllMembersPrepared(){
+        for (int i = 0; i < room_members.size(); i++) {
+            if (!room_members.get(i).getMember_preparation())
+                return false;
+        }
+        return true;
+    }
+
     public int indexOfMember(String id){
         for (int i = 0; i < room_members.size(); i++) {
             if (room_members.get(i).getMember_id().equals(id))

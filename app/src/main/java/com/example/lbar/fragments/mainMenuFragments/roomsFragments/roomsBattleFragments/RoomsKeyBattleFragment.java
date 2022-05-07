@@ -25,9 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.adapter.RoomAdapter;
-import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsSoloFragment;
-import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
+import com.example.lbar.SNTP.SNTPClient;
 import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.Room;
 import com.example.lbar.helpClasses.RoomMember;
@@ -42,9 +40,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Collections;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class RoomsKeyBattleFragment extends Fragment {
+
+    //FIXME: Время, получаемое через системные часы не одинаковое на разных устройствах.
+    // разница в две секунды примерно. И секундомер не запускается............
 
     //TODO: IDEA: Если в комнтае уже идёт сборка - попросить пользователя подождать
     // и заупстить колесико загрузки
@@ -52,6 +55,8 @@ public class RoomsKeyBattleFragment extends Fragment {
     private DatabaseReference ref = FirebaseDatabase
             .getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
             .getReference("Rooms");
+
+    //private Calendar calendar;
 
     private boolean isRunning = false;
     private Cube cube = new Cube(1);
@@ -61,8 +66,9 @@ public class RoomsKeyBattleFragment extends Fragment {
     private Room thisRoom = null;
     private RoomMember thisRoomMember = null;
 
-    private Handler customHandler;
+    private Handler customHandlerForTimer;
     private Runnable updateTimerThread;
+    //private Runnable currentTimeCheckerThread;
 
     private long startTime = 0L;
     private long timeInMS = 0L;
@@ -84,8 +90,29 @@ public class RoomsKeyBattleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_key_battle_rooms, container, false);
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
+        SNTPClient.getDate(TimeZone.getDefault(), new SNTPClient.Listener() {
+            @Override
+            public void onTimeResponse(String rawDate, Date date, Exception ex) {
+                //date.getTime()
+                Log.d("SNTP", rawDate);
+            }
+        });
+
+        //MuTime.enableDiskCaching(getContext());
+        //MuTime.buildCustomSntpRequest("time.google.com");
+//
+        //try {
+        //    long m = MuTime.now();
+        //    Log.d("qwe", m + "");
+        //} catch (MissingTimeDataException e) {
+        //    e.printStackTrace();
+        //}
+
+        //calendar = Calendar.getInstance();
+
         getRoomClass();
         initItems(view);
+        thisRoomMember = new RoomMember(newMemberID, false);
         realiseClickListeners();
 
         updateTimerThread = new Runnable() {
@@ -94,15 +121,46 @@ public class RoomsKeyBattleFragment extends Fragment {
                 timeInMS = SystemClock.uptimeMillis() - startTime;
                 updateTime = timeSwapBuffer + timeInMS;
                 chronometer.setText(convertFromMStoString(updateTime));
-                customHandler.postDelayed(this, 0);
+                customHandlerForTimer.postDelayed(this, 0);
             }
         };
+
+        //currentTimeCheckerThread = new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        RoomsKeyBattleFragment.this.startChronometer();
+        //        customHandlerForTimer.postDelayed(this, 0);
+        //    }
+        //};
 
         return view;
     }
 
     private void setUpAdminControl() {
+        if (thisRoom.isAllMembersPrepared()){
+            startChronometer();
+            //long newTime = System.currentTimeMillis() + 5000;
+            //Log.d("TimeChecker", newTime + "");
+            //thisRoom.setRoom_start_time(newTime);
+            //updatePreparation(false, true);
+        }
+    }
 
+    private void startChronometer() {
+        //Log.d("TimeChecker-start", System.currentTimeMillis() + "");
+        //if (System.currentTimeMillis() == thisRoom.getRoom_start_time()){
+            Log.d("KeyBattle", "DONE");
+            //customHandlerForTimer.removeCallbacks(currentTimeCheckerThread);
+            //isRunning = true;
+            //updatePreparation(false, false);
+
+            startTime = SystemClock.uptimeMillis();
+            customHandlerForTimer.postDelayed(updateTimerThread, 0);
+            layout.setBackgroundResource(R.color.colorPrimary);
+            isRunning = true;
+            //return 0;
+        //}
+        //return -1;
     }
 
     private void initItems(View v) {
@@ -115,7 +173,8 @@ public class RoomsKeyBattleFragment extends Fragment {
         backImageView = v.findViewById(R.id.rooms_key_battle_back_iv);
         bar = v.findViewById(R.id.rooms_key_battle_bar);
 
-        customHandler = new Handler(Looper.getMainLooper());
+        customHandlerForTimer = new Handler(Looper.getMainLooper());
+        //customHandlerForChecker = new Handler(Looper.getMainLooper());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -138,22 +197,22 @@ public class RoomsKeyBattleFragment extends Fragment {
 
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
 
-                        updatePreparation(true);
+                        updatePreparation(true, false);
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
-                        customHandler.removeCallbacks(updateTimerThread);
+
+                        customHandlerForTimer.removeCallbacks(updateTimerThread);
+                        updatePreparation(false, false);
+                        isRunning = false;
+                        //thisRoom.setRoom_start_time(0L);
+                        //ref.child(roomID).setValue(thisRoom);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
                     if (!isRunning) {
-                        updatePreparation(false);
-
-                        startTime = SystemClock.uptimeMillis();
-                        customHandler.postDelayed(updateTimerThread, 0);
-                        layout.setBackgroundResource(R.color.colorPrimary);
-                        isRunning = true;
+                        //isRunning = true;
                     } else {
-                        isRunning = false;
+                        //isRunning = false;
                     }
                     break;
             }
@@ -161,7 +220,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         });
     }
 
-    private void updatePreparation(boolean preparation) {
+    private void updatePreparation(boolean preparation, boolean isThreadStart) {
         thisRoomMember.setMember_preparation(preparation);
 
         int index = thisRoom.indexOfMember(thisRoomMember.getMember_id());
@@ -172,8 +231,16 @@ public class RoomsKeyBattleFragment extends Fragment {
 
         if (index != -1) {
             Log.d("KeyBattle", "indexFound");
-            ref.child(roomID).child("room_members").child(Integer.toString(index))
-                    .setValue(thisRoomMember);
+            thisRoom.getRoom_members().get(index).setMember_preparation(preparation);
+
+            if (!isThreadStart){
+                ref.child(roomID).child("room_members").child(Integer.toString(index))
+                        .setValue(thisRoomMember);
+            } //else if (thisRoom.getRoom_start_time() != 0L)
+            //ref.child(roomID).setValue(thisRoom)
+            //        .addOnCompleteListener(task -> {
+            //            customHandlerForTimer.postDelayed(currentTimeCheckerThread, 0);
+            //        });
         } else {
             Log.d("KeyBattle", "indexNotFound");
         }
@@ -191,10 +258,10 @@ public class RoomsKeyBattleFragment extends Fragment {
                 }
                 if (thisRoom != null)
                     pMode.setText(puzzleNames[thisRoom.getRoom_puzzle_discipline()]);
-                thisRoomMember = new RoomMember(newMemberID, false);
 
-                if (thisRoomMember.getMember_id().equals(thisRoom.getRoom_admin_id()))
-                    setUpAdminControl();
+                //if (thisRoomMember.getMember_id().equals(thisRoom.getRoom_admin_id()))
+                setUpAdminControl();
+                //else customHandlerForTimer.postDelayed(currentTimeCheckerThread, 0);
             }
 
             @Override
@@ -284,8 +351,9 @@ public class RoomsKeyBattleFragment extends Fragment {
 
         if (isRunning){
             isRunning = false;
-            customHandler.removeCallbacks(updateTimerThread);
+            customHandlerForTimer.removeCallbacks(updateTimerThread);
         }
+        //customHandlerForTimer.removeCallbacks(currentTimeCheckerThread);
 
         //TODO: Продумать эту логику и учесть все возможные ошибки,
         // если пользователь уйдёт в обход диалога

@@ -50,8 +50,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import id.zelory.compressor.Compressor;
-
 import static android.app.Activity.RESULT_OK;
 import static com.example.lbar.MainActivity.storage;
 

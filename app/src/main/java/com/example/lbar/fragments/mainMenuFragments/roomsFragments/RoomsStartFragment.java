@@ -24,10 +24,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.SNTP.SNTPClient;
 import com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments.RoomsMainBattleFragment;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Date;
+import java.util.TimeZone;
 
 import static com.example.lbar.MainActivity.SWIPE_THRESHOLD;
 import static com.example.lbar.MainActivity.SWIPE_VELOCITY_THRESHOLD;
@@ -46,6 +50,15 @@ public class RoomsStartFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_start_rooms, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
+
+        SNTPClient.getDate(TimeZone.getDefault(), new SNTPClient.Listener() {
+            @Override
+            public void onTimeResponse(String rawDate, Date date, Exception ex) {
+                Log.d("SNTP", System.currentTimeMillis() + "");
+                Log.d("SNTP", date.getTime() + "");
+                Log.d("SNTP", rawDate);
+            }
+        });
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_rooms);
         setToolbarSettings(toolbar, activity, main_activity);
