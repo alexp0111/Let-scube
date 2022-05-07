@@ -40,8 +40,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class RoomsKeyBattleFragment extends Fragment {
@@ -56,8 +58,6 @@ public class RoomsKeyBattleFragment extends Fragment {
             .getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
             .getReference("Rooms");
 
-    //private Calendar calendar;
-
     private boolean isRunning = false;
     private Cube cube = new Cube(1);
 
@@ -65,10 +65,10 @@ public class RoomsKeyBattleFragment extends Fragment {
     private String newMemberID;
     private Room thisRoom = null;
     private RoomMember thisRoomMember = null;
+    private ArrayList<Long> results;
 
     private Handler customHandlerForTimer;
     private Runnable updateTimerThread;
-    //private Runnable currentTimeCheckerThread;
 
     private long startTime = 0L;
     private long timeInMS = 0L;
@@ -90,28 +90,9 @@ public class RoomsKeyBattleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_key_battle_rooms, container, false);
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
-        SNTPClient.getDate(TimeZone.getDefault(), new SNTPClient.Listener() {
-            @Override
-            public void onTimeResponse(String rawDate, Date date, Exception ex) {
-                //date.getTime()
-                Log.d("SNTP", rawDate);
-            }
-        });
-
-        //MuTime.enableDiskCaching(getContext());
-        //MuTime.buildCustomSntpRequest("time.google.com");
-//
-        //try {
-        //    long m = MuTime.now();
-        //    Log.d("qwe", m + "");
-        //} catch (MissingTimeDataException e) {
-        //    e.printStackTrace();
-        //}
-
-        //calendar = Calendar.getInstance();
-
         getRoomClass();
         initItems(view);
+        results = new ArrayList<>();
         thisRoomMember = new RoomMember(newMemberID, false);
         realiseClickListeners();
 
@@ -125,42 +106,20 @@ public class RoomsKeyBattleFragment extends Fragment {
             }
         };
 
-        //currentTimeCheckerThread = new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        RoomsKeyBattleFragment.this.startChronometer();
-        //        customHandlerForTimer.postDelayed(this, 0);
-        //    }
-        //};
-
         return view;
     }
 
     private void setUpAdminControl() {
-        if (thisRoom.isAllMembersPrepared()){
+        if (thisRoom.isAllMembersPrepared()) {
             startChronometer();
-            //long newTime = System.currentTimeMillis() + 5000;
-            //Log.d("TimeChecker", newTime + "");
-            //thisRoom.setRoom_start_time(newTime);
-            //updatePreparation(false, true);
         }
     }
 
     private void startChronometer() {
-        //Log.d("TimeChecker-start", System.currentTimeMillis() + "");
-        //if (System.currentTimeMillis() == thisRoom.getRoom_start_time()){
-            Log.d("KeyBattle", "DONE");
-            //customHandlerForTimer.removeCallbacks(currentTimeCheckerThread);
-            //isRunning = true;
-            //updatePreparation(false, false);
-
-            startTime = SystemClock.uptimeMillis();
-            customHandlerForTimer.postDelayed(updateTimerThread, 0);
-            layout.setBackgroundResource(R.color.colorPrimary);
-            isRunning = true;
-            //return 0;
-        //}
-        //return -1;
+        startTime = SystemClock.uptimeMillis();
+        customHandlerForTimer.postDelayed(updateTimerThread, 0);
+        layout.setBackgroundResource(R.color.colorPrimary);
+        isRunning = true;
     }
 
     private void initItems(View v) {
@@ -174,7 +133,6 @@ public class RoomsKeyBattleFragment extends Fragment {
         bar = v.findViewById(R.id.rooms_key_battle_bar);
 
         customHandlerForTimer = new Handler(Looper.getMainLooper());
-        //customHandlerForChecker = new Handler(Looper.getMainLooper());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -197,50 +155,51 @@ public class RoomsKeyBattleFragment extends Fragment {
 
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
 
-                        updatePreparation(true, false);
+                        updatePreparation(true);
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
+                        updatePreparation(false);
+
                         customHandlerForTimer.removeCallbacks(updateTimerThread);
-                        updatePreparation(false, false);
                         isRunning = false;
                         //thisRoom.setRoom_start_time(0L);
                         //ref.child(roomID).setValue(thisRoom);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (!isRunning) {
-                        //isRunning = true;
-                    } else {
-                        //isRunning = false;
-                    }
+                    //if (!isRunning) {
+                    //} else {
+                    //}
                     break;
             }
             return true;
         });
     }
 
-    private void updatePreparation(boolean preparation, boolean isThreadStart) {
-        thisRoomMember.setMember_preparation(preparation);
+    private void updateResultsList() {
+        results.add(updateTime);
+        int index = thisRoom.indexOfMember(newMemberID);
 
-        int index = thisRoom.indexOfMember(thisRoomMember.getMember_id());
-
-        for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
-            Log.d("KeyBattle-members", thisRoom.getRoom_members().get(i).getMember_id());
+        if (index != -1) {
+            Log.d("KeyBattle", "indexFound");
+            thisRoom.getRoom_members().get(index).setMember_results(results);
+            ref.child(roomID).setValue(thisRoom);
+        } else {
+            Log.d("KeyBattle", "indexNotFound");
         }
+    }
+
+    private void updatePreparation(boolean preparation) {
+        int index = thisRoom.indexOfMember(newMemberID);
 
         if (index != -1) {
             Log.d("KeyBattle", "indexFound");
             thisRoom.getRoom_members().get(index).setMember_preparation(preparation);
-
-            if (!isThreadStart){
-                ref.child(roomID).child("room_members").child(Integer.toString(index))
-                        .setValue(thisRoomMember);
-            } //else if (thisRoom.getRoom_start_time() != 0L)
-            //ref.child(roomID).setValue(thisRoom)
-            //        .addOnCompleteListener(task -> {
-            //            customHandlerForTimer.postDelayed(currentTimeCheckerThread, 0);
-            //        });
+            ref.child(roomID).setValue(thisRoom).addOnCompleteListener(task -> {
+                if (updateTime != 0)
+                 updateResultsList();
+            });
         } else {
             Log.d("KeyBattle", "indexNotFound");
         }
@@ -282,7 +241,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         mdBuilder.setNegativeButton(R.string.i_am_shure, (dialogInterface, i) -> {
             if (thisRoom != null && thisRoom.getRoom_members().size() == 1) {
                 ref.child(roomID).removeValue().addOnCompleteListener(task -> closeFragment());
-            } else if (thisRoom != null){
+            } else if (thisRoom != null) {
                 for (int j = 0; j < thisRoom.getRoom_members().size(); j++) {
                     RoomMember roomMember = thisRoom.getRoom_members().get(j);
                     if (roomMember.getMember_id().equals(newMemberID))
@@ -349,11 +308,10 @@ public class RoomsKeyBattleFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        if (isRunning){
+        if (isRunning) {
             isRunning = false;
             customHandlerForTimer.removeCallbacks(updateTimerThread);
         }
-        //customHandlerForTimer.removeCallbacks(currentTimeCheckerThread);
 
         //TODO: Продумать эту логику и учесть все возможные ошибки,
         // если пользователь уйдёт в обход диалога
