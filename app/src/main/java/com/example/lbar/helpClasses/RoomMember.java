@@ -7,6 +7,7 @@ public class RoomMember {
     private String member_id;
     private ArrayList<Long> member_results;
     private boolean member_preparation;
+    private int index;
 
     public RoomMember(String member_id, boolean member_preparation) {
         this.member_id = member_id;
@@ -17,6 +18,12 @@ public class RoomMember {
         this.member_id = member_id;
         this.member_results = member_results;
         this.member_preparation = member_preparation;
+    }
+
+    public RoomMember(String member_id, ArrayList<Long> member_results, int index) {
+        this.member_id = member_id;
+        this.member_results = member_results;
+        this.index = index;
     }
 
     public RoomMember() {
@@ -44,5 +51,13 @@ public class RoomMember {
 
     public void setMember_preparation(boolean member_preparation) {
         this.member_preparation = member_preparation;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

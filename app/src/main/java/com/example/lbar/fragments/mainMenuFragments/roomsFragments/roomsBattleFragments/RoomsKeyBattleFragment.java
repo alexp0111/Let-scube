@@ -22,10 +22,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.SNTP.SNTPClient;
+import com.example.lbar.adapter.RoomAdapter;
+import com.example.lbar.adapter.RoomMemberAdapter;
+import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.Room;
 import com.example.lbar.helpClasses.RoomMember;
@@ -42,6 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -66,6 +72,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     private Room thisRoom = null;
     private RoomMember thisRoomMember = null;
     private ArrayList<Long> results;
+    private RoomMemberAdapter roomMemberAdapter;
 
     private Handler customHandlerForTimer;
     private Runnable updateTimerThread;
@@ -80,6 +87,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     private LinearLayout layout;
     private ImageView backImageView;
     private ConstraintLayout bar;
+    private RecyclerView recyclerView;
 
     private String[] puzzleNames = {"2 x 2", "3 x 3", "4 x 4", "5 x 5", "6 x 6", "7 x 7",
             "Pyraminx", "Sqube", "Megaminx", "Clock", "Square-1"};
@@ -95,6 +103,11 @@ public class RoomsKeyBattleFragment extends Fragment {
         results = new ArrayList<>();
         thisRoomMember = new RoomMember(newMemberID, false);
         realiseClickListeners();
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        roomMemberAdapter = new RoomMemberAdapter(getContext(), new ArrayList<>());
+        recyclerView.setAdapter(roomMemberAdapter);
 
         updateTimerThread = new Runnable() {
             @Override
@@ -120,6 +133,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         customHandlerForTimer.postDelayed(updateTimerThread, 0);
         layout.setBackgroundResource(R.color.colorPrimary);
         isRunning = true;
+        updatePreparation(false, false);
     }
 
     private void initItems(View v) {
@@ -131,6 +145,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         layout = v.findViewById(R.id.layout_key_battle_chronometer);
         backImageView = v.findViewById(R.id.rooms_key_battle_back_iv);
         bar = v.findViewById(R.id.rooms_key_battle_bar);
+        recyclerView = v.findViewById(R.id.key_battle_members_list);
 
         customHandlerForTimer = new Handler(Looper.getMainLooper());
     }
@@ -155,22 +170,17 @@ public class RoomsKeyBattleFragment extends Fragment {
 
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
 
-                        updatePreparation(true);
+                        updatePreparation(true, false);
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
-                        updatePreparation(false);
+                        updatePreparation(false, true);
 
                         customHandlerForTimer.removeCallbacks(updateTimerThread);
                         isRunning = false;
-                        //thisRoom.setRoom_start_time(0L);
-                        //ref.child(roomID).setValue(thisRoom);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    //if (!isRunning) {
-                    //} else {
-                    //}
                     break;
             }
             return true;
@@ -190,15 +200,15 @@ public class RoomsKeyBattleFragment extends Fragment {
         }
     }
 
-    private void updatePreparation(boolean preparation) {
+    private void updatePreparation(boolean preparation, boolean resUpdate) {
         int index = thisRoom.indexOfMember(newMemberID);
 
         if (index != -1) {
             Log.d("KeyBattle", "indexFound");
             thisRoom.getRoom_members().get(index).setMember_preparation(preparation);
             ref.child(roomID).setValue(thisRoom).addOnCompleteListener(task -> {
-                if (updateTime != 0)
-                 updateResultsList();
+                if (resUpdate && updateTime != 0)
+                    updateResultsList();
             });
         } else {
             Log.d("KeyBattle", "indexNotFound");
@@ -220,6 +230,7 @@ public class RoomsKeyBattleFragment extends Fragment {
 
                 //if (thisRoomMember.getMember_id().equals(thisRoom.getRoom_admin_id()))
                 setUpAdminControl();
+                updateRecyclerView();
                 //else customHandlerForTimer.postDelayed(currentTimeCheckerThread, 0);
             }
 
@@ -228,6 +239,29 @@ public class RoomsKeyBattleFragment extends Fragment {
 
             }
         });
+    }
+
+    private void updateRecyclerView() {
+        int maxLen = -1;
+        List<RoomMember> newList = new ArrayList<>();
+        for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
+            if (thisRoom.getRoom_members().get(i).getMember_results() != null
+                    && thisRoom.getRoom_members().get(i).getMember_results().size() > maxLen)
+                maxLen = thisRoom.getRoom_members().get(i).getMember_results().size();
+        }
+        for (int i = 0; i < maxLen; i++) {
+            for (int j = 0; j < thisRoom.getRoom_members().size(); j++) {
+                RoomMember listItem =
+                        new RoomMember(
+                                thisRoom.getRoom_members().get(j).getMember_id()
+                                , thisRoom.getRoom_members().get(j).getMember_results()
+                                , i);
+                newList.add(listItem);
+            }
+        }
+        Collections.reverse(newList);
+        roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
+        recyclerView.setAdapter(roomMemberAdapter);
     }
 
     private void startSureDialog() {
