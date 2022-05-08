@@ -113,6 +113,7 @@ public class RoomsKeyBattleFragment extends Fragment {
                 new LinearLayoutManagerWrapper(getContext(), LinearLayoutManager.VERTICAL, false);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
+
         recyclerView.setLayoutManager(linearLayoutManager);
         roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
         recyclerView.setAdapter(roomMemberAdapter);
@@ -238,7 +239,8 @@ public class RoomsKeyBattleFragment extends Fragment {
 
                 //if (thisRoomMember.getMember_id().equals(thisRoom.getRoom_admin_id()))
                 setUpAdminControl();
-                updateRecyclerView();
+                if (thisRoom.absoluteResultsNumber() > newList.size())
+                    updateRecyclerView();
                 //else customHandlerForTimer.postDelayed(currentTimeCheckerThread, 0);
             }
 
@@ -251,7 +253,7 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private void updateRecyclerView() {
         int maxLen = -1;
-        newList.clear();
+        //newList.clear();
         for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
             if (thisRoom.getRoom_members().get(i).getMember_results() != null
                     && thisRoom.getRoom_members().get(i).getMember_results().size() > maxLen)
@@ -260,19 +262,41 @@ public class RoomsKeyBattleFragment extends Fragment {
         for (int i = 0; i < maxLen; i++) {
             for (int j = 0; j < thisRoom.getRoom_members().size(); j++) {
                 RoomMember listItem =
-                        new RoomMember(
-                                thisRoom.getRoom_members().get(j).getMember_id()
+                        new RoomMember(thisRoom.getRoom_members().get(j).getMember_id()
                                 , thisRoom.getRoom_members().get(j).getMember_results()
-                                , i);
-                newList.add(listItem);
+                                , numberOfMemberResultsInList(thisRoom.getRoom_members().get(j).getMember_id()));
+                if (thisRoom.getRoom_members().get(j).getMember_results() != null &&
+                        i < thisRoom.getRoom_members().get(j).getMember_results().size()
+                        && newListItemIsUnique(listItem, thisRoom.getRoom_members().get(j).getMember_results().size())) {
+                    newList.add(listItem);
+                    Log.d("KeyBattle-newElement-id", listItem.getMember_id());
+                    Log.d("KeyBattle-newElement-time", listItem.getMember_results().get(listItem.getMember_results().size()-1) + " ");
+                    Log.d("KeyBattle-newElement-index", listItem.getIndex() + " ");
+                }
             }
         }
+        Log.d("KeyBattle-newElement:", "===========================================");
         //Collections.reverse(newList);
-        roomMemberAdapter.notifyItemInserted(newList.size()-1);
         //roomMemberAdapter.notifyDataSetChanged();
+        roomMemberAdapter.notifyItemInserted(newList.size() - 1);
+        recyclerView.scrollToPosition(newList.size() - 1);
         //TODO: Коряво отображается [думоть]
         //roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
         //recyclerView.setAdapter(roomMemberAdapter);
+    }
+
+    private boolean newListItemIsUnique(RoomMember listItem, int newSize) {
+        return (newSize - numberOfMemberResultsInList(listItem.getMember_id())) == 1;
+    }
+
+    private int numberOfMemberResultsInList(String memberId){
+        int numOfMemberResults = 0;
+        for (int i = 0; i < newList.size(); i++) {
+            if (newList.get(i).getMember_id().equals(memberId)){
+                numOfMemberResults++;
+            }
+        }
+        return numOfMemberResults;
     }
 
     private void startSureDialog() {

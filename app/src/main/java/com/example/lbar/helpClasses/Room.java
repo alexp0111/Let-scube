@@ -66,7 +66,18 @@ public class Room {
     public Room() {
     }
 
-    public boolean isAllMembersPrepared(){
+    public int absoluteResultsNumber() {
+        int result = 0;
+        for (int i = 0; i < room_members.size(); i++) {
+            if (room_members.get(i).getMember_results() != null)
+                for (int j = 0; j < room_members.get(i).getMember_results().size(); j++) {
+                    result++;
+                }
+        }
+        return result;
+    }
+
+    public boolean isAllMembersPrepared() {
         for (int i = 0; i < room_members.size(); i++) {
             if (!room_members.get(i).getMember_preparation())
                 return false;
@@ -74,7 +85,7 @@ public class Room {
         return true;
     }
 
-    public int indexOfMember(String id){
+    public int indexOfMember(String id) {
         for (int i = 0; i < room_members.size(); i++) {
             if (room_members.get(i).getMember_id().equals(id))
                 return i;
