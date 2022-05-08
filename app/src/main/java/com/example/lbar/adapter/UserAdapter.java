@@ -108,7 +108,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         // При смене темы вылетает офлайн на мгновение - странно?
 
-        //holder.itemView.startAnimation(animation);
+        // holder.itemView.startAnimation(animation);
     }
 
     @Override

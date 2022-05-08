@@ -50,7 +50,7 @@ public class Cube {
     public Cube() {
     }
 
-    public String bestInfo() { //TODO: make logic of best results forming
+    public String bestInfo() {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < puzzle_build_pb_statistics.size() - 1; i++) {
             result.append(convertFromMStoString(puzzle_build_pb_statistics.get(i))).append("\n");

@@ -108,7 +108,6 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
         });
 
         realiseClickListenerOnCards();
-        //setCollectionValueEventListener(); TODO: Разобраться с свайпрефрешлайаутами. (создают новый листенер, хотя он и так риалтайме)
 
         gestureDetector = new GestureDetector(getContext(), this);
 

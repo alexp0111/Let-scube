@@ -268,15 +268,18 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
             // Верификация через email          begin
             fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            //FIXME: Вылетает null при загрузке иногда - не ясно почему (в Toast [269 - 275])
-
-            //fUser.sendEmailVerification()
-            //        .addOnSuccessListener(aVoid ->
-            //                Toast.makeText(getContext(), R.string.ver_mail_has_sent,
-            //                        Toast.LENGTH_LONG).show())
-            //        .addOnFailureListener(e ->
-            //                Toast.makeText(getContext(), R.string.sww,
-            //                        Toast.LENGTH_SHORT).show());
+            if (fUser != null)
+                fUser.sendEmailVerification()
+                        .addOnSuccessListener(aVoid -> {
+                            if (getContext() != null)
+                                Toast.makeText(getContext(), R.string.ver_mail_has_sent,
+                                        Toast.LENGTH_LONG).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            if (getContext() != null)
+                                Toast.makeText(getContext(), R.string.sww,
+                                        Toast.LENGTH_SHORT).show();
+                        });
 
 
             // Верификация через email          end

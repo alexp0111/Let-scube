@@ -276,13 +276,8 @@ public class RoomsKeyBattleFragment extends Fragment {
             }
         }
         Log.d("KeyBattle-newElement:", "===========================================");
-        //Collections.reverse(newList);
-        //roomMemberAdapter.notifyDataSetChanged();
         roomMemberAdapter.notifyItemInserted(newList.size() - 1);
         recyclerView.scrollToPosition(newList.size() - 1);
-        //TODO: Коряво отображается [думоть]
-        //roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
-        //recyclerView.setAdapter(roomMemberAdapter);
     }
 
     private boolean newListItemIsUnique(RoomMember listItem, int newSize) {
