@@ -101,8 +101,7 @@ public class RoomsPublicBattleFragment extends Fragment {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Room room = snapshot.getValue(Room.class);
-                    assert room != null;
-                    if (room.getRoom_access().equals("public"))
+                    if (room != null && room.getRoom_access().equals("public"))
                         mRooms.add(room);
                 }
 

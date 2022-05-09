@@ -16,6 +16,7 @@ public class Room {
     private boolean room_collection_synchronization; // false - without // true - with
     private Integer room_puzzle_discipline;
     private Integer room_max_number_of_members;
+    private String room_scramble;
 
     public Room(String room_id,
                 String room_admin_id,
@@ -27,7 +28,7 @@ public class Room {
                 String room_password,
                 boolean room_collection_synchronization,
                 Integer room_puzzle_discipline,
-                Integer room_max_number_of_members) {
+                Integer room_max_number_of_members, String room_scramble) {
         this.room_id = room_id;
         this.room_admin_id = room_admin_id;
         this.room_start_time = room_start_time;
@@ -39,6 +40,7 @@ public class Room {
         this.room_collection_synchronization = room_collection_synchronization;
         this.room_puzzle_discipline = room_puzzle_discipline;
         this.room_max_number_of_members = room_max_number_of_members;
+        this.room_scramble = room_scramble;
     }
 
     public Room(String room_id,
@@ -50,7 +52,7 @@ public class Room {
                 String room_access,
                 boolean room_collection_synchronization,
                 Integer room_puzzle_discipline,
-                Integer room_max_number_of_members) {
+                Integer room_max_number_of_members, String room_scramble) {
         this.room_id = room_id;
         this.room_admin_id = room_admin_id;
         this.room_start_time = room_start_time;
@@ -61,6 +63,7 @@ public class Room {
         this.room_collection_synchronization = room_collection_synchronization;
         this.room_puzzle_discipline = room_puzzle_discipline;
         this.room_max_number_of_members = room_max_number_of_members;
+        this.room_scramble = room_scramble;
     }
 
     public Room() {
@@ -179,5 +182,13 @@ public class Room {
 
     public void setRoom_password(String room_password) {
         this.room_password = room_password;
+    }
+
+    public String getRoom_scramble() {
+        return room_scramble;
+    }
+
+    public void setRoom_scramble(String room_scramble) {
+        this.room_scramble = room_scramble;
     }
 }

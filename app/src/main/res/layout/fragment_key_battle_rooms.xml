@@ -105,7 +105,7 @@
             android:gravity="center"
             android:paddingHorizontal="20dp"
             android:textColor="@color/colorAccent"
-            android:text="Scramble"
+            android:text="heating non-scramble round"
             android:visibility="visible"
             android:textSize="20sp" />
 

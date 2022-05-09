@@ -52,6 +52,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.TimeZone;
 
 public class RoomsKeyBattleFragment extends Fragment {
@@ -80,7 +81,6 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private Handler customHandlerForTimer;
     private Runnable updateTimerThread;
-    private Runnable inspectionCounterThread;
 
     private long startTime = 0L;
     private long timeInMS = 0L;
@@ -91,11 +91,13 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private TextView chronometer;
     private TextView pMode;
+    private TextView scramble;
     private LinearLayout layout;
     private ImageView backImageView;
     private ConstraintLayout bar;
     private RecyclerView recyclerView;
 
+    private String[] scrambleArray_classic;
     private String[] puzzleNames = {"2 x 2", "3 x 3", "4 x 4", "5 x 5", "6 x 6", "7 x 7",
             "Pyraminx", "Sqube", "Megaminx", "Clock", "Square-1"};
 
@@ -129,6 +131,7 @@ public class RoomsKeyBattleFragment extends Fragment {
                     chronometer.setText(convertFromMStoString(inspectionTime));
                     inspectionTime -= 1000L;
                 } else if (inspectionTime == 0) {
+                    scramble.setText("");
                     delay = 0;
                     startTime = SystemClock.uptimeMillis();
                     inspectionTime = -1;
@@ -147,6 +150,10 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private void setUpAdminControl() {
         if (thisRoom.isAllMembersPrepared()) {
+            updatePreparation(false, false, true);
+            scramble.setText(thisRoom.getRoom_scramble());
+
+            scramble.setText("inspection time");
             inspectionTime = 10000L; // inspection time
             startChronometer();
         }
@@ -156,7 +163,6 @@ public class RoomsKeyBattleFragment extends Fragment {
         customHandlerForTimer.postDelayed(updateTimerThread, 0);
         layout.setBackgroundResource(R.color.colorPrimary);
         isRunning = true;
-        updatePreparation(false, false);
     }
 
     private void initItems(View v) {
@@ -165,12 +171,15 @@ public class RoomsKeyBattleFragment extends Fragment {
 
         chronometer = v.findViewById(R.id.chronometer_key_battle);
         pMode = v.findViewById(R.id.rooms_key_battle_puzzle_mode);
+        scramble = v.findViewById(R.id.scramble_key_battle_textView);
         layout = v.findViewById(R.id.layout_key_battle_chronometer);
         backImageView = v.findViewById(R.id.rooms_key_battle_back_iv);
         bar = v.findViewById(R.id.rooms_key_battle_bar);
         recyclerView = v.findViewById(R.id.key_battle_members_list);
 
         customHandlerForTimer = new Handler(Looper.getMainLooper());
+
+        scrambleArray_classic = getResources().getStringArray(R.array.scrambles_for_classic);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -193,11 +202,12 @@ public class RoomsKeyBattleFragment extends Fragment {
 
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
 
-                        updatePreparation(true, false);
+                        updatePreparation(true, false, false);
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
-                        updatePreparation(false, true);
+                        scramble.setText(thisRoom.getRoom_scramble());
+                        updatePreparation(false, true, false);
 
                         customHandlerForTimer.removeCallbacks(updateTimerThread);
                         isRunning = false;
@@ -223,7 +233,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         }
     }
 
-    private void updatePreparation(boolean preparation, boolean resUpdate) {
+    private void updatePreparation(boolean preparation, boolean resUpdate, boolean scrambleUpdate) {
         int index = thisRoom.indexOfMember(newMemberID);
 
         if (index != -1) {
@@ -232,6 +242,8 @@ public class RoomsKeyBattleFragment extends Fragment {
             ref.child(roomID).setValue(thisRoom).addOnCompleteListener(task -> {
                 if (resUpdate && updateTime != 0)
                     updateResultsList();
+                if (scrambleUpdate && newMemberID.equals(thisRoom.getRoom_admin_id()))
+                    downloadNewScramble();
             });
         } else {
             Log.d("KeyBattle", "indexNotFound");
@@ -248,10 +260,9 @@ public class RoomsKeyBattleFragment extends Fragment {
                     if (room.getRoom_id().equals(roomID))
                         thisRoom = room;
                 }
-                if (thisRoom != null)
+                if (thisRoom != null) {
                     pMode.setText(puzzleNames[thisRoom.getRoom_puzzle_discipline()]);
-
-                //if (thisRoomMember.getMember_id().equals(thisRoom.getRoom_admin_id()))
+                }
                 setUpAdminControl();
                 if (thisRoom.absoluteResultsNumber() > newList.size())
                     updateRecyclerView();
@@ -263,6 +274,60 @@ public class RoomsKeyBattleFragment extends Fragment {
 
             }
         });
+    }
+
+    private void downloadNewScramble() {
+        ref.child(roomID).child("room_scramble").setValue(getRandomScramble(thisRoom.getRoom_puzzle_discipline()));
+    }
+
+    private String getRandomScramble(int puzzle_discipline) {
+        if (puzzle_discipline >= 6){ return "Sorry, scrambles for this puzzle is currently unavailable"; }
+        StringBuilder result = new StringBuilder();
+        Random random = new Random();
+
+        Log.d("RoomSoloFragment_disc2", puzzle_discipline + ";");
+
+        String[] libArray = scrambleArray_classic;
+        int border = 17;
+        int scrambleLength = 0;
+
+        int prevInd = -1;
+        int counter = 0;
+
+        if (puzzle_discipline == 0){
+            scrambleLength = 9;
+        } else if (puzzle_discipline == 1){
+            scrambleLength = 19;
+        } else if (puzzle_discipline == 2){
+            scrambleLength = 47; border = 35;
+        } else if (puzzle_discipline == 3){
+            scrambleLength = 60; border = 35;
+        } else if (puzzle_discipline == 4){
+            scrambleLength = 80; border = 53;
+        } else if (puzzle_discipline == 5){
+            scrambleLength = 100; border = 53;
+        }
+
+        while (true){
+            // 100 - чем больше число, тем равновероятнее событие
+            // + Math.round(scrambleLength / 2) - позиция пика вероятности
+            int ind = (int) Math.round(100*random.nextGaussian() + Math.round(scrambleLength / 2.0));
+
+            if (ind >= 0 && ind <= border){
+                if (!((Math.abs(prevInd - ind) % 3) == 0))
+                { // Проверяем повторения, ходы <->, ходы <<- ->, ходы параллельных граней;
+                    Log.d("RoomsSoloFragment ++++++++", String.valueOf(ind));
+                    prevInd = ind;
+                    result.append(scrambleArray_classic[ind]).append(" ");
+                    counter++;
+                } else {
+                    Log.d("RoomsSoloFragment collision", String.valueOf(ind));
+                }
+            } else {
+                Log.d("RoomsSoloFragment bad", String.valueOf(ind));
+            }
+            if (counter == scrambleLength) return result.toString();
+        }
     }
 
     private void updateRecyclerView() {

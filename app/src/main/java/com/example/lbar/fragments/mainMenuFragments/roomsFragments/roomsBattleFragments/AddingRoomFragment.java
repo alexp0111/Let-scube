@@ -146,11 +146,11 @@ public class AddingRoomFragment extends Fragment {
         if (pointerAccess.equals("private")){
             newRoom = new Room(newRef, userID, 0L, roomMembers,
                     textHeader, textDescription, pointerAccess, textPassword,
-                    pointerSync, pointerDiscipline, pointerMember+2);
+                    pointerSync, pointerDiscipline, pointerMember+2, "heating non-scramble round");
         } else {
             newRoom = new Room(newRef, userID, 0L, roomMembers,
                     textHeader, textDescription, pointerAccess,
-                    pointerSync, pointerDiscipline, pointerMember+2);
+                    pointerSync, pointerDiscipline, pointerMember+2, "heating non-scramble round");
         }
 
 
