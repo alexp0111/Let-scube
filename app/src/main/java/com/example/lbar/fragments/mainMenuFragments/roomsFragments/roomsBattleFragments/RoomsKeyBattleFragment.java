@@ -80,11 +80,14 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private Handler customHandlerForTimer;
     private Runnable updateTimerThread;
+    private Runnable inspectionCounterThread;
 
     private long startTime = 0L;
     private long timeInMS = 0L;
     private long timeSwapBuffer = 0L;
     private long updateTime = 0L;
+    private long inspectionTime = 0L;
+    private long delay = 0L;
 
     private TextView chronometer;
     private TextView pMode;
@@ -121,10 +124,21 @@ public class RoomsKeyBattleFragment extends Fragment {
         updateTimerThread = new Runnable() {
             @Override
             public void run() {
-                timeInMS = SystemClock.uptimeMillis() - startTime;
-                updateTime = timeSwapBuffer + timeInMS;
-                chronometer.setText(convertFromMStoString(updateTime));
-                customHandlerForTimer.postDelayed(this, 0);
+                if (inspectionTime > 0){
+                    delay = 1000;
+                    chronometer.setText(convertFromMStoString(inspectionTime));
+                    inspectionTime -= 1000L;
+                } else if (inspectionTime == 0) {
+                    delay = 0;
+                    startTime = SystemClock.uptimeMillis();
+                    inspectionTime = -1;
+                } else {
+                    delay = 0;
+                    timeInMS = SystemClock.uptimeMillis() - startTime;
+                    updateTime = timeSwapBuffer + timeInMS;
+                    chronometer.setText(convertFromMStoString(updateTime));
+                }
+                customHandlerForTimer.postDelayed(this, delay);
             }
         };
 
@@ -133,12 +147,12 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private void setUpAdminControl() {
         if (thisRoom.isAllMembersPrepared()) {
+            inspectionTime = 10000L; // inspection time
             startChronometer();
         }
     }
 
     private void startChronometer() {
-        startTime = SystemClock.uptimeMillis();
         customHandlerForTimer.postDelayed(updateTimerThread, 0);
         layout.setBackgroundResource(R.color.colorPrimary);
         isRunning = true;
