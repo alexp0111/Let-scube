@@ -115,7 +115,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         } else {
             holder.sync.setText("ASYNC");
         }
-        holder.members.setText(room.getRoom_members().size() + " / " + room.getRoom_max_number_of_members());
+        holder.members.setText(room.memberAmount() + " / " + room.getRoom_max_number_of_members());
 
         holder.roomHeader.setText(room.getRoom_header());
         String text = room.getRoom_description();
@@ -130,7 +130,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
         // Listener
         holder.joinButton.setOnClickListener(view -> {
-            if (room.getRoom_members().size() == room.getRoom_max_number_of_members()) {
+            if (room.memberAmount() >= room.getRoom_max_number_of_members()) {
                 Toast.makeText(mContext, "Room is crowded", Toast.LENGTH_SHORT).show();
             } else {
                 if (room.getRoom_access().equals("private")) {

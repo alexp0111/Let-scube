@@ -63,11 +63,8 @@ public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.Vi
                             if (member.getMember_result() != null) {
                                 holder.time.setText(convertFromMStoString(
                                         member.getMember_result()));
-                                //if (holder.time.getText() != null
-                                //        && holder.time.getText().equals("......"))
-                                //    notifyItemChanged(holder.getAdapterPosition());
                             } else {
-                                holder.time.setText("......");
+                                holder.time.setText("joined the room");
                             }
                         }
                     }

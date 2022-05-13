@@ -1,6 +1,7 @@
 package com.example.lbar.helpClasses;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class Room {
 
@@ -67,6 +68,14 @@ public class Room {
     }
 
     public Room() {
+    }
+
+    public int memberAmount(){
+        TreeSet<String> ids = new TreeSet<>();
+        for (int i = 0; i < room_members.size(); i++) {
+            ids.add(room_members.get(i).getMember_id());
+        }
+        return ids.size();
     }
 
     public boolean isAllMembersPrepared() {

@@ -354,19 +354,22 @@ public class RoomsKeyBattleFragment extends Fragment {
         MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(getContext());
         mdBuilder.setTitle("Are you sure you want to exit?");
 
-        if (thisRoom != null && thisRoom.getRoom_members().size() == 1)
+        if (thisRoom != null && thisRoom.memberAmount() == 1)
             mdBuilder.setMessage("The room will be deleted after that");
         mdBuilder.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_drawable, null));
 
         mdBuilder.setNegativeButton(R.string.i_am_shure, (dialogInterface, i) -> {
-            if (thisRoom != null && thisRoom.getRoom_members().size() == 1) {
+            if (thisRoom != null && thisRoom.memberAmount() == 1) {
                 ref.child(roomID).removeValue().addOnCompleteListener(task -> closeFragment());
             } else if (thisRoom != null) {
+                ArrayList<RoomMember> tmpList = new ArrayList<>();
                 for (int j = 0; j < thisRoom.getRoom_members().size(); j++) {
-                    RoomMember roomMember = thisRoom.getRoom_members().get(j);
-                    if (roomMember.getMember_id().equals(newMemberID))
-                        thisRoom.getRoom_members().remove(j);
+                    if (!thisRoom.getRoom_members().get(j).getMember_id().equals(newMemberID))
+                        tmpList.add(thisRoom.getRoom_members().get(j));
                 }
+                thisRoom.getRoom_members().clear();
+                thisRoom.getRoom_members().addAll(tmpList);
+                tmpList.clear();
                 if (thisRoom.getRoom_admin_id().equals(newMemberID)) {
                     thisRoom.setRoom_admin_id(thisRoom.getRoom_members().get(0).getMember_id());
                 }
