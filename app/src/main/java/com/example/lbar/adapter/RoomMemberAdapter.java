@@ -60,11 +60,9 @@ public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.Vi
                         if (user != null) {
                             holder.username.setText(user.getUs_name());
                             Glide.with(mContext).load(user.getImage()).into(holder.profile_image);
-                            if (member.getMember_results() != null &&
-                                    member.getIndex() < member.getMember_results().size()) {
+                            if (member.getMember_result() != null) {
                                 holder.time.setText(convertFromMStoString(
-                                        member.getMember_results()
-                                                .get((member.getIndex()))));
+                                        member.getMember_result()));
                                 //if (holder.time.getText() != null
                                 //        && holder.time.getText().equals("......"))
                                 //    notifyItemChanged(holder.getAdapterPosition());

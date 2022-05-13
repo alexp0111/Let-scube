@@ -69,17 +69,6 @@ public class Room {
     public Room() {
     }
 
-    public int absoluteResultsNumber() {
-        int result = 0;
-        for (int i = 0; i < room_members.size(); i++) {
-            if (room_members.get(i).getMember_results() != null)
-                for (int j = 0; j < room_members.get(i).getMember_results().size(); j++) {
-                    result++;
-                }
-        }
-        return result;
-    }
-
     public boolean isAllMembersPrepared() {
         for (int i = 0; i < room_members.size(); i++) {
             if (!room_members.get(i).getMember_preparation())

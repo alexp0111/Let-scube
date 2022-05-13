@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,16 +27,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.SNTP.SNTPClient;
-import com.example.lbar.adapter.RoomAdapter;
 import com.example.lbar.adapter.RoomMemberAdapter;
-import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.LinearLayoutManagerWrapper;
 import com.example.lbar.helpClasses.Room;
 import com.example.lbar.helpClasses.RoomMember;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,12 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.Random;
-import java.util.TimeZone;
 
 public class RoomsKeyBattleFragment extends Fragment {
 
@@ -62,6 +51,9 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     //TODO: IDEA: Если в комнтае уже идёт сборка - попросить пользователя подождать
     // и заупстить колесико загрузки
+
+    //TODO: Подсчет количества участиников сделать номральным
+    //TODO: Убрать появления многоточия при подключении
 
     private DatabaseReference ref = FirebaseDatabase
             .getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
@@ -97,6 +89,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     private ConstraintLayout bar;
     private RecyclerView recyclerView;
 
+    private static final long INSPECTION_TIME = 3000L;
     private String[] scrambleArray_classic;
     private String[] puzzleNames = {"2 x 2", "3 x 3", "4 x 4", "5 x 5", "6 x 6", "7 x 7",
             "Pyraminx", "Sqube", "Megaminx", "Clock", "Square-1"};
@@ -126,7 +119,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         updateTimerThread = new Runnable() {
             @Override
             public void run() {
-                if (inspectionTime > 0){
+                if (inspectionTime > 0) {
                     delay = 1000;
                     chronometer.setText(convertFromMStoString(inspectionTime));
                     inspectionTime -= 1000L;
@@ -148,13 +141,13 @@ public class RoomsKeyBattleFragment extends Fragment {
         return view;
     }
 
-    private void setUpAdminControl() {
+    private void setUpControl() {
         if (thisRoom.isAllMembersPrepared()) {
             updatePreparation(false, false, true);
             scramble.setText(thisRoom.getRoom_scramble());
 
             scramble.setText("inspection time");
-            inspectionTime = 10000L; // inspection time
+            inspectionTime = INSPECTION_TIME; // inspection time
             startChronometer();
         }
     }
@@ -221,33 +214,23 @@ public class RoomsKeyBattleFragment extends Fragment {
     }
 
     private void updateResultsList() {
-        results.add(updateTime);
-        int index = thisRoom.indexOfMember(newMemberID);
-
-        if (index != -1) {
-            Log.d("KeyBattle", "indexFound");
-            thisRoom.getRoom_members().get(index).setMember_results(results);
-            ref.child(roomID).setValue(thisRoom);
-        } else {
-            Log.d("KeyBattle", "indexNotFound");
-        }
+        RoomMember roomMember = new RoomMember(newMemberID, updateTime, false);
+        thisRoom.getRoom_members().add(roomMember);
+        ref.child(roomID).setValue(thisRoom);
     }
 
     private void updatePreparation(boolean preparation, boolean resUpdate, boolean scrambleUpdate) {
-        int index = thisRoom.indexOfMember(newMemberID);
-
-        if (index != -1) {
-            Log.d("KeyBattle", "indexFound");
-            thisRoom.getRoom_members().get(index).setMember_preparation(preparation);
-            ref.child(roomID).setValue(thisRoom).addOnCompleteListener(task -> {
-                if (resUpdate && updateTime != 0)
-                    updateResultsList();
-                if (scrambleUpdate && newMemberID.equals(thisRoom.getRoom_admin_id()))
-                    downloadNewScramble();
-            });
-        } else {
-            Log.d("KeyBattle", "indexNotFound");
+        for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
+            if (thisRoom.getRoom_members().get(i).getMember_id().equals(newMemberID))
+                thisRoom.getRoom_members().get(i).setMember_preparation(preparation);
         }
+
+        ref.child(roomID).setValue(thisRoom).addOnCompleteListener(task -> {
+            if (resUpdate && updateTime != 0)
+                updateResultsList();
+            if (scrambleUpdate && newMemberID.equals(thisRoom.getRoom_admin_id()))
+                downloadNewScramble();
+        });
     }
 
     private void getRoomClass() {
@@ -263,10 +246,15 @@ public class RoomsKeyBattleFragment extends Fragment {
                 if (thisRoom != null) {
                     pMode.setText(puzzleNames[thisRoom.getRoom_puzzle_discipline()]);
                 }
-                setUpAdminControl();
-                if (thisRoom.absoluteResultsNumber() > newList.size())
-                    updateRecyclerView();
-                //else customHandlerForTimer.postDelayed(currentTimeCheckerThread, 0);
+                setUpControl();
+                if (thisRoom.getRoom_members().size() - newList.size() == 1){
+                    Log.d("UPDATE_RECYCLER", "false");
+                    updateRecyclerView(false);
+                }
+                else if (thisRoom.getRoom_members().size() - newList.size() > 1){
+                    Log.d("UPDATE_RECYCLER", "true");
+                    updateRecyclerView(true);
+                }
             }
 
             @Override
@@ -281,7 +269,9 @@ public class RoomsKeyBattleFragment extends Fragment {
     }
 
     private String getRandomScramble(int puzzle_discipline) {
-        if (puzzle_discipline >= 6){ return "Sorry, scrambles for this puzzle is currently unavailable"; }
+        if (puzzle_discipline >= 6) {
+            return "Sorry, scrambles for this puzzle is currently unavailable";
+        }
         StringBuilder result = new StringBuilder();
         Random random = new Random();
 
@@ -294,28 +284,31 @@ public class RoomsKeyBattleFragment extends Fragment {
         int prevInd = -1;
         int counter = 0;
 
-        if (puzzle_discipline == 0){
+        if (puzzle_discipline == 0) {
             scrambleLength = 9;
-        } else if (puzzle_discipline == 1){
+        } else if (puzzle_discipline == 1) {
             scrambleLength = 19;
-        } else if (puzzle_discipline == 2){
-            scrambleLength = 47; border = 35;
-        } else if (puzzle_discipline == 3){
-            scrambleLength = 60; border = 35;
-        } else if (puzzle_discipline == 4){
-            scrambleLength = 80; border = 53;
-        } else if (puzzle_discipline == 5){
-            scrambleLength = 100; border = 53;
+        } else if (puzzle_discipline == 2) {
+            scrambleLength = 47;
+            border = 35;
+        } else if (puzzle_discipline == 3) {
+            scrambleLength = 60;
+            border = 35;
+        } else if (puzzle_discipline == 4) {
+            scrambleLength = 80;
+            border = 53;
+        } else if (puzzle_discipline == 5) {
+            scrambleLength = 100;
+            border = 53;
         }
 
-        while (true){
+        while (true) {
             // 100 - чем больше число, тем равновероятнее событие
             // + Math.round(scrambleLength / 2) - позиция пика вероятности
-            int ind = (int) Math.round(100*random.nextGaussian() + Math.round(scrambleLength / 2.0));
+            int ind = (int) Math.round(100 * random.nextGaussian() + Math.round(scrambleLength / 2.0));
 
-            if (ind >= 0 && ind <= border){
-                if (!((Math.abs(prevInd - ind) % 3) == 0))
-                { // Проверяем повторения, ходы <->, ходы <<- ->, ходы параллельных граней;
+            if (ind >= 0 && ind <= border) {
+                if (!((Math.abs(prevInd - ind) % 3) == 0)) { // Проверяем повторения, ходы <->, ходы <<- ->, ходы параллельных граней;
                     Log.d("RoomsSoloFragment ++++++++", String.valueOf(ind));
                     prevInd = ind;
                     result.append(scrambleArray_classic[ind]).append(" ");
@@ -330,43 +323,27 @@ public class RoomsKeyBattleFragment extends Fragment {
         }
     }
 
-    private void updateRecyclerView() {
-        int maxLen = -1;
-        //newList.clear();
-        for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
-            if (thisRoom.getRoom_members().get(i).getMember_results() != null
-                    && thisRoom.getRoom_members().get(i).getMember_results().size() > maxLen)
-                maxLen = thisRoom.getRoom_members().get(i).getMember_results().size();
+    private void updateRecyclerView(boolean fullUpdate) {
+        if (fullUpdate) {
+            newList.clear();
+            newList.addAll(thisRoom.getRoom_members());
+            roomMemberAdapter = new RoomMemberAdapter(getContext(), newList);
+            recyclerView.setAdapter(roomMemberAdapter);
+        } else {
+            newList.add(thisRoom.getRoom_members().get(thisRoom.getRoom_members().size() - 1));
+            roomMemberAdapter.notifyItemInserted(newList.size() - 1);
+            recyclerView.scrollToPosition(newList.size() - 1);
         }
-        for (int i = 0; i < maxLen; i++) {
-            for (int j = 0; j < thisRoom.getRoom_members().size(); j++) {
-                RoomMember listItem =
-                        new RoomMember(thisRoom.getRoom_members().get(j).getMember_id()
-                                , thisRoom.getRoom_members().get(j).getMember_results()
-                                , numberOfMemberResultsInList(thisRoom.getRoom_members().get(j).getMember_id()));
-                if (thisRoom.getRoom_members().get(j).getMember_results() != null &&
-                        i < thisRoom.getRoom_members().get(j).getMember_results().size()
-                        && newListItemIsUnique(listItem, thisRoom.getRoom_members().get(j).getMember_results().size())) {
-                    newList.add(listItem);
-                    Log.d("KeyBattle-newElement-id", listItem.getMember_id());
-                    Log.d("KeyBattle-newElement-time", listItem.getMember_results().get(listItem.getMember_results().size()-1) + " ");
-                    Log.d("KeyBattle-newElement-index", listItem.getIndex() + " ");
-                }
-            }
-        }
-        Log.d("KeyBattle-newElement:", "===========================================");
-        roomMemberAdapter.notifyItemInserted(newList.size() - 1);
-        recyclerView.scrollToPosition(newList.size() - 1);
     }
 
     private boolean newListItemIsUnique(RoomMember listItem, int newSize) {
         return (newSize - numberOfMemberResultsInList(listItem.getMember_id())) == 1;
     }
 
-    private int numberOfMemberResultsInList(String memberId){
+    private int numberOfMemberResultsInList(String memberId) {
         int numOfMemberResults = 0;
         for (int i = 0; i < newList.size(); i++) {
-            if (newList.get(i).getMember_id().equals(memberId)){
+            if (newList.get(i).getMember_id().equals(memberId)) {
                 numOfMemberResults++;
             }
         }

@@ -5,25 +5,18 @@ import java.util.ArrayList;
 public class RoomMember {
 
     private String member_id;
-    private ArrayList<Long> member_results;
+    private Long member_result;
     private boolean member_preparation;
-    private int index;
 
     public RoomMember(String member_id, boolean member_preparation) {
         this.member_id = member_id;
         this.member_preparation = member_preparation;
     }
 
-    public RoomMember(String member_id, ArrayList<Long> member_results, boolean member_preparation) {
+    public RoomMember(String member_id, Long member_result, boolean member_preparation) {
         this.member_id = member_id;
-        this.member_results = member_results;
+        this.member_result = member_result;
         this.member_preparation = member_preparation;
-    }
-
-    public RoomMember(String member_id, ArrayList<Long> member_results, int index) {
-        this.member_id = member_id;
-        this.member_results = member_results;
-        this.index = index;
     }
 
     public RoomMember() {
@@ -37,14 +30,6 @@ public class RoomMember {
         this.member_id = member_id;
     }
 
-    public ArrayList<Long> getMember_results() {
-        return member_results;
-    }
-
-    public void setMember_results(ArrayList<Long> member_results) {
-        this.member_results = member_results;
-    }
-
     public boolean getMember_preparation() {
         return member_preparation;
     }
@@ -53,11 +38,11 @@ public class RoomMember {
         this.member_preparation = member_preparation;
     }
 
-    public int getIndex() {
-        return index;
+    public Long getMember_result() {
+        return member_result;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setMember_result(Long member_result) {
+        this.member_result = member_result;
     }
 }
