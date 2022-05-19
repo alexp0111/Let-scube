@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:paddingHorizontal="10dp"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
-            android:tint="#000"
+            app:tint="#000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -105,7 +105,7 @@
             android:gravity="center"
             android:paddingHorizontal="20dp"
             android:textColor="@color/colorAccent"
-            android:text="heating non-scramble round"
+            android:text="@string/non_scr_round"
             android:visibility="visible"
             android:textSize="20sp" />
 

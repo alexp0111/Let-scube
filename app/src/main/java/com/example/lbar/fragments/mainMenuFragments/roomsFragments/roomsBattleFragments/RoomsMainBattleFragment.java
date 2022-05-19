@@ -59,10 +59,10 @@ public class RoomsMainBattleFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText("Public");
+                    tab.setText(R.string.public_rooms);
                     break;
                 case 1:
-                    tab.setText("Private");
+                    tab.setText(R.string.private_rooms);
                     break;
             }
         }).attach();

@@ -187,7 +187,7 @@ public class RegistrationFragment extends Fragment {
                     }
 
                     for (int i = 0; i < 11; i++) {
-                        Cube cube = new Cube(0, "Cube code: " + i, arrBest, arrAvg);
+                        Cube cube = new Cube(0, "Cube code: " + i, arrBest, arrAvg, getContext());
                         allCubesArray.add(cube);
                     }
 

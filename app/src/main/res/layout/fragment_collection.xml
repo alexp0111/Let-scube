@@ -54,6 +54,8 @@
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/collection_card_type1"
                         android:layout_width="220dp"
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
                         android:layout_height="220dp"
                         android:layout_margin="20dp"
                         android:orientation="vertical"
@@ -165,6 +167,8 @@
                         android:layout_width="220dp"
                         android:layout_height="220dp"
                         android:layout_margin="20dp"
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
                         android:layout_toEndOf="@id/collection_card_pyraminx"
                         android:orientation="vertical"
                         android:theme="@style/AppTheme"
@@ -199,6 +203,8 @@
                         android:theme="@style/AppTheme"
                         app:cardBackgroundColor="@color/colorMsgRightItem"
                         app:cardCornerRadius="20dp"
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
                         app:cardElevation="6dp">
 
                         <ImageView
@@ -216,6 +222,8 @@
                         android:layout_margin="20dp"
                         android:layout_toEndOf="@id/collection_card_type4"
                         android:orientation="vertical"
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
                         android:theme="@style/AppTheme"
                         app:cardBackgroundColor="@color/colorMsgRightItem"
                         app:cardCornerRadius="20dp"
@@ -248,6 +256,8 @@
                         android:theme="@style/AppTheme"
                         app:cardBackgroundColor="@color/colorMsgRightItem"
                         app:cardCornerRadius="20dp"
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
                         app:cardElevation="6dp">
 
                         <ImageView
@@ -268,6 +278,8 @@
                         android:theme="@style/AppTheme"
                         app:cardBackgroundColor="@color/colorMsgRightItem"
                         app:cardCornerRadius="20dp"
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
                         app:cardElevation="6dp">
 
                         <ImageView
@@ -288,6 +300,8 @@
                         android:theme="@style/AppTheme"
                         app:cardBackgroundColor="@color/colorMsgRightItem"
                         app:cardCornerRadius="20dp"
+                        android:minHeight="10dp"
+                        android:minWidth="10dp"
                         app:cardElevation="6dp">
 
                         <ImageView

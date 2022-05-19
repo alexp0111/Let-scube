@@ -1,4 +1,4 @@
-package com.example.lbar.fragments.mainMenuFragments;
+package com.example.lbar.fragments.mainMenuFragments.messageFragments;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -73,5 +73,31 @@
     <string name="i_am_shure">Yes, i\'m sure</string>
     <string name="cube_not_enough_info">Not enough info\nNot enough info\nNot enough info\nNot enough info\nNot enough info</string>
     <string name="leave_app_while_stopwatch">Don\'t leave the app while the stopwatch is running</string>
+    <string name="any_vp">Any</string>
+    <string name="friends_vp">Friends</string>
+    <string name="header">Header:</string>
+    <string name="only_for_friends">Only for friends:</string>
+    <string name="text">Text:</string>
+    <string name="discipline">Discipline</string>
+    <string name="settings">Settings</string>
+    <string name="sync_with_collection">SYNC WITH COLLECTION</string>
+    <string name="show_scrambles">SHOW SCRAMBLES</string>
+    <string name="show_fine_buttons">SHOW FINE BUTTONS</string>
+    <string name="hide_fine_buttons">HIDE FINE BUTTONS</string>
+    <string name="hide_scrambles">HIDE SCRAMBLES</string>
+    <string name="do_not_sync_with_collection">DO NOT SYNC WITH COLLECTION</string>
+    <string name="current_results">Current results</string>
+    <string name="best_results">Best results</string>
+    <string name="not_enough_info">Not enough info</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="public_rooms">Public</string>
+    <string name="private_rooms">Private</string>
+    <string name="description">Description:</string>
+    <string name="join_the_room">join the room</string>
+    <string name="room_exit_shure">Are you sure you want to exit?</string>
+    <string name="room_will_be_deleted">The room will be deleted after that</string>
+    <string name="joined_room">joined the room</string>
+    <string name="inspection_time">inspection time</string>
+    <string name="non_scr_round">heating non-scramble round</string>
 
 </resources>

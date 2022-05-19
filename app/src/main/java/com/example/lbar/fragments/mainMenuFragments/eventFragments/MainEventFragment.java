@@ -23,7 +23,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.ViewPagerEventFragmentAdapter;
-import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -62,10 +61,10 @@ public class MainEventFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText("Any");
+                    tab.setText(R.string.any_vp);
                     break;
                 case 1:
-                    tab.setText("Friends");
+                    tab.setText(R.string.friends_vp);
                     break;
             }
         }).attach();

@@ -168,6 +168,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
 
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Cube cube = snapshot.getValue(Cube.class);
+                            cube.set_mContext(getContext());
                             if (cube != null) {
                                 allCubesArray.add(cube);
                             }
@@ -237,7 +238,7 @@ public class CollectionFragment extends Fragment implements GestureDetector.OnGe
             mdBuilder.setMessage(R.string.shure_del_stat);
             mdBuilder.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
 
-            mdBuilder.setNegativeButton(R.string.i_am_shure, (dialogInterface, i) -> {
+            mdBuilder.setNegativeButton(R.string.del_mess, (dialogInterface, i) -> {
                 clearPuzzleStatisic(n);
                 txt_avg.setText(R.string.cube_not_enough_info);
                 txt_best.setText(R.string.cube_not_enough_info);

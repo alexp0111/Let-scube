@@ -21,7 +21,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="SYNC WITH COLLECTION"
+            android:text="@string/sync_with_collection"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -45,7 +45,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="SHOW SCRAMBLES"
+            android:text="@string/show_scrambles"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -70,7 +70,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="SHOW FINE BUTTONS"
+            android:text="@string/show_fine_buttons"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />

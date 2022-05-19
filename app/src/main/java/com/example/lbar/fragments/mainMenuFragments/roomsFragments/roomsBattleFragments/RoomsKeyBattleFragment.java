@@ -29,7 +29,6 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.RoomMemberAdapter;
 import com.example.lbar.helpClasses.Cube;
-import com.example.lbar.helpClasses.LinearLayoutManagerWrapper;
 import com.example.lbar.helpClasses.Room;
 import com.example.lbar.helpClasses.RoomMember;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -46,21 +45,15 @@ import java.util.Random;
 
 public class RoomsKeyBattleFragment extends Fragment {
 
-    //FIXME: Время, получаемое через системные часы не одинаковое на разных устройствах.
-    // разница в две секунды примерно. И секундомер не запускается............
-
     //TODO: IDEA: Если в комнтае уже идёт сборка - попросить пользователя подождать
     // и заупстить колесико загрузки
-
-    //TODO: Подсчет количества участиников сделать номральным
-    //TODO: Убрать появления многоточия при подключении
 
     private DatabaseReference ref = FirebaseDatabase
             .getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
             .getReference("Rooms");
 
     private boolean isRunning = false;
-    private Cube cube = new Cube(1);
+    private Cube cube = new Cube(1, getContext());
 
     private String roomID;
     private String newMemberID;
@@ -89,7 +82,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     private ConstraintLayout bar;
     private RecyclerView recyclerView;
 
-    private static final long INSPECTION_TIME = 3000L;
+    private static final long INSPECTION_TIME = 15000L;
     private String[] scrambleArray_classic;
     private String[] puzzleNames = {"2 x 2", "3 x 3", "4 x 4", "5 x 5", "6 x 6", "7 x 7",
             "Pyraminx", "Sqube", "Megaminx", "Clock", "Square-1"};
@@ -107,8 +100,8 @@ public class RoomsKeyBattleFragment extends Fragment {
         realiseClickListeners();
 
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManagerWrapper linearLayoutManager =
-                new LinearLayoutManagerWrapper(getContext(), LinearLayoutManager.VERTICAL, false);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
 
@@ -146,7 +139,7 @@ public class RoomsKeyBattleFragment extends Fragment {
             updatePreparation(false, false, true);
             scramble.setText(thisRoom.getRoom_scramble());
 
-            scramble.setText("inspection time");
+            scramble.setText(R.string.inspection_time);
             inspectionTime = INSPECTION_TIME; // inspection time
             startChronometer();
         }
@@ -352,10 +345,10 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private void startSureDialog() {
         MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(getContext());
-        mdBuilder.setTitle("Are you sure you want to exit?");
+        mdBuilder.setTitle(R.string.room_exit_shure);
 
         if (thisRoom != null && thisRoom.memberAmount() == 1)
-            mdBuilder.setMessage("The room will be deleted after that");
+            mdBuilder.setMessage(R.string.room_will_be_deleted);
         mdBuilder.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_drawable, null));
 
         mdBuilder.setNegativeButton(R.string.i_am_shure, (dialogInterface, i) -> {

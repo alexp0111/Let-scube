@@ -1,10 +1,12 @@
 package com.example.lbar.helpClasses;
 
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.lbar.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class Cube {
+
+    private Context mContext;
     private Long lastElementOfListBuffer;
     private DatabaseReference ref;
 
@@ -26,16 +30,18 @@ public class Cube {
     private ArrayList<Long> puzzle_build_pb_statistics; //pb, pb3, pb5, pb12, pb100;
     private ArrayList<Long> puzzle_build_avg_statistics;
 
-    public Cube(int cube_type, String cube_name, ArrayList<Long> puzzle_build_pb_statistics, ArrayList<Long> puzzle_build_avg_statistics) {
+    public Cube(int cube_type, String cube_name, ArrayList<Long> puzzle_build_pb_statistics, ArrayList<Long> puzzle_build_avg_statistics, Context mContext) {
         this.cube_type = cube_type;
         this.cube_name = cube_name;
 
         this.puzzle_build_pb_statistics = puzzle_build_pb_statistics;
         this.puzzle_build_avg_statistics = puzzle_build_avg_statistics;
+        this.mContext = mContext;
     }
 
-    public Cube(int cube_type) {
+    public Cube(int cube_type, Context mContext) {
         this.cube_type = cube_type;
+        this.mContext = mContext;
 
         puzzle_build_pb_statistics = new ArrayList<Long>();
         puzzle_build_avg_statistics = new ArrayList<Long>();
@@ -102,7 +108,7 @@ public class Cube {
     }
 
     private String convertFromMStoString(long ms) {
-        if (ms == -1L) return "Not enough info";
+        if (ms == -1L) return mContext.getString(R.string.not_enough_info);
         if (ms == -2L) return "DNF";
         String result = "";
         if (ms / 3600000 != 0) {
@@ -139,6 +145,14 @@ public class Cube {
 
     // For DataBase
     // For DataBase
+
+    public Context get_mContext() {
+        return mContext;
+    }
+
+    public void set_mContext(Context mContext) {
+        this.mContext = mContext;
+    }
 
     private String strCorrection(long numToCorrect, int digits) {
         StringBuilder num = new StringBuilder(Long.toString(numToCorrect));

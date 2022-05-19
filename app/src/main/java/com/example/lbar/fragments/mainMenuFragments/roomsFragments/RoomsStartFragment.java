@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
-import com.example.lbar.SNTP.SNTPClient;
 import com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments.RoomsMainBattleFragment;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;

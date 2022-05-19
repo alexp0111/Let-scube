@@ -42,7 +42,7 @@ public class RoomsSoloFragment extends Fragment {
 
     private boolean isRunning = false;
     private int PUZZLE_DISCIPLINE = 1;
-    private Cube cube = new Cube(PUZZLE_DISCIPLINE);
+    private Cube cube = new Cube(PUZZLE_DISCIPLINE, getContext());
 
     private boolean pointerSync = true;
     private boolean pointerScrambles = true;
@@ -120,21 +120,21 @@ public class RoomsSoloFragment extends Fragment {
         final SharedPreferences preferencesSettings = activity.getSharedPreferences("roomSoloSettings", 0);
         pointerSync = preferencesSettings.getBoolean("is sync", value);
         if (pointerSync){
-            tvListSettings.get(0).setText("SYNC WITH COLLECTION");
+            tvListSettings.get(0).setText(R.string.sync_with_collection);
         } else {
-            tvListSettings.get(0).setText("DO NOT SYNC WITH COLLECTION");
+            tvListSettings.get(0).setText(R.string.do_not_sync_with_collection);
         }
         pointerScrambles = preferencesSettings.getBoolean("is scramble", value);
         if (pointerScrambles){
-            tvListSettings.get(1).setText("SHOW SCRAMBLES");
+            tvListSettings.get(1).setText(R.string.show_scrambles);
         } else {
-            tvListSettings.get(1).setText("HIDE SCRAMBLES");
+            tvListSettings.get(1).setText(R.string.hide_scrambles);
         }
         pointerButtons = preferencesSettings.getBoolean("is buttons", value);
         if (pointerButtons){
-            tvListSettings.get(2).setText("SHOW FINE BUTTONS");
+            tvListSettings.get(2).setText(R.string.show_fine_buttons);
         } else {
-            tvListSettings.get(2).setText("HIDE FINE BUTTONS");
+            tvListSettings.get(2).setText(R.string.hide_fine_buttons);
         }
     }
 
@@ -264,7 +264,7 @@ public class RoomsSoloFragment extends Fragment {
         pMode.setOnClickListener(view -> {
             mdBuilderPuzzleChoice = new MaterialAlertDialogBuilder(getContext());
 
-            mdBuilderPuzzleChoice.setTitle("Discipline");
+            mdBuilderPuzzleChoice.setTitle(R.string.discipline);
             mdBuilderPuzzleChoice.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
 
             if (puzzlesView.getParent() != null) {
@@ -278,7 +278,7 @@ public class RoomsSoloFragment extends Fragment {
         settingsImageView.setOnClickListener(view -> {
             mdBuilderPuzzleChoice = new MaterialAlertDialogBuilder(getContext());
 
-            mdBuilderPuzzleChoice.setTitle("Settings");
+            mdBuilderPuzzleChoice.setTitle(R.string.settings);
             mdBuilderPuzzleChoice.setBackground(getResources().getDrawable(R.drawable.dialog_drawable, null));
 
             if (settingsSoloView.getParent() != null) {
@@ -343,7 +343,7 @@ public class RoomsSoloFragment extends Fragment {
 
                 pMode.setText(puzzleNames[finalI]);
                 PUZZLE_DISCIPLINE = finalI;
-                cube = new Cube(PUZZLE_DISCIPLINE);
+                cube = new Cube(PUZZLE_DISCIPLINE, getContext());
                 if (pointerScrambles){
                     scrambleTextView.setText(getRandomScramble(PUZZLE_DISCIPLINE));
                 } else {scrambleTextView.setText("");}
@@ -354,11 +354,11 @@ public class RoomsSoloFragment extends Fragment {
         // Sync settings
         mcdListSettings.get(0).setOnClickListener(view -> {
             if (pointerSync){
-                tvListSettings.get(0).setText("DO NOT SYNC WITH COLLECTION");
+                tvListSettings.get(0).setText(R.string.do_not_sync_with_collection);
                 preferencesSettings.edit().putBoolean("is sync", false).apply();
                 pointerSync = false;
             } else {
-                tvListSettings.get(0).setText("SYNC WITH COLLECTION");
+                tvListSettings.get(0).setText(R.string.sync_with_collection);
                 preferencesSettings.edit().putBoolean("is sync", true).apply();
                 pointerSync = true;
             }
@@ -367,12 +367,12 @@ public class RoomsSoloFragment extends Fragment {
         //Scramble settings
         mcdListSettings.get(1).setOnClickListener(view -> {
             if (pointerScrambles){
-                tvListSettings.get(1).setText("HIDE SCRAMBLES");
+                tvListSettings.get(1).setText(R.string.hide_scrambles);
                 preferencesSettings.edit().putBoolean("is scramble", false).apply();
                 scrambleTextView.setVisibility(View.INVISIBLE);
                 pointerScrambles = false;
             } else {
-                tvListSettings.get(1).setText("SHOW SCRAMBLES");
+                tvListSettings.get(1).setText(R.string.show_scrambles);
                 preferencesSettings.edit().putBoolean("is scramble", true).apply();
                 scrambleTextView.setVisibility(View.VISIBLE);
                 pointerScrambles = true;
@@ -382,14 +382,14 @@ public class RoomsSoloFragment extends Fragment {
         //Buttons settings
         mcdListSettings.get(2).setOnClickListener(view -> {
             if (pointerButtons){
-                tvListSettings.get(2).setText("HIDE FINE BUTTONS");
+                tvListSettings.get(2).setText(R.string.hide_fine_buttons);
                 preferencesSettings.edit().putBoolean("is buttons", false).apply();
                 btnPlusTwo.setVisibility(View.INVISIBLE);
                 btnDNF.setVisibility(View.INVISIBLE);
                 btnDeleteResult.setVisibility(View.INVISIBLE);
                 pointerButtons = false;
             } else {
-                tvListSettings.get(2).setText("SHOW FINE BUTTONS");
+                tvListSettings.get(2).setText(R.string.show_fine_buttons);
                 preferencesSettings.edit().putBoolean("is buttons", true).apply();
                 pointerButtons = true;
             }

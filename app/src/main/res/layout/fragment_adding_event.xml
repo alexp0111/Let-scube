@@ -35,7 +35,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
-            android:text="Header:"
+            android:text="@string/header"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -83,7 +83,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
-            android:text="Only for friends:"
+            android:text="@string/only_for_friends"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -121,7 +121,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
-            android:text="Text:"
+            android:text="@string/text"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 

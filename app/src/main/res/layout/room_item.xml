@@ -181,7 +181,7 @@
                 android:layout_width="wrap_content"
                 android:textColor="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
-                android:text="join the room" />
+                android:text="@string/join_the_room" />
 
         </LinearLayout>
     </LinearLayout>

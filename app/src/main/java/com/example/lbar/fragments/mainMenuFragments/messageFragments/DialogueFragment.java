@@ -1,4 +1,4 @@
-package com.example.lbar.fragments;
+package com.example.lbar.fragments.mainMenuFragments.messageFragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,8 +26,6 @@ import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.MessageAdapter;
-import com.example.lbar.fragments.mainMenuFragments.MessageFragment;
-import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.example.lbar.helpClasses.Message;
 import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;

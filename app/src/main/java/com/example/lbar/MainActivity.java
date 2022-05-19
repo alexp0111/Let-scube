@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -24,7 +23,7 @@ import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFra
 import com.example.lbar.helpClasses.User;
 import com.example.lbar.fragments.mainMenuFragments.CollectionFragment;
 import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
-import com.example.lbar.fragments.mainMenuFragments.MessageFragment;
+import com.example.lbar.fragments.mainMenuFragments.messageFragments.MessageFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.ProfileFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
 import com.google.android.material.navigation.NavigationView;

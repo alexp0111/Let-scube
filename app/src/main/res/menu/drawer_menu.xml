@@ -42,7 +42,7 @@
                 android:id="@+id/nav_switch"
                 app:actionLayout="@layout/switch_menu"
                 android:icon="@drawable/ic_theme_mode"
-                android:title="Dark mode" />
+                android:title="@string/dark_mode" />
         </menu>
     </item>
 </menu>

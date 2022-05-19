@@ -20,7 +20,6 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.EventAdapter;
 import com.example.lbar.adapter.RoomAdapter;
-import com.example.lbar.helpClasses.Event;
 import com.example.lbar.helpClasses.Room;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

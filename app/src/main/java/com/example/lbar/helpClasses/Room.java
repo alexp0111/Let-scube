@@ -86,14 +86,6 @@ public class Room {
         return true;
     }
 
-    public int indexOfMember(String id) {
-        for (int i = 0; i < room_members.size(); i++) {
-            if (room_members.get(i).getMember_id().equals(id))
-                return i;
-        }
-        return -1;
-    }
-
     public String getRoom_id() {
         return room_id;
     }
