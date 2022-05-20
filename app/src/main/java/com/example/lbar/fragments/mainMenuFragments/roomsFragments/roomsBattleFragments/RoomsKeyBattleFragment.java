@@ -53,7 +53,7 @@ public class RoomsKeyBattleFragment extends Fragment {
             .getReference("Rooms");
 
     private boolean isRunning = false;
-    private Cube cube = new Cube(1, getContext());
+    private Cube cube;
 
     private String roomID;
     private String newMemberID;
@@ -193,6 +193,7 @@ public class RoomsKeyBattleFragment extends Fragment {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
                         scramble.setText(thisRoom.getRoom_scramble());
+                        updateDataBaseStatistic();
                         updatePreparation(false, true, false);
 
                         customHandlerForTimer.removeCallbacks(updateTimerThread);
@@ -204,6 +205,12 @@ public class RoomsKeyBattleFragment extends Fragment {
             }
             return true;
         });
+    }
+
+    private void updateDataBaseStatistic() {
+        if (thisRoom.isRoom_collection_synchronization() && cube != null && updateTime != 0L){
+            cube.updateStatistics(updateTime);
+        }
     }
 
     private void updateResultsList() {
@@ -238,6 +245,7 @@ public class RoomsKeyBattleFragment extends Fragment {
                 }
                 if (thisRoom != null) {
                     pMode.setText(puzzleNames[thisRoom.getRoom_puzzle_discipline()]);
+                    cube = new Cube(thisRoom.getRoom_puzzle_discipline(), getContext());
                 }
                 setUpControl();
                 if (thisRoom.getRoom_members().size() - newList.size() == 1){
