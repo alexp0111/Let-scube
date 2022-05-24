@@ -1,5 +1,6 @@
 package com.example.lbar.adapter;
 
+import com.example.lbar.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -21,8 +22,8 @@ public class StatusAdapter {
     }
 
     public void setUs_status(String us_status) {
-
         if (fUser != null) {
+
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("us_status", us_status);
             fStatusRef.updateChildren(hashMap);

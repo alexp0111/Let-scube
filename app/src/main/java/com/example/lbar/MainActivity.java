@@ -129,17 +129,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     User profile = dataSnapshot.getValue(User.class);
 
                     if (profile != null) {
-                        String name, urll, status;
+                        String name, urll;
 
                         name = profile.getUs_name();
-                        status = profile.getUs_status();
                         urll = profile.getImage();
                         //->
                         try {
                             nav_name_text.setText(name);
-                            nav_status_text.setText(status);
-                            nav_status_text.setTextColor(Color.parseColor("#FFC107"));
-                            //->
                             Glide.with(headerView).load(urll).into(nav_img);
                         } catch (Exception e){
                             Snackbar.make(findViewById(R.id.mainActivity_layout), "Exception in menu load", Snackbar.LENGTH_SHORT).show();
@@ -260,6 +256,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onResume() {
         super.onResume();
+
+        NavigationView navigationView =  findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView nav_status_text = headerView.findViewById(R.id.status_nav);
+
+        nav_status_text.setText("online");
+        nav_status_text.setTextColor(Color.parseColor("#FFC107"));
+
         StatusAdapter adapter = new StatusAdapter();
         adapter.setUs_status("online");
     }
@@ -267,6 +272,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPause() {
         super.onPause();
+
+        NavigationView navigationView =  findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView nav_status_text = headerView.findViewById(R.id.status_nav);
+
+        nav_status_text.setText("offline");
+        nav_status_text.setTextColor(Color.parseColor("#BDBDBD"));
+
         StatusAdapter adapter = new StatusAdapter();
         adapter.setUs_status("offline");
     }
