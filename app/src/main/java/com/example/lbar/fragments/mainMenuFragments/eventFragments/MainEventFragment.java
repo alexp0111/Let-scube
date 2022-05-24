@@ -1,6 +1,7 @@
 package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,8 @@ public class MainEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_event, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_event);
         setToolbarSettings(toolbar, activity, main_activity);
@@ -108,6 +111,13 @@ public class MainEventFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     private void initItems(View v) {

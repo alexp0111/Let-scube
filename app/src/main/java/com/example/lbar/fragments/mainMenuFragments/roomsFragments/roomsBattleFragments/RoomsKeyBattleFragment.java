@@ -2,6 +2,7 @@ package com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleF
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -88,7 +89,8 @@ public class RoomsKeyBattleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_key_battle_rooms, container, false);
-        AppCompatActivity main_activity = (MainActivity) getActivity();
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         getRoomClass();
         initItems(view);
@@ -334,20 +336,6 @@ public class RoomsKeyBattleFragment extends Fragment {
         }
     }
 
-    private boolean newListItemIsUnique(RoomMember listItem, int newSize) {
-        return (newSize - numberOfMemberResultsInList(listItem.getMember_id())) == 1;
-    }
-
-    private int numberOfMemberResultsInList(String memberId) {
-        int numOfMemberResults = 0;
-        for (int i = 0; i < newList.size(); i++) {
-            if (newList.get(i).getMember_id().equals(memberId)) {
-                numOfMemberResults++;
-            }
-        }
-        return numOfMemberResults;
-    }
-
     private void startSureDialog() {
         MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(getContext());
         mdBuilder.setTitle(R.string.room_exit_shure);
@@ -428,6 +416,8 @@ public class RoomsKeyBattleFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
         if (isRunning) {
             isRunning = false;
