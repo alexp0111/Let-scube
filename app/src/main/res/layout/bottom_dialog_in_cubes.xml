@@ -8,150 +8,162 @@
     android:background="@drawable/dialog_bottom_sheet_background"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/decor_line"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="20dp"
-            android:paddingTop="15dp"
-            android:src="@drawable/line" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/decor_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
-    <TextView
-        android:id="@+id/text_test"
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:layout_below="@id/decor_line"
-        android:autoSizeMaxTextSize="50sp"
-        android:autoSizeMinTextSize="1sp"
-        android:autoSizeTextType="uniform"
-        android:gravity="center"
-        android:maxLines="1"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="30dp"
-        android:textColor="@color/colorAccent" />
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:paddingTop="15dp"
+                    android:src="@drawable/line" />
 
-    <View
-        android:id="@+id/sheet_divider_1"
-        android:layout_width="430dp"
-        android:layout_height="1dp"
-        android:layout_below="@id/text_test"
-        android:background="?android:attr/listDivider"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="135dp" />
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/sheet_avg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sheet_divider_1"
-        android:layout_marginVertical="20dp"
-        android:gravity="center"
-        android:text="@string/current_results"
-        android:textColor="@color/colorAccent"
-        android:textSize="28sp" />
+            <TextView
+                android:id="@+id/text_test"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:layout_below="@id/decor_line"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeMinTextSize="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="30dp"
+                android:textColor="@color/colorAccent" />
 
-    <LinearLayout
-        android:id="@+id/sheet_ll_avg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sheet_avg"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp">
+            <View
+                android:id="@+id/sheet_divider_1"
+                android:layout_width="430dp"
+                android:layout_height="1dp"
+                android:layout_below="@id/text_test"
+                android:background="?android:attr/listDivider"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="135dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:text="Single:\nMO 3:\nAVG 5:\nAVG 12:\nAVG 100:"
-            android:textColor="@color/colorAccent"
-            android:textSize="28sp" />
+            <TextView
+                android:id="@+id/sheet_avg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sheet_divider_1"
+                android:layout_marginVertical="20dp"
+                android:gravity="center"
+                android:text="@string/current_results"
+                android:textColor="@color/colorAccent"
+                android:textSize="28sp" />
 
-        <TextView
-            android:id="@+id/info_in_collection_avg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="100"
-            android:gravity="center"
-            android:text="...\n...\n...\n...\n..."
-            android:textColor="@color/colorAccent"
-            android:textSize="28sp" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/sheet_ll_avg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sheet_avg"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
 
-    <View
-        android:id="@+id/sheet_divider_2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/sheet_ll_avg"
-        android:layout_marginVertical="20dp"
-        android:background="?android:attr/listDivider" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:text="Single:\nMO 3:\nAVG 5:\nAVG 12:\nAVG 100:"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="28sp" />
 
-    <TextView
-        android:id="@+id/sheet_best"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sheet_divider_2"
-        android:gravity="center"
-        android:text="@string/best_results"
-        android:textColor="@color/colorAccent"
-        android:textSize="28sp" />
+                <TextView
+                    android:id="@+id/info_in_collection_avg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100"
+                    android:gravity="center"
+                    android:text="...\n...\n...\n...\n..."
+                    android:textColor="@color/colorAccent"
+                    android:textSize="28sp" />
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/sheet_ll_best"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sheet_best"
-        android:layout_marginVertical="20dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp">
+            <View
+                android:id="@+id/sheet_divider_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/sheet_ll_avg"
+                android:layout_marginVertical="20dp"
+                android:background="?android:attr/listDivider" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:text="Single:\nMO 3:\nAVG 5:\nAVG 12:\nAVG 100:"
-            android:textColor="@color/colorAccent"
-            android:textSize="28sp" />
+            <TextView
+                android:id="@+id/sheet_best"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sheet_divider_2"
+                android:gravity="center"
+                android:text="@string/best_results"
+                android:textColor="@color/colorAccent"
+                android:textSize="28sp" />
 
-        <TextView
-            android:id="@+id/info_in_collection_best"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="100"
-            android:gravity="center"
-            android:text="...\n...\n...\n...\n..."
-            android:textColor="@color/colorAccent"
-            android:textSize="28sp" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/sheet_ll_best"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sheet_best"
+                android:layout_marginVertical="20dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
 
-    <View
-        android:id="@+id/divider_under_best_results"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/sheet_ll_best"
-        android:background="?android:attr/listDivider" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:text="Single:\nMO 3:\nAVG 5:\nAVG 12:\nAVG 100:"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="28sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/divider_under_best_results"
-        android:gravity="center"
-        android:padding="10dp">
+                <TextView
+                    android:id="@+id/info_in_collection_best"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100"
+                    android:gravity="center"
+                    android:text="...\n...\n...\n...\n..."
+                    android:textColor="@color/colorAccent"
+                    android:textSize="28sp" />
+            </LinearLayout>
 
-        <ImageView
-            android:id="@+id/delete_puzzle_info"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:clickable="true"
-            android:src="@drawable/ic_delete"
-            app:tint="@color/colorNegativeBtn" />
-    </LinearLayout>
+            <View
+                android:id="@+id/divider_under_best_results"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/sheet_ll_best"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider_under_best_results"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/delete_puzzle_info"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_delete"
+                    app:tint="@color/colorNegativeBtn" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>

@@ -122,8 +122,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         });
 
         mdBuilder.show();
-        //TODO: Разобраться с обновлением спика после изменения текста сообщения
-        // (нижнее сообщение стартует анимацию, а этого делать бы не надо)
     }
 
     @Override

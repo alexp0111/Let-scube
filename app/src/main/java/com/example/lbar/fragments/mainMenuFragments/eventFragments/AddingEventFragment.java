@@ -307,7 +307,7 @@ public class AddingEventFragment extends Fragment {
                          */
 
 
-                        // TODO: Compressing - didn't get it
+                        // TODO: Compressing
 
                         txtPictureAdding.setVisibility(View.GONE);
                         imgPictureAdding.setVisibility(View.VISIBLE);

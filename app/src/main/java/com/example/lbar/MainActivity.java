@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             nav_status_text.setTextColor(Color.parseColor("#FFC107"));
                             //->
                             Glide.with(headerView).load(urll).into(nav_img);
-                            Snackbar.make(findViewById(R.id.mainActivity_layout), "menu load", Snackbar.LENGTH_SHORT).show();
                         } catch (Exception e){
                             Snackbar.make(findViewById(R.id.mainActivity_layout), "Exception in menu load", Snackbar.LENGTH_SHORT).show();
                         }
@@ -209,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_switch:
                 try {
-                    //TODO: Code inspection for shared pref.
                     MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_switch);
                     SwitchMaterial switchMaterial = (SwitchMaterial) menuItem.getActionView().findViewById(R.id.nav_switch_id);
 

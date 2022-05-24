@@ -45,9 +45,6 @@ import java.util.Random;
 
 public class RoomsKeyBattleFragment extends Fragment {
 
-    //TODO: IDEA: Если в комнтае уже идёт сборка - попросить пользователя подождать
-    // и заупстить колесико загрузки
-
     private DatabaseReference ref = FirebaseDatabase
             .getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
             .getReference("Rooms");
@@ -436,9 +433,6 @@ public class RoomsKeyBattleFragment extends Fragment {
             isRunning = false;
             customHandlerForTimer.removeCallbacks(updateTimerThread);
         }
-
-        //TODO: Продумать эту логику и учесть все возможные ошибки,
-        // если пользователь уйдёт в обход диалога
     }
 
     @Override

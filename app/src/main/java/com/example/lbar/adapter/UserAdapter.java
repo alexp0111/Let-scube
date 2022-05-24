@@ -100,7 +100,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         } else {
             Toast.makeText(mContext, "To chat, firstly enter your account", Toast.LENGTH_SHORT).show();
         }
-        // TODO:
         // Надо отлаживать и думать над анимацией. Она обновляет список каждый раз, когда кто-то в приложении
         // выходит или меняет тему - так быть не должно. Или не должно приносить дискомфорт пользователю
 
