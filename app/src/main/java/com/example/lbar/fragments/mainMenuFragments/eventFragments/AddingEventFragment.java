@@ -279,8 +279,7 @@ public class AddingEventFragment extends Fragment {
                 result -> {
                     Intent data = result.getData();
 
-                    assert data != null;
-                    if (data.getData() != null && result.getResultCode() == RESULT_OK) {
+                    if (data != null && data.getData() != null && result.getResultCode() == RESULT_OK) {
                         imageUri = data.getData();
 
                         /*
