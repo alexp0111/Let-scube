@@ -2,12 +2,8 @@ package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +31,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,11 +39,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.lbar.MainActivity.storage;
@@ -75,6 +65,7 @@ public class AddingEventFragment extends Fragment {
     //picture block
     private MaterialCardView cdPictureAdding;
     private TextView txtPictureAdding;
+    private ImageView imgPictureAddingIcon;
     private ImageView imgPictureAdding;
 
     private String textHeader;
@@ -122,9 +113,9 @@ public class AddingEventFragment extends Fragment {
             if (imageUri == null){
                 choosePictureFromAlbum();
             } else {
-                txtPictureAdding.setText(R.string.add_picture);
+                //txtPictureAdding.setText(R.string.add_picture);
                 imgPictureAdding.setVisibility(View.GONE);
-                txtPictureAdding.setVisibility(View.VISIBLE);
+                imgPictureAddingIcon.setVisibility(View.VISIBLE);
 
                 imageUri = null;
             }
@@ -210,6 +201,7 @@ public class AddingEventFragment extends Fragment {
         //picture block
         cdPictureAdding = v.findViewById(R.id.event_adding_picture_cdv);
         txtPictureAdding = v.findViewById(R.id.event_adding_picture_cdv_txt);
+        imgPictureAddingIcon = v.findViewById(R.id.event_adding_picture_cdv_img_icon);
         imgPictureAdding = v.findViewById(R.id.event_adding_picture_cdv_img);
     }
 
@@ -309,7 +301,7 @@ public class AddingEventFragment extends Fragment {
 
                         // TODO: Compressing
 
-                        txtPictureAdding.setVisibility(View.GONE);
+                        imgPictureAddingIcon.setVisibility(View.GONE);
                         imgPictureAdding.setVisibility(View.VISIBLE);
                         Glide.with(view).load(imageUri).into(imgPictureAdding);
                     } else {
