@@ -320,7 +320,7 @@ public class ProfileFragment extends Fragment implements GestureDetector.OnGestu
                 result -> {
                     Intent data = result.getData();
 
-                    if (data.getData() != null && result.getResultCode() == RESULT_OK) {
+                    if (data != null && data.getData() != null && result.getResultCode() == RESULT_OK) {
                         imageUri = data.getData();
                         pr_img.setImageURI(imageUri);
                         uploadPicture();

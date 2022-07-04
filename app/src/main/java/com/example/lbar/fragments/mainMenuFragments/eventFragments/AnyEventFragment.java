@@ -48,6 +48,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
     private RecyclerView recyclerViewInEvents;
     private EventAdapter eventAdapter;
+    private View dialogView;
 
     private List<Event> mEvents;
     private ArrayList<String> mFriends = new ArrayList<>();
@@ -63,6 +64,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_any_event, container, false);
+        dialogView = inflater.inflate(R.layout.dialog_image_only, container, false);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
@@ -130,7 +132,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
                 }
 
                 Collections.reverse(mEvents);
-                eventAdapter = new EventAdapter(getContext(), mEvents);
+                eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
                 recyclerViewInEvents.setAdapter(eventAdapter);
                 progressBar.setVisibility(View.GONE);
             }
