@@ -17,4 +17,6 @@
     <color name="colorNegativeBtn">#A62E2E</color>
     <color name="colorPositiveBtn">#FFC107</color>
     <color name="colorNeutralBtn">#FB8C00</color>
+
+    <color name="colorGray">#E6606061</color>
 </resources>

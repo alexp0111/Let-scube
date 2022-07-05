@@ -2,6 +2,8 @@ package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +44,11 @@ import com.google.firebase.storage.StorageTask;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.lbar.MainActivity.storage;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class AddingEventFragment extends Fragment {
 
