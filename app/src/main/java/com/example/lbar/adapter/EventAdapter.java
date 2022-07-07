@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Event;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 import static com.example.lbar.MainActivity.reference;
+
+import org.w3c.dom.Text;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
@@ -77,6 +83,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         holder.eventHeader.setText(event.getEv_header());
         holder.eventText.setText(event.getEv_text());
+
         if (event.getEv_image().equals("none")) {
             holder.eventText.setPadding(0, 0, 0, 16);
             holder.eventImage.setVisibility(View.GONE);
@@ -108,6 +115,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             });
         });
 
+        // Likes
+        Log.d("EVENT_ADAPTER", event.getEv_likes() + " ");
+        holder.eventNumLikes.setText(String.valueOf(event.getEv_likes()));
+
+        // Comments
+        holder.eventNumComments.setText("in dev...");
+        holder.eventComments
+                .setOnClickListener(view ->
+                        Snackbar.make(view, "Currently unavailable",
+                                BaseTransientBottomBar.LENGTH_SHORT).show());
     }
 
     @Override
@@ -123,6 +140,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         public TextView eventText;
         public ImageView eventImage;
 
+        public MaterialCheckBox eventLikes;
+        public TextView eventNumLikes;
+        public LinearLayout eventComments;
+        public TextView eventNumComments;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -132,6 +154,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             eventHeader = itemView.findViewById(R.id.event_item_header_txt);
             eventText = itemView.findViewById(R.id.event_item_text);
             eventImage = itemView.findViewById(R.id.event_item_image);
+
+
+            eventLikes = itemView.findViewById(R.id.event_likes_cb);
+            eventNumLikes = itemView.findViewById(R.id.event_likes_txt);
+
+            eventComments = itemView.findViewById(R.id.event_comments_ll);
+            eventNumComments = itemView.findViewById(R.id.event_comments_txt);
         }
     }
 }

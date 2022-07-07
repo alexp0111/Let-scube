@@ -18,5 +18,6 @@
     <color name="colorPositiveBtn">#FFC107</color>
     <color name="colorNeutralBtn">#FB8C00</color>
 
-    <color name="colorGray">#E6606061</color>
+    <!--<color name="colorGray">#E6606061</color>-->
+    <color name="colorGray">#BDBDBD</color>
 </resources>

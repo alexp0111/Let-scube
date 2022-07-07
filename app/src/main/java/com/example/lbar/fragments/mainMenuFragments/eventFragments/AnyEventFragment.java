@@ -120,20 +120,36 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         eventReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mEvents.clear();
+                List<Event> tmp_buffer = new ArrayList<>();
+                //List<Event> tmp_buffer = new ArrayList<>(mEvents);
+
+                //mEvents.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Event event = snapshot.getValue(Event.class);
                     assert event != null;
 
                     if (event.getEv_accessibility() == 0 || event.getEv_author_id().equals(fUser.getUid()) || isFriend(event.getEv_author_id())) {
-                        mEvents.add(event);
+                        //mEvents.add(event);
+                        tmp_buffer.add(event);
                     }
                 }
 
-                Collections.reverse(mEvents);
-                eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
-                recyclerViewInEvents.setAdapter(eventAdapter);
+                Collections.reverse(tmp_buffer);
+                if (mEvents.size() != tmp_buffer.size()){
+                    mEvents = new ArrayList<>(tmp_buffer);
+                    eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
+                    recyclerViewInEvents.setAdapter(eventAdapter);
+                } else {
+                    for (int i = 0; i < mEvents.size(); i++) {
+                        if (mEvents.get(i).getEv_likes() != tmp_buffer.get(i).getEv_likes()){
+                            mEvents.get(i).setEv_likes(tmp_buffer.get(i).getEv_likes());
+                            eventAdapter.notifyItemChanged(i);
+                            Log.d("ANY_EVENT", "changed: " + i);
+                        }
+                    }
+                }
+                tmp_buffer.clear();
                 progressBar.setVisibility(View.GONE);
             }
 
