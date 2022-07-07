@@ -127,12 +127,16 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
                     if (event.getEv_accessibility() == 0 || event.getEv_author_id().equals(fUser.getUid()) || isFriend(event.getEv_author_id())) {
                         mEvents.add(event);
+                        for (int i = 0; i < event.getEv_liked_users().size(); i++) {
+                            Log.d("ARBUZZZZZ", event.getEv_liked_users().get(i));
+                        }
                         Log.d("ARB", event.getEv_liked_users().size() + " + " + mEvents.size());
                     }
                 }
 
                 Collections.reverse(mEvents);
                 eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
+                eventAdapter.setHasStableIds(true);
                 recyclerViewInEvents.setAdapter(eventAdapter);
 
                 progressBar.setVisibility(View.GONE);

@@ -89,7 +89,6 @@ public class FriendsEventFragment extends Fragment implements GestureDetector.On
             progressBar.setVisibility(View.VISIBLE);
             getUserFriendsList();
             readEvents();
-            progressBar.setVisibility(View.GONE);
             srl.setRefreshing(false);
         });
 
@@ -114,7 +113,7 @@ public class FriendsEventFragment extends Fragment implements GestureDetector.On
     }
 
     private void readEvents() {
-        eventReference.addValueEventListener(new ValueEventListener() {
+        eventReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mEvents.clear();
@@ -130,6 +129,7 @@ public class FriendsEventFragment extends Fragment implements GestureDetector.On
 
                 Collections.reverse(mEvents);
                 eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
+                eventAdapter.setHasStableIds(true);
                 recyclerViewInFriendsEvents.setAdapter(eventAdapter);
                 progressBar.setVisibility(View.GONE);
             }

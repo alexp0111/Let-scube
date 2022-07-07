@@ -27,17 +27,11 @@ public class Event {
         this.ev_image = ev_image;
         this.ev_likes = ev_likes;
         this.ev_accessibility = ev_accessibility;
-        this.ev_liked_users = ev_liked_users;
-    }
-
-    public Event(String ev_id, String ev_author_id, String ev_header, String ev_text, String ev_image, int ev_likes, int ev_accessibility) {
-        this.ev_id = ev_id;
-        this.ev_author_id = ev_author_id;
-        this.ev_header = ev_header;
-        this.ev_text = ev_text;
-        this.ev_image = ev_image;
-        this.ev_likes = ev_likes;
-        this.ev_accessibility = ev_accessibility;
+        if (ev_liked_users == null){
+            this.ev_liked_users = new ArrayList<>(0);
+        } else {
+            this.ev_liked_users = ev_liked_users;
+        }
     }
 
     public String getEv_id() {
@@ -97,7 +91,7 @@ public class Event {
     }
 
     public List<String> getEv_liked_users() {
-        if (ev_liked_users == null) return new ArrayList<>();
+        if (ev_liked_users == null) return new ArrayList<>(0);
         return ev_liked_users;
     }
 

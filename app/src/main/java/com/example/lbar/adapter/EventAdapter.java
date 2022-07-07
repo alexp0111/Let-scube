@@ -61,6 +61,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Event event = mEvents.get(position);
@@ -139,26 +149,35 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         holder.eventLikes.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             holder.eventLikes.setClickable(false);
-            if (isChecked) {
-                // DB stuff
-                List<String> tmp_list = new ArrayList<>(event.getEv_liked_users());
-                if (!tmp_list.contains(fUser.getUid())) tmp_list.add(fUser.getUid());
+            List<String> tmp_list = new ArrayList<>();
+            evRef.child(event.getEv_id()).child("ev_liked_users").get()
+                    .addOnCompleteListener(task1 -> {
+                        // Get actual data
+                        for (DataSnapshot snapshot : task1.getResult().getChildren()) {
+                            String liked_id = snapshot.getValue().toString();
+                            tmp_list.add(liked_id);
+                        }
+                    }).addOnCompleteListener(task2 -> {
+                        // Refresh data
+                        if (isChecked) {
+                            // DB stuff
+                            if (!tmp_list.contains(fUser.getUid())) tmp_list.add(fUser.getUid());
 
-                evRef.child(event.getEv_id()).child("ev_liked_users").setValue(tmp_list)
-                        .addOnCompleteListener(task12 -> {
-                            holder.eventNumLikes.setText(String.valueOf(tmp_list.size()));
-                            holder.eventLikes.setClickable(true);
-                        });
-            } else {
-                List<String> tmp_list = new ArrayList<>(event.getEv_liked_users());
-                tmp_list.remove(fUser.getUid());
+                            evRef.child(event.getEv_id()).child("ev_liked_users").setValue(tmp_list)
+                                    .addOnCompleteListener(task12 -> {
+                                        holder.eventNumLikes.setText(String.valueOf(tmp_list.size()));
+                                        holder.eventLikes.setClickable(true);
+                                    });
+                        } else {
+                            tmp_list.remove(fUser.getUid());
 
-                evRef.child(event.getEv_id()).child("ev_liked_users").setValue(tmp_list)
-                        .addOnCompleteListener(task1 -> {
-                            holder.eventNumLikes.setText(String.valueOf(tmp_list.size()));
-                            holder.eventLikes.setClickable(true);
-                        });
-            }
+                            evRef.child(event.getEv_id()).child("ev_liked_users").setValue(tmp_list)
+                                    .addOnCompleteListener(task1 -> {
+                                        holder.eventNumLikes.setText(String.valueOf(tmp_list.size()));
+                                        holder.eventLikes.setClickable(true);
+                                    });
+                        }
+                    });
         });
 
         // Comments
@@ -166,7 +185,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.eventComments
                 .setOnClickListener(view ->
                         Snackbar.make(view, "Currently unavailable",
-                                BaseTransientBottomBar.LENGTH_SHORT).show());
+                                        BaseTransientBottomBar.LENGTH_SHORT).
+
+                                show());
     }
 
     @Override

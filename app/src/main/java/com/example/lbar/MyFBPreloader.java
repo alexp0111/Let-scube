@@ -10,6 +10,7 @@ public class MyFBPreloader extends Application {
     public void onCreate() {
         super.onCreate();
 
-        FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).setPersistenceEnabled(true);
+        // FIXME: This stroke break like logic if internet is slow [Just remove?]
+        // FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).setPersistenceEnabled(true);
     }
 }

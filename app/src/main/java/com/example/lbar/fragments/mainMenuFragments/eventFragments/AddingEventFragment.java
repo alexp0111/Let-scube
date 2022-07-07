@@ -188,7 +188,7 @@ public class AddingEventFragment extends Fragment {
                     picture = "none";
 
                     String newRef = reference.child("Events").push().getKey();
-                    Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility);
+                    Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility, null);
                     reference.child("Events").child(newRef).setValue(event);
 
                     indicator.setVisibility(View.INVISIBLE);
@@ -329,7 +329,7 @@ public class AddingEventFragment extends Fragment {
                 DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
 
                 String newRef = reference.child("Events").push().getKey();
-                Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility);
+                Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility, null);
                 reference.child("Events").child(newRef).setValue(event);
 
                 //getBackAnimationsStart();
