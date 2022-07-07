@@ -74,7 +74,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
         eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Events");
 
         initItems(view);
-        if (fUser != null){
+        if (fUser != null) {
             getUserFriendsList();
         }
         SwipeMenuOpenerControl(view);
@@ -91,7 +91,6 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
             progressBar.setVisibility(View.VISIBLE);
             getUserFriendsList();
             readEvents();
-            progressBar.setVisibility(View.GONE);
             srl.setRefreshing(false);
         });
 
@@ -117,39 +116,25 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
     }
 
     private void readEvents() {
-        eventReference.addValueEventListener(new ValueEventListener() {
+        eventReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Event> tmp_buffer = new ArrayList<>();
-                //List<Event> tmp_buffer = new ArrayList<>(mEvents);
-
-                //mEvents.clear();
+                mEvents.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Event event = snapshot.getValue(Event.class);
                     assert event != null;
 
                     if (event.getEv_accessibility() == 0 || event.getEv_author_id().equals(fUser.getUid()) || isFriend(event.getEv_author_id())) {
-                        //mEvents.add(event);
-                        tmp_buffer.add(event);
+                        mEvents.add(event);
+                        Log.d("ARB", event.getEv_liked_users().size() + " + " + mEvents.size());
                     }
                 }
 
-                Collections.reverse(tmp_buffer);
-                if (mEvents.size() != tmp_buffer.size()){
-                    mEvents = new ArrayList<>(tmp_buffer);
-                    eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
-                    recyclerViewInEvents.setAdapter(eventAdapter);
-                } else {
-                    for (int i = 0; i < mEvents.size(); i++) {
-                        if (mEvents.get(i).getEv_likes() != tmp_buffer.get(i).getEv_likes()){
-                            mEvents.get(i).setEv_likes(tmp_buffer.get(i).getEv_likes());
-                            eventAdapter.notifyItemChanged(i);
-                            Log.d("ANY_EVENT", "changed: " + i);
-                        }
-                    }
-                }
-                tmp_buffer.clear();
+                Collections.reverse(mEvents);
+                eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
+                recyclerViewInEvents.setAdapter(eventAdapter);
+
                 progressBar.setVisibility(View.GONE);
             }
 

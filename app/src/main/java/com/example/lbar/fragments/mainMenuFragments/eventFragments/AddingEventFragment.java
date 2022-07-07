@@ -186,8 +186,11 @@ public class AddingEventFragment extends Fragment {
                     uploadPicture(v);
                 } else {
                     picture = "none";
-                    Event event = new Event(fUser.getUid(), textHeader, textText, picture, 0, accessibility);
-                    reference.child("Events").push().setValue(event);
+
+                    String newRef = reference.child("Events").push().getKey();
+                    Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility);
+                    reference.child("Events").child(newRef).setValue(event);
+
                     indicator.setVisibility(View.INVISIBLE);
                     closeFragment();
                 }
@@ -324,8 +327,11 @@ public class AddingEventFragment extends Fragment {
             Task<Uri> downloadURl = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task -> {
                 picture = task.getResult().toString();
                 DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
-                Event event = new Event(fUser.getUid(), textHeader, textText, picture, 0, accessibility);
-                reference.child("Events").push().setValue(event);
+
+                String newRef = reference.child("Events").push().getKey();
+                Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility);
+                reference.child("Events").child(newRef).setValue(event);
+
                 //getBackAnimationsStart();
                 indicator.setVisibility(View.INVISIBLE);
                 //fabExtended.setAlpha(0f);

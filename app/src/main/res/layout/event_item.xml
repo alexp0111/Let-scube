@@ -110,6 +110,7 @@
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/event_likes_cb"
+                    android:checked="false"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:button="@drawable/custom_checkbox_selector"
