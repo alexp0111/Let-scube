@@ -127,10 +127,10 @@ public class FriendsEventFragment extends Fragment implements GestureDetector.On
                     }
                 }
 
-                Collections.reverse(mEvents);
-                eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
-                eventAdapter.setHasStableIds(true);
-                recyclerViewInFriendsEvents.setAdapter(eventAdapter);
+                //Collections.reverse(mEvents);
+                //eventAdapter = new EventAdapter(getContext(), mEvents, dialogView);
+                //eventAdapter.setHasStableIds(true);
+                //recyclerViewInFriendsEvents.setAdapter(eventAdapter);
                 progressBar.setVisibility(View.GONE);
             }
 

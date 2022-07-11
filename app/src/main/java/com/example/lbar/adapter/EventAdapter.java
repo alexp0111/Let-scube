@@ -3,6 +3,8 @@ package com.example.lbar.adapter;
 import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Event;
+import com.example.lbar.helpClasses.Liker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -42,12 +46,14 @@ import org.w3c.dom.Text;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
     private List<Event> mEvents;
+    private List<Liker> mLikers;
     private View dialogView;
     private Context mContext;
     private FirebaseUser fUser;
 
-    public EventAdapter(Context mContext, List<Event> mEvents, View dialogView) {
+    public EventAdapter(Context mContext, List<Event> mEvents, List<Liker> mLikers, View dialogView) {
         this.mEvents = mEvents;
+        this.mLikers = mLikers;
         this.mContext = mContext;
         this.dialogView = dialogView;
     }
@@ -75,17 +81,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         Event event = mEvents.get(position);
 
-
-        if (event.getEv_liked_users().contains(fUser.getUid())) {
-            Log.d("ARBUZ", position + " ");
-            holder.eventLikes.setChecked(true);
-        }
-
         DatabaseReference ref1 = reference.child(event.getEv_author_id()).child("us_name");
         DatabaseReference ref2 = reference.child(event.getEv_author_id()).child("image");
-        DatabaseReference evRef = FirebaseDatabase
+        DatabaseReference likeRef = FirebaseDatabase
                 .getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
-                .getReference("Events");
+                .getReference("Likes");
 
         ref1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -143,51 +143,74 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             });
         });
 
-        // Likes
-        Log.d("EVENT_ADAPTER", event.getEv_likes() + " ");
-        holder.eventNumLikes.setText(String.valueOf(event.getEv_liked_users().size()));
+        // // Likes
 
+        // number
+        holder.eventNumLikes.setText(String.valueOf(numOfLikesInEvent(mLikers, event.getEv_id())));
+
+        // checkbox preset
+        if (likedByUser(mLikers, event.getEv_id(), fUser.getUid())){
+            holder.eventLikes.setChecked(true);
+        }
+
+        // checkbox listener
         holder.eventLikes.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             holder.eventLikes.setClickable(false);
-            List<String> tmp_list = new ArrayList<>();
-            evRef.child(event.getEv_id()).child("ev_liked_users").get()
-                    .addOnCompleteListener(task1 -> {
-                        // Get actual data
-                        for (DataSnapshot snapshot : task1.getResult().getChildren()) {
-                            String liked_id = snapshot.getValue().toString();
-                            tmp_list.add(liked_id);
-                        }
-                    }).addOnCompleteListener(task2 -> {
-                        // Refresh data
-                        if (isChecked) {
-                            // DB stuff
-                            if (!tmp_list.contains(fUser.getUid())) tmp_list.add(fUser.getUid());
+            // Refresh data
+            if (isChecked) {
+                // DB stuff
+                String key = likeRef.push().getKey();
+                Liker liker = new Liker(key, fUser.getUid(), event.getEv_id());
+                mLikers.add(liker);
 
-                            evRef.child(event.getEv_id()).child("ev_liked_users").setValue(tmp_list)
-                                    .addOnCompleteListener(task12 -> {
-                                        holder.eventNumLikes.setText(String.valueOf(tmp_list.size()));
-                                        holder.eventLikes.setClickable(true);
-                                    });
-                        } else {
-                            tmp_list.remove(fUser.getUid());
-
-                            evRef.child(event.getEv_id()).child("ev_liked_users").setValue(tmp_list)
-                                    .addOnCompleteListener(task1 -> {
-                                        holder.eventNumLikes.setText(String.valueOf(tmp_list.size()));
-                                        holder.eventLikes.setClickable(true);
-                                    });
-                        }
+                if (key != null)
+                    likeRef.child(key).setValue(liker).addOnCompleteListener(task -> {
+                        holder.eventNumLikes.setText(String.valueOf(numOfLikesInEvent(mLikers, event.getEv_id())));
+                        holder.eventLikes.setClickable(true);
                     });
+            } else {
+                for (int i = 0; i < mLikers.size(); i++) {
+                    if (mLikers.get(i).getLike_event_id().equals(event.getEv_id())
+                            && mLikers.get(i).getLike_user_id().equals(fUser.getUid())) {
+                        likeRef.child(mLikers.get(i).getLike_id()).removeValue();
+                        mLikers.remove(i);
+                        i--;
+                    }
+                }
+                holder.eventNumLikes.setText(String.valueOf(numOfLikesInEvent(mLikers, event.getEv_id())));
+                holder.eventLikes.setClickable(true);
+            }
         });
 
         // Comments
         holder.eventNumComments.setText("in dev...");
         holder.eventComments
-                .setOnClickListener(view ->
-                        Snackbar.make(view, "Currently unavailable",
-                                        BaseTransientBottomBar.LENGTH_SHORT).
+                .setOnClickListener(view -> {
+                    if (holder.tmpAboba.getVisibility() == View.GONE) {
+                        TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
+                        holder.tmpAboba.setVisibility(View.VISIBLE);
+                    } else {
+                        TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
+                        holder.tmpAboba.setVisibility(View.GONE);
+                    }
+                });
+    }
 
-                                show());
+    private boolean likedByUser(List<Liker> tmp_list, String ev_id, String us_id) {
+        if (tmp_list == null || tmp_list.size() == 0 || ev_id == null || us_id == null) return false;
+        for (int i = 0; i < tmp_list.size(); i++) {
+            if (tmp_list.get(i).getLike_event_id().equals(ev_id)
+                    && tmp_list.get(i).getLike_user_id().equals(us_id)) return true;
+        }
+        return false;
+    }
+
+    private int numOfLikesInEvent(List<Liker> tmp_list, String ev_id) {
+        if (tmp_list == null || tmp_list.size() == 0 || ev_id == null) return 0;
+        int counter = 0;
+        for (int i = 0; i < tmp_list.size(); i++)
+            if (tmp_list.get(i).getLike_event_id().equals(ev_id)) counter++;
+        return counter;
     }
 
     @Override
@@ -196,6 +219,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public MaterialCardView cardView;
 
         public TextView authorName;
         public ImageView authorImage;
@@ -208,8 +233,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         public LinearLayout eventComments;
         public TextView eventNumComments;
 
+        public TextView tmpAboba;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            cardView = itemView.findViewById(R.id.event_mcv);
 
             authorName = itemView.findViewById(R.id.event_item_author_name);
             authorImage = itemView.findViewById(R.id.event_item_author_img);
@@ -224,6 +253,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
             eventComments = itemView.findViewById(R.id.event_comments_ll);
             eventNumComments = itemView.findViewById(R.id.event_comments_txt);
+
+            tmpAboba = itemView.findViewById(R.id.tmp_text_aboba);
         }
     }
 }
