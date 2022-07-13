@@ -99,5 +99,6 @@
     <string name="joined_room">joined the room</string>
     <string name="inspection_time">inspection time</string>
     <string name="non_scr_round">heating non-scramble round</string>
+    <string name="comments">Comments</string>
 
 </resources>

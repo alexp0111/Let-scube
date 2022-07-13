@@ -14,8 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.lbar.R;
-import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
-import com.example.lbar.fragments.mainMenuFragments.messageFragments.MessageFragment;
 
 public class CommentsFragment extends Fragment {
 

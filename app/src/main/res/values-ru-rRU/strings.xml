@@ -99,4 +99,5 @@
     <string name="joined_room">присоединился</string>
     <string name="inspection_time">Время инспекции</string>
     <string name="non_scr_round">Разогревочный раунд</string>
+    <string name="comments">Комментарии</string>
 </resources>

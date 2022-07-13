@@ -218,7 +218,7 @@ public class DialogueFragment extends Fragment {
     private void initItems(View view) {
         profileImg = view.findViewById(R.id.dialog_us_img);
         addFriend = view.findViewById(R.id.add_a_friend);
-        message_layout = view.findViewById(R.id.constraint_for_message_edit_text);
+        message_layout = view.findViewById(R.id.constraint_for_comment_edit_text);
 
         recyclerView = view.findViewById(R.id.recycler_view_messages);
         recyclerView.setHasFixedSize(true);
@@ -226,8 +226,8 @@ public class DialogueFragment extends Fragment {
         username = view.findViewById(R.id.dialog_txt_us_name);
         username.setWidth(dp_width / 2);
 
-        text_to_send = view.findViewById(R.id.et_send);
-        textInputLayout_send = view.findViewById(R.id.textField_message);
+        text_to_send = view.findViewById(R.id.et_send_comment);
+        textInputLayout_send = view.findViewById(R.id.textField_comment);
 
         urll = this.getArguments().getString("user_img");
         receiverUserID = this.getArguments().getString("us_id");

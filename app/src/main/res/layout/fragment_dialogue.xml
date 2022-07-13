@@ -61,11 +61,11 @@
         android:id="@+id/recycler_view_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/constraint_for_message_edit_text"
+        android:layout_above="@id/constraint_for_comment_edit_text"
         android:layout_below="@id/toolbar_in_dialogue" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_for_message_edit_text"
+        android:id="@+id/constraint_for_comment_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -73,7 +73,7 @@
         android:layout_marginBottom="8dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField_message"
+            android:id="@+id/textField_comment"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_send"
+                android:id="@+id/et_send_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
