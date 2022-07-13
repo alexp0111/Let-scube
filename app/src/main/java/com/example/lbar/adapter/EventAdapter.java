@@ -3,6 +3,7 @@ package com.example.lbar.adapter;
 import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -13,12 +14,15 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.lbar.R;
+import com.example.lbar.fragments.mainMenuFragments.eventFragments.CommentsFragment;
 import com.example.lbar.helpClasses.Event;
 import com.example.lbar.helpClasses.Liker;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -149,7 +153,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.eventNumLikes.setText(String.valueOf(numOfLikesInEvent(mLikers, event.getEv_id())));
 
         // checkbox preset
-        if (likedByUser(mLikers, event.getEv_id(), fUser.getUid())){
+        if (likedByUser(mLikers, event.getEv_id(), fUser.getUid())) {
             holder.eventLikes.setChecked(true);
         }
 
@@ -186,18 +190,31 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.eventNumComments.setText("in dev...");
         holder.eventComments
                 .setOnClickListener(view -> {
-                    if (holder.tmpAboba.getVisibility() == View.GONE) {
-                        TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
-                        holder.tmpAboba.setVisibility(View.VISIBLE);
-                    } else {
-                        TransitionManager.beginDelayedTransition(holder.cardView, new AutoTransition());
-                        holder.tmpAboba.setVisibility(View.GONE);
+                    CommentsFragment fragment = new CommentsFragment();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("header", event.getEv_header());
+                    bundle.putString("text", event.getEv_text());
+                    bundle.putString("ev_id", event.getEv_id());
+                    bundle.putString("us_id", event.getEv_author_id());
+                    bundle.putString("img", event.getEv_image());
+
+                    fragment.setArguments(bundle);
+
+                    try {
+                        ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.to_right, R.anim.from_right)
+                                .replace(R.id.fragment_container,
+                                        fragment).commit();
+                    } catch (Exception D) {
+                        Toast.makeText(mContext, R.string.sww, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private boolean likedByUser(List<Liker> tmp_list, String ev_id, String us_id) {
-        if (tmp_list == null || tmp_list.size() == 0 || ev_id == null || us_id == null) return false;
+        if (tmp_list == null || tmp_list.size() == 0 || ev_id == null || us_id == null)
+            return false;
         for (int i = 0; i < tmp_list.size(); i++) {
             if (tmp_list.get(i).getLike_event_id().equals(ev_id)
                     && tmp_list.get(i).getLike_user_id().equals(us_id)) return true;
