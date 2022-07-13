@@ -51,6 +51,7 @@ public class CommentsFragment extends Fragment {
 
     private TextView txtEventText;
 
+    private ConstraintLayout constraintLayout;
     private TextInputEditText text_to_send;
     private ConstraintLayout comment_layout;
     private TextInputLayout textInputLayout_send;
@@ -100,7 +101,20 @@ public class CommentsFragment extends Fragment {
             text_to_send.setText("");
         });
 
+        constraintLayout.setOnClickListener(view12 -> closeFragment());
+
         return view;
+    }
+
+    private void closeFragment() {
+        try {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                    .replace(R.id.fragment_container,
+                            new MainEventFragment()).commit();
+        } catch (Exception D) {
+            Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void readComments() {
@@ -147,6 +161,7 @@ public class CommentsFragment extends Fragment {
     private void initItems(View v) {
         txtEventText = v.findViewById(R.id.comment_ev_text);
 
+        constraintLayout = v.findViewById(R.id.comments_top_layout);
         text_to_send = v.findViewById(R.id.et_send_comment);
         comment_layout = v.findViewById(R.id.constraint_for_comment_edit_text);
         textInputLayout_send = v.findViewById(R.id.textField_comment);
@@ -161,14 +176,7 @@ public class CommentsFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                    try {
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.anim.from_left, R.anim.to_left)
-                                .replace(R.id.fragment_container,
-                                        new MainEventFragment()).commit();
-                    } catch (Exception D) {
-                        Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
-                    }
+                    closeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);

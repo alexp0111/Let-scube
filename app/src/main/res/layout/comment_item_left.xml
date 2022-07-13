@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:gravity="start"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/linearLayout_for_profile_image"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_img"
+            android:src="@drawable/hacker"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:id="@+id/comment_author_txt"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/fnt3"
+            android:textColor="@color/colorGray"
+            android:textSize="16dp"
+            android:layout_height="20dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/show_message"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/fnt3"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout_for_profile_image"
+        android:background="@drawable/left_background_comment"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="8dp"
+        android:text="Hello!"
+        android:textColor="@color/colorMsgText"
+        android:textSize="18sp" />
+
+</RelativeLayout>

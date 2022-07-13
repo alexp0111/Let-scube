@@ -11,6 +11,9 @@
     <color name="colorMsgLeftItem">#263238</color>
     <color name="colorMsgRightItem">#37474f</color>
 
+    <color name="colorComLeftItem">#37474f</color>
+    <color name="colorComRightItem">#455a64</color>
+
     <color name="colorChronometerPress">#33691E</color>
 
     <color name="colorNegativeBtn">#D84315</color>

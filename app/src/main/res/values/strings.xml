@@ -100,5 +100,6 @@
     <string name="inspection_time">inspection time</string>
     <string name="non_scr_round">heating non-scramble round</string>
     <string name="comments">Comments</string>
+    <string name="comment_hint">Comment…</string>
 
 </resources>

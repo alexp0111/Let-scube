@@ -18,10 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_baseline_arrow_back_ios_24"
-            android:tint="#000"
             app:layout_constraintBottom_toBottomOf="@id/rooms_bar"
             app:layout_constraintStart_toStartOf="@id/rooms_bar"
-            app:layout_constraintTop_toTopOf="@id/rooms_bar" />
+            app:layout_constraintTop_toTopOf="@id/rooms_bar"
+            app:tint="#000" />
 
         <TextView
             android:id="@+id/rooms_puzzle_mode"

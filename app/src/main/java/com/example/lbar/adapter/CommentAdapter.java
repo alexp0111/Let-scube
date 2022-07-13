@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Comment;
 import com.example.lbar.helpClasses.Message;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,9 +51,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         // TODO: replace with custom items for comments
         View view;
         if (viewType == MSG_TYPE_RIGHT) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_right, parent, false);
+            view = LayoutInflater.from(mContext).inflate(R.layout.comment_item_right, parent, false);
         } else {
-            view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_left, parent, false);
+            view = LayoutInflater.from(mContext).inflate(R.layout.comment_item_left, parent, false);
         }
         return new CommentAdapter.ViewHolder(view);
     }
@@ -65,17 +67,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         DatabaseReference refAuthor = FirebaseDatabase.getInstance(mContext.getString(R.string.fdb_inst))
                 .getReference().child("Users").child(cmt.getComment_author_id());
 
-        refAuthor.child("image").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Glide.with(mContext).load(snapshot.getValue().toString()).into(holder.profile_image);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        refAuthor.child("image").get().addOnCompleteListener(task ->
+                Glide.with(mContext).load(task.getResult().getValue().toString()).into(holder.profile_image)
+        ).addOnCompleteListener(task1 -> refAuthor.child("us_name").get().addOnCompleteListener(
+                task3 -> holder.author.setText(task3.getResult().getValue().toString())
+        ));
     }
 
     @Override
@@ -89,12 +85,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         public TextView message;
         public ImageView profile_image;
+        public TextView author;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             message = itemView.findViewById(R.id.show_message);
             profile_image = itemView.findViewById(R.id.profile_img);
+            author = itemView.findViewById(R.id.comment_author_txt);
         }
     }
 
