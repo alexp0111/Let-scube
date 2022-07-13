@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lbar.R;
 import com.example.lbar.fragments.mainMenuFragments.eventFragments.CommentsFragment;
+import com.example.lbar.helpClasses.Comment;
 import com.example.lbar.helpClasses.Event;
 import com.example.lbar.helpClasses.Liker;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,13 +52,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     private List<Event> mEvents;
     private List<Liker> mLikers;
+    private List<Comment> mComments;
     private View dialogView;
     private Context mContext;
     private FirebaseUser fUser;
 
-    public EventAdapter(Context mContext, List<Event> mEvents, List<Liker> mLikers, View dialogView) {
+    public EventAdapter(Context mContext, List<Event> mEvents, List<Liker> mLikers, List<Comment> mComments, View dialogView) {
         this.mEvents = mEvents;
         this.mLikers = mLikers;
+        this.mComments = mComments;
         this.mContext = mContext;
         this.dialogView = dialogView;
     }
@@ -187,7 +190,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         });
 
         // Comments
-        holder.eventNumComments.setText("in dev...");
+        holder.eventNumComments.setText(String.valueOf(numOfCommentsInEvent(mComments, event.getEv_id())));
         holder.eventComments
                 .setOnClickListener(view -> {
                     CommentsFragment fragment = new CommentsFragment();
@@ -210,6 +213,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         Toast.makeText(mContext, R.string.sww, Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private int numOfCommentsInEvent(List<Comment> tmp_list, String ev_id) {
+        if (tmp_list == null || tmp_list.size() == 0 || ev_id == null) return 0;
+        int counter = 0;
+        for (int i = 0; i < tmp_list.size(); i++){
+            if (tmp_list.get(i).getComment_event_id().equals(ev_id)) counter++;
+        }
+        return counter;
     }
 
     private boolean likedByUser(List<Liker> tmp_list, String ev_id, String us_id) {

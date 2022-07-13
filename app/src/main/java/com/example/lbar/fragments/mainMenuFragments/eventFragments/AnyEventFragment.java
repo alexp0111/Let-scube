@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.EventAdapter;
+import com.example.lbar.helpClasses.Comment;
 import com.example.lbar.helpClasses.Event;
 import com.example.lbar.helpClasses.Liker;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -48,6 +49,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
     private DatabaseReference eventReference;
     private DatabaseReference likeRef;
+    private DatabaseReference cmtRef;
     private DatabaseReference mFriendsRef;
 
     private RecyclerView recyclerViewInEvents;
@@ -56,6 +58,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
     private List<Event> mEvents;
     private List<Liker> mLikers;
+    private List<Comment> mComments;
     private ArrayList<String> mFriends = new ArrayList<>();
 
     private DrawerLayout drawer;
@@ -78,6 +81,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
         eventReference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Events");
         likeRef = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/").getReference("Likes");
+        cmtRef = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/").getReference("Comments");
 
         initItems(view);
         if (fUser != null) {
@@ -87,6 +91,7 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
 
         mEvents = new ArrayList<>();
         mLikers = new ArrayList<>();
+        mComments = new ArrayList<>();
 
         recyclerViewInEvents.setHasFixedSize(true);
         recyclerViewInEvents.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -140,37 +145,20 @@ public class AnyEventFragment extends Fragment implements GestureDetector.OnGest
                 Liker tmp_liker = snapshot.getValue(Liker.class);
                 mLikers.add(tmp_liker);
             }
+        }).addOnCompleteListener(task4 -> cmtRef.get().addOnCompleteListener(task5 -> {
+            mComments.clear();
+            for (DataSnapshot snapshot : task5.getResult().getChildren()) {
+                Comment tmp_cmt = snapshot.getValue(Comment.class);
+                mComments.add(tmp_cmt);
+            }
         }).addOnCompleteListener(task -> {
             Collections.reverse(mEvents);
-            eventAdapter = new EventAdapter(getContext(), mEvents, mLikers, dialogView);
+            eventAdapter = new EventAdapter(getContext(), mEvents,  mLikers, mComments, dialogView);
             eventAdapter.setHasStableIds(true);
             recyclerViewInEvents.setAdapter(eventAdapter);
 
             progressBar.setVisibility(View.GONE);
-        }));
-        //
-        //eventReference.addListenerForSingleValueEvent(new ValueEventListener() {
-        //    @Override
-        //    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        //        mEvents.clear();
-//
-        //        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-        //            Event event = snapshot.getValue(Event.class);
-        //            assert event != null;
-//
-        //            if (event.getEv_accessibility() == 0 || event.getEv_author_id().equals(fUser.getUid()) || isFriend(event.getEv_author_id())) {
-        //                mEvents.add(event);
-        //                Log.d("ARB", event.getEv_liked_users().size() + " + " + mEvents.size());
-        //            }
-        //        }
-        //    }
-//
-        //    @Override
-        //    public void onCancelled(@NonNull DatabaseError error) {
-        //        progressBar.setVisibility(View.GONE);
-        //        Log.d("List_ev", error.getMessage());
-        //    }
-        //});
+        })));
     }
 
     private boolean isFriend(String id) {
