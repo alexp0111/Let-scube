@@ -45,11 +45,10 @@ public class RoomsMainBattleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_battle_rooms, container, false);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_main_battle_rooms);
-        setToolbarSettings(toolbar, activity, main_activity);
+        setToolbarSettings(toolbar, main_activity);
 
         initItems(view);
         //setItemAnimations();
@@ -117,7 +116,7 @@ public class RoomsMainBattleFragment extends Fragment {
         circle = v.findViewById(R.id.circle_in_rooms_main_battle);
     }
 
-    private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {
+    private void setToolbarSettings(Toolbar tbar, AppCompatActivity main_activity) {
         if (tbar != null) {
             tbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
             tbar.setTitle(R.string.commandSolving);

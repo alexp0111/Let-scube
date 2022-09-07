@@ -27,7 +27,7 @@ import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.MessageAdapter;
 import com.example.lbar.helpClasses.Message;
-import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
+import com.example.lbar.fragments.mainMenuFragments.peopleFragments.PeopleFragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;

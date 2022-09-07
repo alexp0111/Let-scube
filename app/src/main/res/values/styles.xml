@@ -1,6 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:forceDarkAllowed">false</item>
         <item name="colorPrimary">#FFC107</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>

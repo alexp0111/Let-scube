@@ -1,4 +1,4 @@
-package com.example.lbar.fragments.mainMenuFragments;
+package com.example.lbar.fragments.mainMenuFragments.peopleFragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -29,7 +30,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.lbar.adapter.UserAdapter;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
+import com.example.lbar.fragments.mainMenuFragments.eventFragments.AddingEventFragment;
+import com.example.lbar.fragments.mainMenuFragments.peopleFragments.friendsFragments.FriendsMainFragment;
 import com.example.lbar.helpClasses.User;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,6 +69,8 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
 
     private com.google.android.material.progressindicator.LinearProgressIndicator progressBar;
     private SwipeRefreshLayout srl;
+
+    private ExtendedFloatingActionButton efab;
 
     @Nullable
     @Override
@@ -122,6 +128,15 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
             srl.setRefreshing(false);
         });
 
+        efab.setOnClickListener(view12 -> {
+            try {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new FriendsMainFragment()).commit();
+            } catch (Exception D) {
+                Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return view;
     }
 
@@ -134,6 +149,7 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
         imgSearchUsers = v.findViewById(R.id.img_search_users);
 
         recyclerViewInPeople = v.findViewById(R.id.recycler_users);
+        efab = v.findViewById(R.id.people_friends_fab);
     }
 
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity activity, AppCompatActivity main_activity) {

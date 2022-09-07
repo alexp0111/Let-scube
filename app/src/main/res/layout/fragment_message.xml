@@ -13,7 +13,7 @@
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/BlackDrawerIconStyle.DrawerIconStyle"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
         app:title="_"
         app:titleTextColor="#000000" />
 

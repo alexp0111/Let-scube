@@ -1,6 +1,7 @@
 package com.example.lbar.fragments.mainMenuFragments.messageFragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;

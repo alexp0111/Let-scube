@@ -22,7 +22,7 @@ import com.example.lbar.fragments.mainMenuFragments.eventFragments.MainEventFrag
 import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.example.lbar.helpClasses.User;
 import com.example.lbar.fragments.mainMenuFragments.CollectionFragment;
-import com.example.lbar.fragments.mainMenuFragments.PeopleFragment;
+import com.example.lbar.fragments.mainMenuFragments.peopleFragments.PeopleFragment;
 import com.example.lbar.fragments.mainMenuFragments.messageFragments.MessageFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.ProfileFragment;
 import com.example.lbar.fragments.mainMenuFragments.accountFragments.LogInFragment;
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("Users");

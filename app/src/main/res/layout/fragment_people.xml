@@ -16,14 +16,14 @@
         app:title="_"
         app:titleTextColor="#000000">
 
-            <ImageView
-                android:id="@+id/img_search_users"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:padding="5sp"
-                android:src="@drawable/ic_search" />
+        <ImageView
+            android:id="@+id/img_search_users"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:padding="5sp"
+            android:src="@drawable/ic_search" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -38,8 +38,8 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pull_to_refresh_users"
         android:layout_width="match_parent"
-        android:layout_below="@id/toolbar_in_users"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_in_users">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -49,10 +49,10 @@
                 android:id="@+id/textField_search_users"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_marginHorizontal="5dp"
-                android:hint="@string/search_hint">
+                android:hint="@string/search_hint"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_users"
@@ -63,9 +63,23 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_users"
                 android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
                 android:layout_height="match_parent"
-                android:layout_below="@id/textField_search_users" />
+                android:layout_below="@id/textField_search_users"
+                android:layout_marginTop="5dp" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/people_friends_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:gravity="center"
+                android:text="@string/friends"
+                app:icon="@drawable/ic_list_of_users"
+                app:strokeWidth="0dp" />
 
 
         </RelativeLayout>
