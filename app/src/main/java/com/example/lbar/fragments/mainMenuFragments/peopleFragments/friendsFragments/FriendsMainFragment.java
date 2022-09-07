@@ -18,9 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.ViewPagerFriendsFragmentAdapter;
-import com.example.lbar.adapter.ViewPagerRoomsFragmentAdapter;
 import com.example.lbar.fragments.mainMenuFragments.peopleFragments.PeopleFragment;
-import com.example.lbar.fragments.mainMenuFragments.roomsFragments.RoomsStartFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -39,7 +37,7 @@ public class FriendsMainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friends, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_friends, container, false);
         AppCompatActivity main_activity = (MainActivity) getActivity();
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_main_friends);
@@ -52,10 +50,10 @@ public class FriendsMainFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText(R.string.friends);
+                    tab.setText("-");
                     break;
                 case 1:
-                    tab.setText("Interactions");
+                    tab.setText(R.string.interactions);
                     break;
             }
         }).attach();
@@ -78,7 +76,7 @@ public class FriendsMainFragment extends Fragment {
             tbar.setNavigationOnClickListener(view1 -> {
                 try {
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            //.setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                            .setCustomAnimations(R.anim.from_left, R.anim.to_left)
                             .replace(R.id.fragment_container,
                                     new PeopleFragment()).commit();
                 } catch (Exception D) {
@@ -98,7 +96,7 @@ public class FriendsMainFragment extends Fragment {
             public void handleOnBackPressed() {
                 try {
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            //.setCustomAnimations(R.anim.from_left, R.anim.to_left)
+                            .setCustomAnimations(R.anim.from_left, R.anim.to_left)
                             .replace(R.id.fragment_container,
                                     new PeopleFragment()).commit();
                 } catch (Exception D) {

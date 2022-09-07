@@ -101,7 +101,6 @@
     <string name="non_scr_round">heating non-scramble round</string>
     <string name="comments">Comments</string>
     <string name="comment_hint">Comment…</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="interactions">Interactions</string>
 
 </resources>

@@ -130,8 +130,9 @@ public class PeopleFragment extends Fragment implements GestureDetector.OnGestur
 
         efab.setOnClickListener(view12 -> {
             try {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new FriendsMainFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.to_right, R.anim.from_right)
+                        .replace(R.id.fragment_container, new FriendsMainFragment()).commit();
             } catch (Exception D) {
                 Toast.makeText(getContext(), R.string.sww, Toast.LENGTH_SHORT).show();
             }
