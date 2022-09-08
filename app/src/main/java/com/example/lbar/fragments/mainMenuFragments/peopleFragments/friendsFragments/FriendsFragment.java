@@ -10,21 +10,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lbar.R;
+import com.example.lbar.adapter.FriendsAdapter;
 import com.example.lbar.helpClasses.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class FriendsFragment extends Fragment {
+    private RecyclerView recyclerView;
+    private FriendsAdapter friendsAdapter;
+
     private FirebaseAuth mAuth;
     private DatabaseReference friendsRef;
 
@@ -48,9 +52,18 @@ public class FriendsFragment extends Fragment {
         String usId = mAuth.getCurrentUser().getUid();
         friendsRef = FirebaseDatabase.getInstance().getReference("Users");
 
+        initItems(view);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         getFriendsList(usId);
 
         return view;
+    }
+
+    private void initItems(View v) {
+        recyclerView = v.findViewById(R.id.recycler_friends);
     }
 
     private void getFriendsList(String usId) {
@@ -78,7 +91,7 @@ public class FriendsFragment extends Fragment {
                     }
 
                     if (i == friendsIDList.size()-1){
-                        displayInfo();
+                        createAdapter();
                     } else {
                         getSeparateUser(i + 1);
                     }
@@ -87,7 +100,8 @@ public class FriendsFragment extends Fragment {
         });
     }
 
-    private void displayInfo() {
-        Toast.makeText(getContext(), friendsList.size() + "", Toast.LENGTH_SHORT).show();
+    private void createAdapter() {
+        friendsAdapter = new FriendsAdapter(friendsList, getContext());
+        recyclerView.setAdapter(friendsAdapter);
     }
 }
