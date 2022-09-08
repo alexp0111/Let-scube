@@ -50,10 +50,10 @@ public class FriendsMainFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText("-");
+                    tab.setText(R.string.friends);
                     break;
                 case 1:
-                    tab.setText(R.string.interactions);
+                    tab.setText(R.string.neww);
                     break;
             }
         }).attach();
@@ -69,7 +69,7 @@ public class FriendsMainFragment extends Fragment {
     private void setToolbarSettings(Toolbar tbar, AppCompatActivity main_activity) {
         if (tbar != null) {
             tbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24);
-            tbar.setTitle(R.string.friends);
+            tbar.setTitle(R.string.interactions);
 
             drawer = main_activity.findViewById(R.id.drawer_layout);
 

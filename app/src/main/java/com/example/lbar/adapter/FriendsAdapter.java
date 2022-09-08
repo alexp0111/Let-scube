@@ -14,18 +14,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder>{
 
     private List<User> mUsers;
+    private List<String> friendIDs;
+    private String userID;
     private Context mContext;
 
-    public FriendsAdapter(List<User> mUsers, Context mContext) {
+    public FriendsAdapter(List<User> mUsers, List<String> friendIDs, String userID, Context mContext) {
         this.mUsers = mUsers;
         this.mContext = mContext;
+        this.userID = userID;
+        this.friendIDs = friendIDs;
     }
 
     @NonNull
@@ -41,12 +49,27 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
         holder.username.setText(friend.getUs_name());
         Glide.with(mContext).load(friend.getImage()).into(holder.profile_image);
-        holder.remove_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: removing from friends
-                Log.d("ADAPTER_FRIENDS", "tap tap");
-            }
+        holder.remove_button.setOnClickListener(view -> {
+            DatabaseReference ref1 = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                    .getReference("Users")
+                    .child(friend.getUs_id())
+                    .child("us_friends");
+
+            DatabaseReference ref2 = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
+                    .getReference("Users")
+                    .child(userID)
+                    .child("us_friends");
+
+            friendIDs.remove(friend.getUs_id());
+            friendIDs.set(0, String.valueOf(friendIDs.size() - 1));
+
+            // Deleting from our user list
+            ref2.setValue(friendIDs).addOnCompleteListener(task -> {
+                mUsers.remove(position);
+                notifyItemRemoved(position);
+            });
+
+            // TODO: Correcting ex-friends list or make new item in interractions
         });
     }
 

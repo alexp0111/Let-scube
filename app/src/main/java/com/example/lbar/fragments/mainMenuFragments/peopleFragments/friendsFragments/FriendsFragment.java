@@ -31,6 +31,7 @@ public class FriendsFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private DatabaseReference friendsRef;
+    private String usId;
 
     private ArrayList<String> friendsIDList;
     private ArrayList<User> friendsList;
@@ -49,7 +50,7 @@ public class FriendsFragment extends Fragment {
         friendsIDList = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();
-        String usId = mAuth.getCurrentUser().getUid();
+        usId = mAuth.getCurrentUser().getUid();
         friendsRef = FirebaseDatabase.getInstance().getReference("Users");
 
         initItems(view);
@@ -101,7 +102,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void createAdapter() {
-        friendsAdapter = new FriendsAdapter(friendsList, getContext());
+        friendsAdapter = new FriendsAdapter(friendsList, friendsIDList, usId,  getContext());
         recyclerView.setAdapter(friendsAdapter);
     }
 }
