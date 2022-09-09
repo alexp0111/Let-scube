@@ -26,8 +26,11 @@ import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.MessageAdapter;
+import com.example.lbar.helpClasses.FriendRequest;
 import com.example.lbar.helpClasses.Message;
 import com.example.lbar.fragments.mainMenuFragments.peopleFragments.PeopleFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -54,8 +57,12 @@ public class DialogueFragment extends Fragment {
     private FirebaseUser fUser;
     private DatabaseReference SendersFriendsRef;
     private DatabaseReference ReceiversFriendsRef;
+    private DatabaseReference SendersRequestsRef;
+
     private ArrayList<String> SendersFriends = new ArrayList<>();
     private ArrayList<String> ReceiversFriends = new ArrayList<>();
+    private ArrayList<String> SendersRequests = new ArrayList<>();
+
     private String senderUserID, receiverUserID, text, urll;
 
     private Toolbar toolbar;
@@ -74,7 +81,7 @@ public class DialogueFragment extends Fragment {
 
     private View rl;
 
-    private boolean isFriend;
+    private String isFriend; //     not a friend / waiting for request / a friend
     private boolean isFirstEnter = true;
     private boolean isFromMessage = false;
 
@@ -89,7 +96,7 @@ public class DialogueFragment extends Fragment {
         fUser = mAuth.getCurrentUser();
         senderUserID = fUser.getUid();
 
-        isFriend = false;
+        isFriend = "not a friend";
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_in_dialogue);
         setToolbarSettings(toolbar, main_activity);
@@ -111,6 +118,8 @@ public class DialogueFragment extends Fragment {
         addFriend.setOnClickListener(view12 -> {
             if (SendersFriends.contains(receiverUserID)) {
                 removeFriend();
+            } else if (SendersRequests.contains(receiverUserID)) {
+                removeRequest();
             } else {
                 makeFriend();
             }
@@ -142,24 +151,39 @@ public class DialogueFragment extends Fragment {
         return view;
     }
 
+    private void removeRequest() {
+        Snackbar.make(getView(), "Request denied", BaseTransientBottomBar.LENGTH_SHORT).show();
+        // TODO: remove request
+    }
+
     private void makeFriend() {
-        Toast.makeText(getContext(), R.string.now_u_r_friends, Toast.LENGTH_SHORT).show();
+        Snackbar.make(getView(), R.string.request_sent, BaseTransientBottomBar.LENGTH_SHORT).show();
 
         if (SendersFriends != null) {
-            SendersFriends.add(receiverUserID);
-            ReceiversFriends.add(senderUserID);
+            String newRef = SendersRequestsRef.push().getKey();
+            FriendRequest request = new FriendRequest(newRef, senderUserID, receiverUserID);
+            SendersRequestsRef.child(newRef).setValue(request);
 
-            SendersFriends.set(0, String.valueOf(SendersFriends.size() - 1));
-            ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size() - 1));
+            SendersRequests.add(receiverUserID);
 
-            SendersFriendsRef.setValue(SendersFriends);
-            ReceiversFriendsRef.setValue(ReceiversFriends);
+            // !!! Adding friend (two way mechanic) !!!
+
+            //SendersFriends.add(receiverUserID);
+            //ReceiversFriends.add(senderUserID);
+//
+            //SendersFriends.set(0, String.valueOf(SendersFriends.size() - 1));
+            //ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size() - 1));
+//
+            //SendersFriendsRef.setValue(SendersFriends);
+            //ReceiversFriendsRef.setValue(ReceiversFriends);
+
+            // !!! Adding friend (two way mechanic) !!!
         }
-        setToolbarProfileInfo(true);
+        setToolbarProfileInfo("waiting");
     }
 
     private void removeFriend() {
-        Toast.makeText(getContext(), R.string.not_a_friend_yet, Toast.LENGTH_SHORT).show();
+        Snackbar.make(getView(), R.string.not_a_friend_yet, BaseTransientBottomBar.LENGTH_SHORT).show();
 
         if (SendersFriends != null) {
             SendersFriends.remove(receiverUserID);
@@ -171,7 +195,7 @@ public class DialogueFragment extends Fragment {
             SendersFriendsRef.setValue(SendersFriends);
             ReceiversFriendsRef.setValue(ReceiversFriends);
         }
-        setToolbarProfileInfo(false);
+        setToolbarProfileInfo("not a friend");
     }
 
     private void isFriendCheckListener() {
@@ -187,10 +211,11 @@ public class DialogueFragment extends Fragment {
 
                     if (friend_id.equals(receiverUserID)) {
                         Log.d("fr_chkr", "bingo");
-                        isFriend = true;
+                        isFriend = "friend";
                     }
                 }
-                setToolbarProfileInfo(isFriend);
+
+                isRequestedCheckListener();
             }
 
             @Override
@@ -211,6 +236,28 @@ public class DialogueFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+        });
+    }
+
+    private void isRequestedCheckListener() {
+        SendersRequestsRef.get().addOnCompleteListener(task -> {
+            SendersRequests.clear();
+
+            for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                FriendRequest request = snapshot.getValue(FriendRequest.class);
+
+                if (request != null) {
+                    String requested_id = request.getToID();
+                    SendersRequests.add(requested_id);
+
+                    if (requested_id.equals(receiverUserID)) {
+                        Log.d("fr_chkr", "requested");
+                        isFriend = "waiting";
+                    }
+                }
+            }
+
+            setToolbarProfileInfo(isFriend);
         });
     }
 
@@ -235,6 +282,8 @@ public class DialogueFragment extends Fragment {
 
         SendersFriendsRef = reference.child(fUser.getUid()).child("us_friends");
         ReceiversFriendsRef = reference.child(receiverUserID).child("us_friends");
+        SendersRequestsRef = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference("FriendRequests");
+
     }
 
     private void setToolbarSettings(Toolbar tbar, Activity main_activity) {
@@ -276,7 +325,7 @@ public class DialogueFragment extends Fragment {
                 .setDuration(200).setStartDelay(100).start();
     }
 
-    private void setToolbarProfileInfo(boolean friend) {
+    private void setToolbarProfileInfo(String friendState) {
         username.setText(username_txt);
         try {
             Glide.with(DialogueFragment.this).load(urll).into(profileImg);
@@ -284,9 +333,12 @@ public class DialogueFragment extends Fragment {
             Log.d("FriendSwapping", "setToolbarProfileInfo() error");
         }
 
-        if (friend) {
+        if (friendState.equals("friend")) {
             Log.d("fr_chkr", "it is friend");
             addFriend.setImageResource(R.drawable.ic_already_friend);
+        } else if (friendState.equals("waiting")) {
+            Log.d("fr_chkr", "it is user that has our request");
+            addFriend.setImageResource(R.drawable.ic_email_unread);
         } else {
             Log.d("fr_chkr", "it is not a friend");
             addFriend.setImageResource(R.drawable.ic_add_friend);
