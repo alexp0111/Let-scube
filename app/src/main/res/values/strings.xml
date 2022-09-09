@@ -60,6 +60,7 @@
     <string name="priv_room_discr">It is necessary if you want to join private room</string>
     <string name="add_friend_discr_del">Here you can delete this user from your friends list!</string>
     <string name="add_friend_discr_add">Here you can add this user to your friends list!</string>
+    <string name="add_friend_discr_req">Request has sent. Waiting for answer!</string>
     <string name="pls_enter_mess">Please, enter a message</string>
     <string name="now_u_r_friends">Now, you are friends!</string>
     <string name="not_a_friend_yet">Not a friend yet</string>

@@ -71,7 +71,8 @@
     <string name="i_am_shure">Да, я уверен</string>
     <string name="cube_not_enough_info">Пока неизвестно\nПока неизвестно\nПока неизвестно\nПока неизвестно\nПока неизвестно</string>
     <string name="last_mess">\Последнее: \</string>
-    <string name="add_friend_discr_add">Хотите добавить пользователя из списка ваших друзей?</string>
+    <string name="add_friend_discr_add">Хотите добавить пользователя в список ваших друзей?</string>
+    <string name="add_friend_discr_req">Запрос отправлен. Ожидание ответа!</string>
     <string name="leave_app_while_stopwatch">Пожалуйста, не покидайте комнату, пока секундомер не остановлен</string>
     <string name="any_vp">Общее</string>
     <string name="friends_vp">Друзья</string>

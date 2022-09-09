@@ -129,7 +129,11 @@ public class DialogueFragment extends Fragment {
             if (SendersFriends.contains(receiverUserID)) {
                 Snackbar.make(getView(), R.string.add_friend_discr_del,
                         BaseTransientBottomBar.LENGTH_LONG).show();
-            } else {
+            } else if (SendersRequests.contains(receiverUserID)) {
+                Snackbar.make(getView(), R.string.add_friend_discr_req,
+                        BaseTransientBottomBar.LENGTH_LONG).show();
+            }
+            else {
                 Snackbar.make(getView(), R.string.add_friend_discr_add,
                         BaseTransientBottomBar.LENGTH_LONG).show();
             }
