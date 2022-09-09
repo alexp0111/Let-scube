@@ -105,4 +105,5 @@
     <string name="interactions">Взаимодействия</string>
     <string name="neww">Новое</string>
     <string name="request_sent">Запрос был отправлен</string>
+    <string name="request_canceled">Запрос отменён</string>
 </resources>

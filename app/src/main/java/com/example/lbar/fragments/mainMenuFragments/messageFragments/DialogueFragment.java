@@ -156,7 +156,7 @@ public class DialogueFragment extends Fragment {
     }
 
     private void removeRequest() {
-        Snackbar.make(getView(), "Request denied", BaseTransientBottomBar.LENGTH_SHORT).show();
+        Snackbar.make(getView(), R.string.request_canceled, BaseTransientBottomBar.LENGTH_SHORT).show();
         SendersRequestsRef.get().addOnCompleteListener(task -> {
             for (DataSnapshot snapshot : task.getResult().getChildren()) {
                 FriendRequest request = snapshot.getValue(FriendRequest.class);
