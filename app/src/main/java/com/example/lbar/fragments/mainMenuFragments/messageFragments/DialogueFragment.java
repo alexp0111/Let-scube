@@ -61,7 +61,7 @@ public class DialogueFragment extends Fragment {
 
     private ArrayList<String> SendersFriends = new ArrayList<>();
     private ArrayList<String> ReceiversFriends = new ArrayList<>();
-    private ArrayList<String> SendersRequests = new ArrayList<>();
+    private FriendRequest SendersRequest = null;
 
     private String senderUserID, receiverUserID, text, urll;
 
@@ -118,7 +118,7 @@ public class DialogueFragment extends Fragment {
         addFriend.setOnClickListener(view12 -> {
             if (SendersFriends.contains(receiverUserID)) {
                 removeFriend();
-            } else if (SendersRequests.contains(receiverUserID)) {
+            } else if (SendersRequest != null) {
                 removeRequest();
             } else {
                 makeFriend();
@@ -129,7 +129,7 @@ public class DialogueFragment extends Fragment {
             if (SendersFriends.contains(receiverUserID)) {
                 Snackbar.make(getView(), R.string.add_friend_discr_del,
                         BaseTransientBottomBar.LENGTH_LONG).show();
-            } else if (SendersRequests.contains(receiverUserID)) {
+            } else if (SendersRequest != null) {
                 Snackbar.make(getView(), R.string.add_friend_discr_req,
                         BaseTransientBottomBar.LENGTH_LONG).show();
             }
@@ -157,7 +157,22 @@ public class DialogueFragment extends Fragment {
 
     private void removeRequest() {
         Snackbar.make(getView(), "Request denied", BaseTransientBottomBar.LENGTH_SHORT).show();
-        // TODO: remove request
+        SendersRequestsRef.get().addOnCompleteListener(task -> {
+            for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                FriendRequest request = snapshot.getValue(FriendRequest.class);
+
+                if (request != null && request.getFromID().equals(SendersRequest.getFromID())
+                        && request.getToID().equals(SendersRequest.getToID())) {
+
+                    SendersRequestsRef.child(request.getRequestID()).removeValue();
+                    SendersRequest = null;
+                    isFriend = "not a friend";
+                    break;
+                }
+            }
+
+            setToolbarProfileInfo(isFriend);
+        });
     }
 
     private void makeFriend() {
@@ -168,7 +183,7 @@ public class DialogueFragment extends Fragment {
             FriendRequest request = new FriendRequest(newRef, senderUserID, receiverUserID);
             SendersRequestsRef.child(newRef).setValue(request);
 
-            SendersRequests.add(receiverUserID);
+            SendersRequest = request;
 
             // !!! Adding friend (two way mechanic) !!!
 
@@ -245,19 +260,13 @@ public class DialogueFragment extends Fragment {
 
     private void isRequestedCheckListener() {
         SendersRequestsRef.get().addOnCompleteListener(task -> {
-            SendersRequests.clear();
-
             for (DataSnapshot snapshot : task.getResult().getChildren()) {
                 FriendRequest request = snapshot.getValue(FriendRequest.class);
 
-                if (request != null) {
-                    String requested_id = request.getToID();
-                    SendersRequests.add(requested_id);
-
-                    if (requested_id.equals(receiverUserID)) {
-                        Log.d("fr_chkr", "requested");
-                        isFriend = "waiting";
-                    }
+                if (request != null && request.getFromID().equals(senderUserID)
+                        && request.getToID().equals(receiverUserID)) {
+                    SendersRequest = request;
+                    isFriend = "waiting";
                 }
             }
 
