@@ -22,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder>{
+public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
+
+    private static String TAG = "FRIENDS_ADAPTER";
 
     private List<User> mUsers;
     private List<String> friendIDs;
@@ -65,12 +67,22 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
             // Deleting from our user list
             ref2.setValue(friendIDs).addOnCompleteListener(task -> {
-                mUsers.remove(position);
-                notifyItemRemoved(position);
+                Log.d(TAG, position + " " + friendIDs.size() + " " + mUsers.size());
+                removeRecyclerElement(friend);
             });
 
             // TODO: Correcting ex-friends list or make new item in interractions
         });
+    }
+
+    private void removeRecyclerElement(User friend) {
+        String idToDelete = friend.getUs_id();
+        for (int i = 0; i < mUsers.size(); i++) {
+            if (mUsers.get(i).getUs_id().equals(idToDelete)) {
+                mUsers.remove(i);
+                notifyItemRemoved(i);
+            }
+        }
     }
 
     @Override
@@ -78,7 +90,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         return mUsers.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView username;
         public ImageView profile_image;
