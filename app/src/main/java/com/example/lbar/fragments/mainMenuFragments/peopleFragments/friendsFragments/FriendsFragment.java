@@ -25,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+// Just for user's friends list
+
 public class FriendsFragment extends Fragment {
     private RecyclerView recyclerView;
     private FriendsAdapter friendsAdapter;

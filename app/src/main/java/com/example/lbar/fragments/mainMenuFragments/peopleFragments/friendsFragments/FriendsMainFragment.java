@@ -22,6 +22,9 @@ import com.example.lbar.fragments.mainMenuFragments.peopleFragments.PeopleFragme
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+// TODO: Продумать систему, когда люди отправляют запрос друг другу (в диалоге отмечать,
+//  что от человека уже есть запрос и его остаётся лишь принять)
+
 public class FriendsMainFragment extends Fragment {
 
     private ViewPager2 viewPager2;
