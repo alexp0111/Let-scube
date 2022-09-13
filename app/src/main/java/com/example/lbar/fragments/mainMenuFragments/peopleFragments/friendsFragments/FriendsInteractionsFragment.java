@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lbar.R;
 import com.example.lbar.adapter.FriendRequestsAdapter;
-import com.example.lbar.adapter.FriendsAdapter;
 import com.example.lbar.helpClasses.FriendRequest;
 import com.example.lbar.helpClasses.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,16 +38,16 @@ public class FriendsInteractionsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private String usId;
 
-    private ArrayList<String> requestsIDList;
-    private ArrayList<User> requestsList;
+    private ArrayList<FriendRequest> requestsList;
+    private ArrayList<User> requestersList;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends_interactions, container, false);
 
-        requestsIDList = new ArrayList<>();
         requestsList = new ArrayList<>();
+        requestersList = new ArrayList<>();
 
         requestsRef = FirebaseDatabase.getInstance().getReference("FriendRequests");
         userRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -72,34 +71,34 @@ public class FriendsInteractionsFragment extends Fragment {
 
     private void getFriendRequestsList() {
         requestsRef.get().addOnCompleteListener(task -> {
-            requestsIDList.clear();
+            requestsList.clear();
 
             for (DataSnapshot snapshot : task.getResult().getChildren()) {
                 FriendRequest request = snapshot.getValue(FriendRequest.class);
 
                 if (request != null && request.getToID().equals(usId))
-                    requestsIDList.add(request.getFromID());
+                    requestsList.add(request);
             }
         }).addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task1) {
-                if (requestsIDList.size() == 0) return;
+                if (requestsList.size() == 0) return;
 
                 int i = 0;
                 getSeparateUser(i);
             }
 
             private void getSeparateUser(final int i) {
-                userRef.child(requestsIDList.get(i)).get().addOnCompleteListener(task2 -> {
+                userRef.child(requestsList.get(i).getFromID()).get().addOnCompleteListener(task2 -> {
                     User user = task2.getResult().getValue(User.class);
 
                     if (user != null) {
                         Log.d("FRIENDS_INTER_FRAGMENT", user.getUs_name());
-                        requestsList.add(user);
-                        Log.d("FRIENDS_INTER_FRAGMENT added", requestsList.size() + "");
+                        requestersList.add(user);
+                        Log.d("FRIENDS_INTER_FRAGMENT added", requestersList.size() + "");
                     }
 
-                    if (i == requestsIDList.size() - 1) {
+                    if (i == requestsList.size() - 1) {
                         createAdapter();
                     } else {
                         getSeparateUser(i + 1);
@@ -110,7 +109,7 @@ public class FriendsInteractionsFragment extends Fragment {
     }
 
     private void createAdapter() {
-        requestsAdapter = new FriendRequestsAdapter(requestsList, requestsIDList, usId, getContext());
+        requestsAdapter = new FriendRequestsAdapter(requestersList, requestsList, usId, getContext());
         recyclerView.setAdapter(requestsAdapter);
     }
 }
