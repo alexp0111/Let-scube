@@ -84,8 +84,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                         -> ref1.setValue(friendFriendsList).addOnCompleteListener(task4
                         -> removeRecyclerElement(friend)));
             });
-
-            // TODO: Correcting ex-friends list or make new item in interactions
         });
     }
 

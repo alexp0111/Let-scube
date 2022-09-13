@@ -53,6 +53,8 @@ import static com.example.lbar.MainActivity.reference;
 
 public class DialogueFragment extends Fragment {
 
+    private static final String TAG = "DIALOGUE_FRAGMENT";
+
     private FirebaseAuth mAuth;
     private FirebaseUser fUser;
     private DatabaseReference SendersFriendsRef;
@@ -62,6 +64,7 @@ public class DialogueFragment extends Fragment {
     private ArrayList<String> SendersFriends = new ArrayList<>();
     private ArrayList<String> ReceiversFriends = new ArrayList<>();
     private FriendRequest SendersRequest = null;
+    private FriendRequest ReceiversRequest = null;
 
     private String senderUserID, receiverUserID, text, urll;
 
@@ -132,8 +135,7 @@ public class DialogueFragment extends Fragment {
             } else if (SendersRequest != null) {
                 Snackbar.make(getView(), R.string.add_friend_discr_req,
                         BaseTransientBottomBar.LENGTH_LONG).show();
-            }
-            else {
+            } else {
                 Snackbar.make(getView(), R.string.add_friend_discr_add,
                         BaseTransientBottomBar.LENGTH_LONG).show();
             }
@@ -176,29 +178,35 @@ public class DialogueFragment extends Fragment {
     }
 
     private void makeFriend() {
-        Snackbar.make(getView(), R.string.request_sent, BaseTransientBottomBar.LENGTH_SHORT).show();
-
-        if (SendersFriends != null) {
+        if (SendersFriends == null) return;
+        if (ReceiversRequest == null) {
             String newRef = SendersRequestsRef.push().getKey();
             FriendRequest request = new FriendRequest(newRef, senderUserID, receiverUserID);
-            SendersRequestsRef.child(newRef).setValue(request);
+            SendersRequestsRef.child(newRef).setValue(request)
+                    .addOnCompleteListener(task
+                            -> Snackbar.make(getView(), R.string.request_sent, BaseTransientBottomBar.LENGTH_SHORT).show());
 
             SendersRequest = request;
-
-            // !!! Adding friend (two way mechanic) !!!
-
-            //SendersFriends.add(receiverUserID);
-            //ReceiversFriends.add(senderUserID);
-//
-            //SendersFriends.set(0, String.valueOf(SendersFriends.size() - 1));
-            //ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size() - 1));
-//
-            //SendersFriendsRef.setValue(SendersFriends);
-            //ReceiversFriendsRef.setValue(ReceiversFriends);
-
-            // !!! Adding friend (two way mechanic) !!!
+            setToolbarProfileInfo("waiting");
+            return;
         }
-        setToolbarProfileInfo("waiting");
+        SendersFriends.add(receiverUserID);
+        ReceiversFriends.add(senderUserID);
+
+        SendersFriends.set(0, String.valueOf(SendersFriends.size() - 1));
+        ReceiversFriends.set(0, String.valueOf(ReceiversFriends.size() - 1));
+
+        Log.d(TAG, "Friends_interactions_in_lists: DONE");
+        Log.d(TAG, "US_friends_list_get; Size: " + SendersFriends.size());
+        Log.d(TAG, "Requester_friends_list_get; Size: " + ReceiversFriends.size());
+
+        SendersFriendsRef.setValue(SendersFriends).addOnCompleteListener(task5 -> ReceiversFriendsRef.setValue(ReceiversFriends).addOnCompleteListener(task6 -> {
+            SendersRequestsRef.child(ReceiversRequest.getRequestID()).removeValue().addOnCompleteListener(task7 -> {
+                Log.d(TAG, "item removed");
+                Snackbar.make(getView(), R.string.now_u_r_friends, BaseTransientBottomBar.LENGTH_SHORT).show();
+                setToolbarProfileInfo("friend");
+            });
+        }));
     }
 
     private void removeFriend() {
@@ -267,6 +275,12 @@ public class DialogueFragment extends Fragment {
                         && request.getToID().equals(receiverUserID)) {
                     SendersRequest = request;
                     isFriend = "waiting";
+                }
+
+                if (request != null && request.getFromID().equals(receiverUserID)
+                        && request.getToID().equals(senderUserID)) {
+                    ReceiversRequest = request;
+                    isFriend = "not a friend";
                 }
             }
 
