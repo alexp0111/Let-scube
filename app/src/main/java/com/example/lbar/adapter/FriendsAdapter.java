@@ -17,9 +17,11 @@ import com.example.lbar.helpClasses.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
@@ -31,11 +33,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     private String userID;
     private Context mContext;
 
-    public FriendsAdapter(List<User> mUsers, List<String> friendIDs, String userID, Context mContext) {
+    public FriendsAdapter(List<User> mUsers, List<String> usFriendsIDs, String userID, Context mContext) {
         this.mUsers = mUsers;
         this.mContext = mContext;
         this.userID = userID;
-        this.friendIDs = friendIDs;
+        this.friendIDs = usFriendsIDs;
     }
 
     @NonNull
@@ -52,6 +54,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         holder.username.setText(friend.getUs_name());
         Glide.with(mContext).load(friend.getImage()).into(holder.profile_image);
         holder.remove_button.setOnClickListener(view -> {
+            ArrayList<String> friendFriendsList = new ArrayList<>();
+
             DatabaseReference ref1 = FirebaseDatabase.getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
                     .getReference("Users")
                     .child(friend.getUs_id())
@@ -68,10 +72,20 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             // Deleting from our user list
             ref2.setValue(friendIDs).addOnCompleteListener(task -> {
                 Log.d(TAG, position + " " + friendIDs.size() + " " + mUsers.size());
-                removeRecyclerElement(friend);
+
+                ref1.get().addOnCompleteListener(task2 -> {
+                    for (DataSnapshot snapshot : task2.getResult().getChildren()) {
+                        friendFriendsList.add(snapshot.getValue().toString());
+                    }
+
+                    friendFriendsList.remove(userID);
+                    friendFriendsList.set(0, String.valueOf(friendFriendsList.size() - 1));
+                }).addOnCompleteListener(task3
+                        -> ref1.setValue(friendFriendsList).addOnCompleteListener(task4
+                        -> removeRecyclerElement(friend)));
             });
 
-            // TODO: Correcting ex-friends list or make new item in interractions
+            // TODO: Correcting ex-friends list or make new item in interactions
         });
     }
 
