@@ -50,6 +50,8 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
     testImplementation 'junit:junit:4.13'
 
+    implementation 'com.iceteck.silicompressorr:silicompressor:2.2.4'
+    implementation 'id.zelory:compressor:2.1.1'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.airbnb.android:lottie:3.4.0'
 

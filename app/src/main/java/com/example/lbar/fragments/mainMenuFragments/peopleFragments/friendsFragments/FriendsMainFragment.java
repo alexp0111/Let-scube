@@ -22,8 +22,6 @@ import com.example.lbar.fragments.mainMenuFragments.peopleFragments.PeopleFragme
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-// TODO: Add srl on both pages
-
 // FIXME: На плохом интернете замечено: Получилось создать ситуацию в
 //  которой один человек становится другому другом, и при этом второй может отправить запрос
 

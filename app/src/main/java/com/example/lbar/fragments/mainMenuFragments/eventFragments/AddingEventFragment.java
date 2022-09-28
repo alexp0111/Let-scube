@@ -41,14 +41,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.iceteck.silicompressorr.FileUtils;
+import com.iceteck.silicompressorr.SiliCompressor;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.lbar.MainActivity.storage;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import id.zelory.compressor.Compressor;
 
 public class AddingEventFragment extends Fragment {
 
@@ -81,6 +86,8 @@ public class AddingEventFragment extends Fragment {
     private String picture = "none";
     private Uri imageUri = null;
 
+    private File file = null; //tmp compress file
+
     private Animation startExtendedFabAnimation;
     private Animation miniUnExplosionAnimation;
     private Animation rotateExtendedFabAnimation;
@@ -95,6 +102,8 @@ public class AddingEventFragment extends Fragment {
     private boolean fabFlag = false;
 
     private CircularProgressIndicator indicator;
+
+    private Context context;
 
     @Nullable
     @Override
@@ -117,7 +126,7 @@ public class AddingEventFragment extends Fragment {
         });
 
         cdPictureAdding.setOnClickListener(view14 -> {
-            if (imageUri == null){
+            if (imageUri == null) {
                 choosePictureFromAlbum();
             } else {
                 //txtPictureAdding.setText(R.string.add_picture);
@@ -140,6 +149,8 @@ public class AddingEventFragment extends Fragment {
             etHeader.setText("");
             getBackAnimationsStart();
         });
+
+        context = getContext();
 
         return view;
     }
@@ -172,17 +183,17 @@ public class AddingEventFragment extends Fragment {
         textText = etText.getText().toString();
         accessibility = cbAccessibility.isChecked() ? 1 : 0;
 
-        if (fUser == null){
+        if (fUser == null) {
             Snackbar.make(v, "It looks like you haven't entered your account. It is necessary, to make an event.", Snackbar.LENGTH_SHORT).show();
             indicator.setVisibility(View.INVISIBLE);
         } else {
-            if (textHeader == null || textText == null || textHeader.equals("") || textText.equals("")){
+            if (textHeader == null || textText == null || textHeader.equals("") || textText.equals("")) {
                 Snackbar.make(v, "Please, do not let <Header> or <Text> fields empty.", Snackbar.LENGTH_SHORT).show();
                 indicator.setVisibility(View.INVISIBLE);
             } else {
                 DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
 
-                if (imageUri != null){
+                if (imageUri != null) {
                     uploadPicture(v);
                 } else {
                     picture = "none";
@@ -292,23 +303,22 @@ public class AddingEventFragment extends Fragment {
                     if (data != null && data.getData() != null && result.getResultCode() == RESULT_OK) {
                         imageUri = data.getData();
 
+                        //compressImage();
+
                         /*
-                        File file = new File(imageUri.getPath());
+                        File file = new File(imageUri.toString());
                         Log.d("imageUri ", imageUri.getPath());
                         Log.d("imageUri ", file.canRead() + "");
                         try {
-                            File compressed = new Compressor(getContext())
+                            File compressed = new Compressor(context)
                                     .compressToFile(file);
-                            //imageUri = Uri.fromFile(compressed);
+                            imageUri = Uri.fromFile(compressed);
                             Log.d("imageUri ", imageUri.getPath());
                         } catch (IOException e) {
                             e.printStackTrace();
                             Log.d("imageUri ", "errrrror");
                         }
-                         */
-
-
-                        // TODO: Compressing
+                        */
 
                         imgPictureAddingIcon.setVisibility(View.GONE);
                         imgPictureAdding.setVisibility(View.VISIBLE);
@@ -317,6 +327,16 @@ public class AddingEventFragment extends Fragment {
                         Log.d("imageUri", "error");
                     }
                 });
+    }
+
+    private void compressImage() {
+        //FIXME: Compressing work, but it is too much. Very bad quality
+        Context context = getContext();
+        file = new File(SiliCompressor.with(context)
+                .compress(imageUri.toString(),
+                        new File(context.getCacheDir(), "temp")));
+
+        imageUri = Uri.fromFile(file);
     }
 
     private void uploadPicture(View v) {
@@ -333,6 +353,7 @@ public class AddingEventFragment extends Fragment {
                 reference.child("Events").child(newRef).setValue(event);
 
                 //getBackAnimationsStart();
+                if (file != null) file.delete();
                 indicator.setVisibility(View.INVISIBLE);
                 //fabExtended.setAlpha(0f);
                 closeFragment();
