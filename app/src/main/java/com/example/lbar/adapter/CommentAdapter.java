@@ -48,7 +48,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @NonNull
     @Override
     public CommentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // TODO: replace with custom items for comments
         View view;
         if (viewType == MSG_TYPE_RIGHT) {
             view = LayoutInflater.from(mContext).inflate(R.layout.comment_item_right, parent, false);

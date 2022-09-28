@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.lbar.R;
 import com.example.lbar.adapter.FriendRequestsAdapter;
@@ -18,6 +19,8 @@ import com.example.lbar.helpClasses.FriendRequest;
 import com.example.lbar.helpClasses.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +44,8 @@ public class FriendsInteractionsFragment extends Fragment {
     private ArrayList<FriendRequest> requestsList;
     private ArrayList<User> requestersList;
 
+    private SwipeRefreshLayout srl;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,18 +64,28 @@ public class FriendsInteractionsFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        createAdapter();
 
         getFriendRequestsList();
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getFriendRequestsList();
+                Snackbar.make(getView(), "Up to date", BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
 
     private void initItems(View v) {
         recyclerView = v.findViewById(R.id.recycler_friends_interactions);
+        srl = v.findViewById(R.id.pull_to_refresh_fr_interactions);
     }
 
     private void getFriendRequestsList() {
         requestsRef.get().addOnCompleteListener(task -> {
+            requestersList.clear();
             requestsList.clear();
 
             for (DataSnapshot snapshot : task.getResult().getChildren()) {
@@ -111,5 +126,6 @@ public class FriendsInteractionsFragment extends Fragment {
     private void createAdapter() {
         requestsAdapter = new FriendRequestsAdapter(requestersList, requestsList, usId, getContext());
         recyclerView.setAdapter(requestsAdapter);
+        srl.setRefreshing(false);
     }
 }
