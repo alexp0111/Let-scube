@@ -30,11 +30,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.lbar.BuildConfig;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.RoomMemberAdapter;
@@ -52,6 +54,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.iceteck.silicompressorr.SiliCompressor;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -245,7 +251,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     private void showScrambleConfirmDialogue() {
         imgV = dilaogView.findViewById(R.id.img_view_scr_cnf);
 
-        imgV.setImageResource(R.drawable.ic_add_photo);
+        imgV.setImageResource(R.drawable.ic_camera);
         imgV.setOnClickListener(view -> {
             choosePictureFromAlbum();
         });
@@ -282,15 +288,21 @@ public class RoomsKeyBattleFragment extends Fragment {
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    Intent data = result.getData();
+                    if (result != null) {
+                        Bundle extras = result.getData().getExtras();
+                        Bitmap bitmap = (Bitmap) extras.get("data");
 
-                    if (data != null) {
-                        Bitmap bitmap = (Bitmap)data.getExtras().get("data");
-                        imgV.setImageBitmap(bitmap);
+                        // imgV.setImageBitmap(bitmap);
 
-                        // TODO: covert bitmap -> Uri
+                        WeakReference<Bitmap> res = new WeakReference<>(
+                                Bitmap.createScaledBitmap(bitmap, bitmap.getHeight(),
+                                        bitmap.getWidth(), false)
+                                        .copy(Bitmap.Config.RGB_565, true));
 
-                        // scrambleURI =
+                        Bitmap clearBM = res.get();
+                        scrambleURI = saveImage(clearBM, getContext());
+                        imgV.setImageURI(scrambleURI);
+
                         // Glide.with(getContext()).load(scrambleURI).into(imgV);
                         // compressImage();
 
@@ -301,6 +313,28 @@ public class RoomsKeyBattleFragment extends Fragment {
                         Log.d("imageUri", "error");
                     }
                 });
+    }
+
+    private Uri saveImage(Bitmap image, Context context) {
+        File imagesFolder = new File(context.getCacheDir(), "images");
+        Uri uri = null;
+
+        try{
+            imagesFolder.mkdirs();
+            File file = new File(imagesFolder, "captured_image.jpg");
+            FileOutputStream stream = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            stream.flush();
+            stream.close();
+
+            uri = FileProvider.getUriForFile(context.getApplicationContext(), BuildConfig.APPLICATION_ID +".provider", file);
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return uri;
     }
 
     private void compressImage() {
