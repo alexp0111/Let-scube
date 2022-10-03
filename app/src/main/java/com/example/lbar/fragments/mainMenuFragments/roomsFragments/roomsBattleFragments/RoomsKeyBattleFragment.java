@@ -3,6 +3,7 @@ package com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleF
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -75,6 +76,9 @@ public class RoomsKeyBattleFragment extends Fragment {
     private boolean isRunning = false;
     private Cube cube;
 
+    private Uri scrambleURI;
+    private View dilaogView;
+
     private String roomID;
     private String newMemberID;
     private Room thisRoom = null;
@@ -111,6 +115,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_key_battle_rooms, container, false);
+        dilaogView = inflater.inflate(R.layout.dialog_scramble_confirm, container, false);
 
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -200,16 +205,17 @@ public class RoomsKeyBattleFragment extends Fragment {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (!isRunning) {
+
+                        // goto -> scramble photos
+
+                        showScrambleConfirmDialogue();
+
                         chronometer.setText("00:000");
 
                         startTime = 0L;
                         timeInMS = 0L;
                         timeSwapBuffer = 0L;
                         updateTime = 0L;
-
-                        layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
-
-                        updatePreparation(true, false, false);
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
@@ -226,6 +232,38 @@ public class RoomsKeyBattleFragment extends Fragment {
             }
             return true;
         });
+    }
+
+    private void showScrambleConfirmDialogue() {
+        ImageView imgV = dilaogView.findViewById(R.id.img_view_scr_cnf);
+
+        imgV.setImageResource(R.drawable.ic_add_photo);
+        imgV.setOnClickListener(view -> {
+            Toast.makeText(getContext(), "tmp", Toast.LENGTH_SHORT).show();
+            // TODO: goto taking self camera picture
+        });
+
+        MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(getContext());
+        mdBuilder.setTitle("Confirmation");
+        mdBuilder.setMessage("Take a photo of your puzzle's corner. It is necessary to show 3 sides");
+        mdBuilder.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_drawable, null));
+
+        if (dilaogView.getParent() != null) {
+            ((ViewGroup) dilaogView.getParent()).removeView(dilaogView);
+        }
+        mdBuilder.setView(dilaogView);
+
+        // show it only after picture made
+        mdBuilder.setPositiveButton(R.string.apply, (dialogInterface, i) -> {
+            if (scrambleURI != null){
+                layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
+                updatePreparation(true, false, false);
+            } else {
+                Snackbar.make(getView(), "Take a picture of puzzle", BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
+
+        mdBuilder.show();
     }
 
     private void updateDataBaseStatistic() {
