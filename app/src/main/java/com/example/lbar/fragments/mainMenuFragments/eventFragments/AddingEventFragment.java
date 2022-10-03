@@ -2,8 +2,6 @@ package com.example.lbar.fragments.mainMenuFragments.eventFragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.lbar.KtLibCompressor;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.helpClasses.Event;
@@ -57,11 +56,9 @@ import id.zelory.compressor.Compressor;
 
 public class AddingEventFragment extends Fragment {
 
-    // Добавить отображение фотографии
     // Поставить ограничения по объёму фотографий
     // Добавить возможность удалить добавленное фото (и возможно заменить)
     // Попроверять на возможность утечек\багов\захламления бд.
-    // Добавить прогресс бар!
     // Перепроверить защиту от дурака
 
     private FirebaseUser fUser;
@@ -305,20 +302,23 @@ public class AddingEventFragment extends Fragment {
 
                         //compressImage();
 
-                        /*
-                        File file = new File(imageUri.toString());
-                        Log.d("imageUri ", imageUri.getPath());
-                        Log.d("imageUri ", file.canRead() + "");
-                        try {
-                            File compressed = new Compressor(context)
-                                    .compressToFile(file);
-                            imageUri = Uri.fromFile(compressed);
-                            Log.d("imageUri ", imageUri.getPath());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Log.d("imageUri ", "errrrror");
-                        }
-                        */
+
+                        File file = new File(imageUri.getPath());
+                        //Log.d("imageUri ", imageUri.getPath());
+                        //Log.d("imageUri ", file.canRead() + "");
+                        //try {
+                            Log.d("vvv", imageUri.toString() + "   //   " + imageUri.getPath());
+                            KtLibCompressor compressor = new KtLibCompressor(file);
+                            imageUri = compressor.getCompressedImage(context);
+                            //File compressed = new Compressor(context)
+                            //        .compressToFile(file);
+                            //imageUri = Uri.fromFile(compressed);
+                            //Log.d("imageUri ", "suuuuuuuuuu");
+                        //} catch (Exception e) {
+                        //    e.printStackTrace();
+                        //    Log.d("imageUri ", "errrrror");
+                        //}
+
 
                         imgPictureAddingIcon.setVisibility(View.GONE);
                         imgPictureAdding.setVisibility(View.VISIBLE);

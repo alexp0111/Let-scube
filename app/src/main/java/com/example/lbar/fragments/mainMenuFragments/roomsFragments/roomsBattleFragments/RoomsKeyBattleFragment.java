@@ -46,6 +46,28 @@ import java.util.Random;
 
 public class RoomsKeyBattleFragment extends Fragment {
 
+    // Логика контроля сборки головоломки
+
+    // 1. Выводим скрамбл на экран
+    // 2. После нажатия (установка готовности) открывать диалог \ новый фрагмент
+    // 3. В диалоге \ фрагменте отобразить две кнопки
+    //      3.1 Кнопка, по нажатии на которую открывается возможность сделать фотографию на фронтальную камеру
+    //          угла головоломки со сторонами белый\зеленый\красный
+    //      3.1 Кнопка, по нажатии на которую открывается возможность сделать фотографию на фронтальную камеру
+    //          угла головоломки со сторонами синий\оранжевый\желтый
+    // 4. При повторонм нажатии на кнопки можно переделать фото
+    // 5. После подтверждения корректности фото происходит возврат к экрану сборки
+    //      (фотографии временно хранятся в Uri)
+    // 6. Начинается отсчёт (15 секунд) - инспекция
+    // 7. Этап сборки
+    // 8. Остановка таймера
+    // 9. Сразу после остановки начинается отсчёт - 5 секунд и участник должен показать один угол головомки
+    //      на фронтальную камеру
+    // 10. Призводится третий снимок в серии
+    // 11. Все три снимка загружаются в firebase storage вместе с объектом класса элемент сборки
+    // 12. В RecyclerView отображаются сжатые изображение напротив имени участника (в одном item с ним)
+    //      тем самым к каждой сборке есть подтверждение правильного скрамбла и результата сборки
+
     private DatabaseReference ref = FirebaseDatabase
             .getInstance("https://lbar-messenger-default-rtdb.firebaseio.com/")
             .getReference("Rooms");
@@ -207,7 +229,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     }
 
     private void updateDataBaseStatistic() {
-        if (thisRoom.isRoom_collection_synchronization() && cube != null && updateTime != 0L){
+        if (thisRoom.isRoom_collection_synchronization() && cube != null && updateTime != 0L) {
             cube.updateStatistics(updateTime);
         }
     }
@@ -247,11 +269,10 @@ public class RoomsKeyBattleFragment extends Fragment {
                     cube = new Cube(thisRoom.getRoom_puzzle_discipline(), getContext());
                 }
                 setUpControl();
-                if (thisRoom.getRoom_members().size() - newList.size() == 1){
+                if (thisRoom.getRoom_members().size() - newList.size() == 1) {
                     Log.d("UPDATE_RECYCLER", "false");
                     updateRecyclerView(false);
-                }
-                else if (thisRoom.getRoom_members().size() - newList.size() > 1){
+                } else if (thisRoom.getRoom_members().size() - newList.size() > 1) {
                     Log.d("UPDATE_RECYCLER", "true");
                     updateRecyclerView(true);
                 }
