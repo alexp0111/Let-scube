@@ -6,11 +6,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,7 +49,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.iceteck.silicompressorr.SiliCompressor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -57,11 +61,9 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     // 1. Выводим скрамбл на экран
     // 2. После нажатия (установка готовности) открывать диалог \ новый фрагмент
-    // 3. В диалоге \ фрагменте отобразить две кнопки
+    // 3. В диалоге \ фрагменте отобразить кнопку
     //      3.1 Кнопка, по нажатии на которую открывается возможность сделать фотографию на фронтальную камеру
     //          угла головоломки со сторонами белый\зеленый\красный
-    //      3.1 Кнопка, по нажатии на которую открывается возможность сделать фотографию на фронтальную камеру
-    //          угла головоломки со сторонами синий\оранжевый\желтый
     // 4. При повторонм нажатии на кнопки можно переделать фото
     // 5. После подтверждения корректности фото происходит возврат к экрану сборки
     //      (фотографии временно хранятся в Uri)
@@ -272,9 +274,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     }
 
     private void choosePictureFromAlbum() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         launcher.launch(intent);
     }
 
@@ -284,14 +284,32 @@ public class RoomsKeyBattleFragment extends Fragment {
                 result -> {
                     Intent data = result.getData();
 
-                    if (data != null && data.getData() != null && result.getResultCode() == RESULT_OK) {
-                        scrambleURI = data.getData();
-                        Glide.with(getContext()).load(scrambleURI).into(imgV);
-                        //uploadPicture();
+                    if (data != null) {
+                        Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+                        imgV.setImageBitmap(bitmap);
+
+                        // TODO: covert bitmap -> Uri
+
+                        // scrambleURI =
+                        // Glide.with(getContext()).load(scrambleURI).into(imgV);
+                        // compressImage();
+
+                        // scrambleURI = data.getData();
+                        // Glide.with(getContext()).load(scrambleURI).into(imgV);
+                        // compressImage();
                     } else {
                         Log.d("imageUri", "error");
                     }
                 });
+    }
+
+    private void compressImage() {
+        Context context = getContext();
+        File file = new File(SiliCompressor.with(context)
+                .compress(scrambleURI.toString(),
+                        new File(context.getCacheDir(), "temp")));
+
+        scrambleURI = Uri.fromFile(file);
     }
 
     private void updateDataBaseStatistic() {
