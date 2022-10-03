@@ -1,7 +1,10 @@
 package com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.RoomMemberAdapter;
@@ -76,6 +82,8 @@ public class RoomsKeyBattleFragment extends Fragment {
     private boolean isRunning = false;
     private Cube cube;
 
+    private ActivityResultLauncher<Intent> launcher;
+    private ImageView imgV;
     private Uri scrambleURI;
     private View dilaogView;
 
@@ -121,6 +129,7 @@ public class RoomsKeyBattleFragment extends Fragment {
 
         getRoomClass();
         initItems(view);
+        createLauncherForChoosingRomAlbum();
         results = new ArrayList<>();
         thisRoomMember = new RoomMember(newMemberID, false);
         realiseClickListeners();
@@ -205,9 +214,6 @@ public class RoomsKeyBattleFragment extends Fragment {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (!isRunning) {
-
-                        // goto -> scramble photos
-
                         showScrambleConfirmDialogue();
 
                         chronometer.setText("00:000");
@@ -235,12 +241,11 @@ public class RoomsKeyBattleFragment extends Fragment {
     }
 
     private void showScrambleConfirmDialogue() {
-        ImageView imgV = dilaogView.findViewById(R.id.img_view_scr_cnf);
+        imgV = dilaogView.findViewById(R.id.img_view_scr_cnf);
 
         imgV.setImageResource(R.drawable.ic_add_photo);
         imgV.setOnClickListener(view -> {
-            Toast.makeText(getContext(), "tmp", Toast.LENGTH_SHORT).show();
-            // TODO: goto taking self camera picture
+            choosePictureFromAlbum();
         });
 
         MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(getContext());
@@ -264,6 +269,29 @@ public class RoomsKeyBattleFragment extends Fragment {
         });
 
         mdBuilder.show();
+    }
+
+    private void choosePictureFromAlbum() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        launcher.launch(intent);
+    }
+
+    private void createLauncherForChoosingRomAlbum() {
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    Intent data = result.getData();
+
+                    if (data != null && data.getData() != null && result.getResultCode() == RESULT_OK) {
+                        scrambleURI = data.getData();
+                        Glide.with(getContext()).load(scrambleURI).into(imgV);
+                        //uploadPicture();
+                    } else {
+                        Log.d("imageUri", "error");
+                    }
+                });
     }
 
     private void updateDataBaseStatistic() {
