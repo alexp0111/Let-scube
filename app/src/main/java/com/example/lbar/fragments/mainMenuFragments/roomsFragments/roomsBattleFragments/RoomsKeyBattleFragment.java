@@ -1,6 +1,6 @@
 package com.example.lbar.fragments.mainMenuFragments.roomsFragments.roomsBattleFragments;
 
-import static android.app.Activity.RESULT_OK;
+import static com.example.lbar.MainActivity.storage;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,21 +28,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.lbar.BuildConfig;
-import com.example.lbar.MainActivity;
 import com.example.lbar.R;
 import com.example.lbar.adapter.RoomMemberAdapter;
 import com.example.lbar.helpClasses.Cube;
+import com.example.lbar.helpClasses.Event;
 import com.example.lbar.helpClasses.Room;
 import com.example.lbar.helpClasses.RoomMember;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -51,6 +50,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.iceteck.silicompressorr.SiliCompressor;
 
 import java.io.File;
@@ -63,15 +64,17 @@ import java.util.Random;
 
 public class RoomsKeyBattleFragment extends Fragment {
 
+    // TODO: Разобраться с версиями (33 вырубает xml хинты, а котлин без 33 не работает)
+
     // Логика контроля сборки головоломки
 
-    // 1. Выводим скрамбл на экран
-    // 2. После нажатия (установка готовности) открывать диалог \ новый фрагмент
-    // 3. В диалоге \ фрагменте отобразить кнопку
-    //      3.1 Кнопка, по нажатии на которую открывается возможность сделать фотографию на фронтальную камеру
+    // [1] Выводим скрамбл на экран
+    // [2] После нажатия (установка готовности) открывать диалог \ новый фрагмент
+    // [3] В диалоге \ фрагменте отобразить кнопку
+    //      [3.1] Кнопка, по нажатии на которую открывается возможность сделать фотографию на фронтальную камеру
     //          угла головоломки со сторонами белый\зеленый\красный
-    // 4. При повторонм нажатии на кнопки можно переделать фото
-    // 5. После подтверждения корректности фото происходит возврат к экрану сборки
+    // [4] При повторонм нажатии на кнопки можно переделать фото
+    // [5] После подтверждения корректности фото происходит возврат к экрану сборки
     //      (фотографии временно хранятся в Uri)
     // 6. Начинается отсчёт (15 секунд) - инспекция
     // 7. Этап сборки
@@ -90,9 +93,17 @@ public class RoomsKeyBattleFragment extends Fragment {
     private boolean isRunning = false;
     private Cube cube;
 
-    private ActivityResultLauncher<Intent> launcher;
+    private ActivityResultLauncher<Intent> launcherSCR;
+    private ActivityResultLauncher<Intent> launcherSLD;
     private ImageView imgV;
+
+    private StorageTask mUploadTask;
+
     private Uri scrambleURI;
+    private Uri solvedURI;
+    private Uri scrambleUriSTR;
+    private Uri solvedUriSTR;
+
     private View dilaogView;
 
     private String roomID;
@@ -137,7 +148,8 @@ public class RoomsKeyBattleFragment extends Fragment {
 
         getRoomClass();
         initItems(view);
-        createLauncherForChoosingRomAlbum();
+        createLauncherForChoosingSCR();
+        createLauncherForChoosingSLD();
         results = new ArrayList<>();
         thisRoomMember = new RoomMember(newMemberID, false);
         realiseClickListeners();
@@ -222,23 +234,13 @@ public class RoomsKeyBattleFragment extends Fragment {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (!isRunning) {
-                        showScrambleConfirmDialogue();
-
-                        chronometer.setText("00:000");
-
-                        startTime = 0L;
-                        timeInMS = 0L;
-                        timeSwapBuffer = 0L;
-                        updateTime = 0L;
+                        showScrambleConfirmDialogue("scr");
                     } else {
                         Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
                         scramble.setText(thisRoom.getRoom_scramble());
-                        updateDataBaseStatistic();
-                        updatePreparation(false, true, false);
-
-                        customHandlerForTimer.removeCallbacks(updateTimerThread);
-                        isRunning = false;
+                        // TODO: show one more dialog to shot a picture of solved
+                        showScrambleConfirmDialogue("sld");
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -248,14 +250,19 @@ public class RoomsKeyBattleFragment extends Fragment {
         });
     }
 
-    private void showScrambleConfirmDialogue() {
+    private void showScrambleConfirmDialogue(String flag) {
         imgV = dilaogView.findViewById(R.id.img_view_scr_cnf);
 
         imgV.setImageResource(R.drawable.ic_camera);
         imgV.setOnClickListener(view -> {
-            choosePictureFromAlbum();
+            if (flag.equals("scr")) {
+                choosePictureFromAlbum("scr"); // for scramble uri
+            } else {
+                choosePictureFromAlbum("sld"); // for scramble uri
+            }
         });
 
+        // TODO: difference between scr & sld
         MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(getContext());
         mdBuilder.setTitle("Confirmation");
         mdBuilder.setMessage("Take a photo of your puzzle's corner. It is necessary to show 3 sides");
@@ -266,60 +273,116 @@ public class RoomsKeyBattleFragment extends Fragment {
         }
         mdBuilder.setView(dilaogView);
 
-        // show it only after picture made
+        // TODO: show it only after picture made
         mdBuilder.setPositiveButton(R.string.apply, (dialogInterface, i) -> {
-            if (scrambleURI != null){
+            // TODO: check if uri is new anf not null
+            if (flag.equals("scr")){
                 layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
                 updatePreparation(true, false, false);
+
+                chronometer.setText("00:000");
+
+                startTime = 0L;
+                timeInMS = 0L;
+                timeSwapBuffer = 0L;
+                updateTime = 0L;
             } else {
-                Snackbar.make(getView(), "Take a picture of puzzle", BaseTransientBottomBar.LENGTH_SHORT).show();
+                updateDataBaseStatistic();
+                updatePreparation(false, true, false);
+
+                customHandlerForTimer.removeCallbacks(updateTimerThread);
+                isRunning = false;
             }
         });
 
         mdBuilder.show();
     }
 
-    private void choosePictureFromAlbum() {
+    private void choosePictureFromAlbum(String type) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        launcher.launch(intent);
+        if (type.equals("scr")) {
+            launcherSCR.launch(intent);
+        } else {
+            launcherSLD.launch(intent);
+        }
     }
 
-    private void createLauncherForChoosingRomAlbum() {
-        launcher = registerForActivityResult(
+    private void createLauncherForChoosingSCR() {
+        launcherSCR = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result != null) {
                         Bundle extras = result.getData().getExtras();
                         Bitmap bitmap = (Bitmap) extras.get("data");
 
-                        // imgV.setImageBitmap(bitmap);
-
                         WeakReference<Bitmap> res = new WeakReference<>(
                                 Bitmap.createScaledBitmap(bitmap, bitmap.getHeight(),
-                                        bitmap.getWidth(), false)
+                                                bitmap.getWidth(), false)
                                         .copy(Bitmap.Config.RGB_565, true));
 
                         Bitmap clearBM = res.get();
                         scrambleURI = saveImage(clearBM, getContext());
                         imgV.setImageURI(scrambleURI);
 
-                        // Glide.with(getContext()).load(scrambleURI).into(imgV);
-                        // compressImage();
-
-                        // scrambleURI = data.getData();
-                        // Glide.with(getContext()).load(scrambleURI).into(imgV);
-                        // compressImage();
                     } else {
                         Log.d("imageUri", "error");
                     }
                 });
     }
 
+    private void createLauncherForChoosingSLD() {
+        launcherSLD = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result != null) {
+                        Bundle extras = result.getData().getExtras();
+                        Bitmap bitmap = (Bitmap) extras.get("data");
+
+                        WeakReference<Bitmap> res = new WeakReference<>(
+                                Bitmap.createScaledBitmap(bitmap, bitmap.getHeight(),
+                                                bitmap.getWidth(), false)
+                                        .copy(Bitmap.Config.RGB_565, true));
+
+                        Bitmap clearBM = res.get();
+                        solvedURI = saveImage(clearBM, getContext());
+                        imgV.setImageURI(solvedURI);
+
+                    } else {
+                        Log.d("imageUri", "error");
+                    }
+                });
+    }
+
+    //private void uploadPicture(Uri uri) {
+    //    StorageReference riversRef = storage.getReference("EventsImages").child(thisRoomMember.getMember_id()).child(uri.getLastPathSegment());
+//
+    //    mUploadTask = riversRef.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+    //        //Snackbar.make(v, "image added!", Snackbar.LENGTH_LONG).show();
+//
+    //        Task<Uri> downloadURl = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task -> {
+    //            picture = task.getResult().toString();
+    //            DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
+//
+    //            String newRef = reference.child("Events").push().getKey();
+    //            Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility, null);
+    //            reference.child("Events").child(newRef).setValue(event);
+//
+    //            //getBackAnimationsStart();
+    //            if (file != null) file.delete();
+    //            indicator.setVisibility(View.INVISIBLE);
+    //            //fabExtended.setAlpha(0f);
+    //            closeFragment();
+    //        });
+    //    }).addOnFailureListener(e -> {
+    //        Log.d("uploading", "f");
+    //    });
+    //}
+
     private Uri saveImage(Bitmap image, Context context) {
         File imagesFolder = new File(context.getCacheDir(), "images");
         Uri uri = null;
 
-        try{
+        try {
             imagesFolder.mkdirs();
             File file = new File(imagesFolder, "captured_image.jpg");
             FileOutputStream stream = new FileOutputStream(file);
@@ -327,8 +390,8 @@ public class RoomsKeyBattleFragment extends Fragment {
             stream.flush();
             stream.close();
 
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), BuildConfig.APPLICATION_ID +".provider", file);
-        } catch (FileNotFoundException e){
+            uri = FileProvider.getUriForFile(context.getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -353,6 +416,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     }
 
     private void updateResultsList() {
+        // TODO: Loading to DB scr & sld uri's and add them into roomMember
         RoomMember roomMember = new RoomMember(newMemberID, updateTime, false);
         thisRoom.getRoom_members().add(roomMember);
         ref.child(roomID).setValue(thisRoom);
