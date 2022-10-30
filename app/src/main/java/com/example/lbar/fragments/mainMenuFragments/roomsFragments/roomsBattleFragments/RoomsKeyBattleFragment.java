@@ -41,6 +41,7 @@ import com.example.lbar.helpClasses.Cube;
 import com.example.lbar.helpClasses.Event;
 import com.example.lbar.helpClasses.Room;
 import com.example.lbar.helpClasses.RoomMember;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -52,6 +53,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.iceteck.silicompressorr.SiliCompressor;
 
 import java.io.File;
@@ -97,12 +99,15 @@ public class RoomsKeyBattleFragment extends Fragment {
     private ActivityResultLauncher<Intent> launcherSLD;
     private ImageView imgV;
 
-    private StorageTask mUploadTask;
+    private StorageTask mUploadTask1;
+    private StorageTask mUploadTask2;
 
     private Uri scrambleURI;
     private Uri solvedURI;
-    private Uri scrambleUriSTR;
-    private Uri solvedUriSTR;
+    private String scrambleUriSTR;
+    private String solvedUriSTR;
+    private String pic1;
+    private String pic2;
 
     private View dilaogView;
 
@@ -133,7 +138,7 @@ public class RoomsKeyBattleFragment extends Fragment {
     private ConstraintLayout bar;
     private RecyclerView recyclerView;
 
-    private static final long INSPECTION_TIME = 15000L;
+    private static final long INSPECTION_TIME = 3000L;
     private String[] scrambleArray_classic;
     private String[] puzzleNames = {"2 x 2", "3 x 3", "4 x 4", "5 x 5", "6 x 6", "7 x 7",
             "Pyraminx", "Sqube", "Megaminx", "Clock", "Square-1"};
@@ -234,13 +239,29 @@ public class RoomsKeyBattleFragment extends Fragment {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (!isRunning) {
-                        showScrambleConfirmDialogue("scr");
+                        Log.d("ROOMS_KEY", "is not running");
+                        layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
+
+                        chronometer.setText("00:000");
+
+                        startTime = 0L;
+                        timeInMS = 0L;
+                        timeSwapBuffer = 0L;
+                        updateTime = 0L;
+                        showScrambleConfirmDialogue("scr"); // dialog for checking scramble
                     } else {
-                        Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
+                        //Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
+                        isRunning = false;
+
+                        Log.d("ROOMS_KEY_OK_before", updateTime + "");
+
+                        customHandlerForTimer.removeCallbacks(updateTimerThread);
+                        Log.d("ROOMS_KEY_OK_after", updateTime + "");
+
+                        showScrambleConfirmDialogue("sld"); // dialog for checking solved
 
                         scramble.setText(thisRoom.getRoom_scramble());
-                        // TODO: show one more dialog to shot a picture of solved
-                        showScrambleConfirmDialogue("sld");
+                        updateDataBaseStatistic();
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -258,7 +279,7 @@ public class RoomsKeyBattleFragment extends Fragment {
             if (flag.equals("scr")) {
                 choosePictureFromAlbum("scr"); // for scramble uri
             } else {
-                choosePictureFromAlbum("sld"); // for scramble uri
+                choosePictureFromAlbum("sld"); // for solved uri
             }
         });
 
@@ -275,23 +296,12 @@ public class RoomsKeyBattleFragment extends Fragment {
 
         // TODO: show it only after picture made
         mdBuilder.setPositiveButton(R.string.apply, (dialogInterface, i) -> {
-            // TODO: check if uri is new anf not null
-            if (flag.equals("scr")){
-                layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
+            // TODO: check if uri is new anf not null !!!!
+            // Checking that image changed !!!!!
+            if (flag.equals("scr")) {
                 updatePreparation(true, false, false);
-
-                chronometer.setText("00:000");
-
-                startTime = 0L;
-                timeInMS = 0L;
-                timeSwapBuffer = 0L;
-                updateTime = 0L;
             } else {
-                updateDataBaseStatistic();
                 updatePreparation(false, true, false);
-
-                customHandlerForTimer.removeCallbacks(updateTimerThread);
-                isRunning = false;
             }
         });
 
@@ -307,6 +317,10 @@ public class RoomsKeyBattleFragment extends Fragment {
         }
     }
 
+    //
+    //  Launchers for getting pictures from camera
+    //
+
     private void createLauncherForChoosingSCR() {
         launcherSCR = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -321,8 +335,10 @@ public class RoomsKeyBattleFragment extends Fragment {
                                         .copy(Bitmap.Config.RGB_565, true));
 
                         Bitmap clearBM = res.get();
-                        scrambleURI = saveImage(clearBM, getContext());
+                        scrambleURI = saveImage(clearBM, getContext(), "scrambled");
                         imgV.setImageURI(scrambleURI);
+
+                        scrambleUriSTR = scrambleURI.toString();
 
                     } else {
                         Log.d("imageUri", "error");
@@ -344,8 +360,13 @@ public class RoomsKeyBattleFragment extends Fragment {
                                         .copy(Bitmap.Config.RGB_565, true));
 
                         Bitmap clearBM = res.get();
-                        solvedURI = saveImage(clearBM, getContext());
+                        solvedURI = saveImage(clearBM, getContext(), "solved");
                         imgV.setImageURI(solvedURI);
+
+
+                        solvedUriSTR = solvedURI.toString();
+                        Log.d("ROOMS_KEY", "in launcher");
+
 
                     } else {
                         Log.d("imageUri", "error");
@@ -353,38 +374,40 @@ public class RoomsKeyBattleFragment extends Fragment {
                 });
     }
 
-    //private void uploadPicture(Uri uri) {
-    //    StorageReference riversRef = storage.getReference("EventsImages").child(thisRoomMember.getMember_id()).child(uri.getLastPathSegment());
-//
-    //    mUploadTask = riversRef.putFile(uri).addOnSuccessListener(taskSnapshot -> {
-    //        //Snackbar.make(v, "image added!", Snackbar.LENGTH_LONG).show();
-//
-    //        Task<Uri> downloadURl = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task -> {
-    //            picture = task.getResult().toString();
-    //            DatabaseReference reference = FirebaseDatabase.getInstance(getString(R.string.fdb_inst)).getReference();
-//
-    //            String newRef = reference.child("Events").push().getKey();
-    //            Event event = new Event(newRef, fUser.getUid(), textHeader, textText, picture, 0, accessibility, null);
-    //            reference.child("Events").child(newRef).setValue(event);
-//
-    //            //getBackAnimationsStart();
-    //            if (file != null) file.delete();
-    //            indicator.setVisibility(View.INVISIBLE);
-    //            //fabExtended.setAlpha(0f);
-    //            closeFragment();
-    //        });
-    //    }).addOnFailureListener(e -> {
-    //        Log.d("uploading", "f");
-    //    });
-    //}
+    //
+    //  Launchers for getting pictures from camera
+    //
 
-    private Uri saveImage(Bitmap image, Context context) {
+
+    private void uploadPictures() {
+        StorageReference riversRef1 = storage.getReference("RoomsImages").child(thisRoom.getRoom_id())
+                .child(thisRoomMember.getMember_id()).child(scrambleURI.getLastPathSegment());
+        StorageReference riversRef2 = storage.getReference("RoomsImages").child(thisRoom.getRoom_id())
+                .child(thisRoomMember.getMember_id()).child(solvedURI.getLastPathSegment());
+
+        // First task is for downloading scrambled picture | Second is for downloading solved pic | 3-d is for downloading roomMember item
+        mUploadTask1 = riversRef1.putFile(scrambleURI).addOnSuccessListener(taskSnapshot -> {
+            Task<Uri> downloadURl1 = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task -> {
+                pic1 = task.getResult().toString();
+            });
+        }).addOnCompleteListener(task2 -> mUploadTask2 = riversRef2.putFile(solvedURI).addOnSuccessListener(taskSnapshot -> {
+            Task<Uri> downloadURl2 = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task3 -> {
+                pic2 = task3.getResult().toString();
+            });
+        }).addOnCompleteListener(taskFinal -> {
+            RoomMember roomMember = new RoomMember(newMemberID, updateTime, false, pic1, pic2);
+            thisRoom.getRoom_members().add(roomMember);
+            ref.child(roomID).setValue(thisRoom);
+        }));
+    }
+
+    private Uri saveImage(Bitmap image, Context context, String fileName) {
         File imagesFolder = new File(context.getCacheDir(), "images");
         Uri uri = null;
 
         try {
             imagesFolder.mkdirs();
-            File file = new File(imagesFolder, "captured_image.jpg");
+            File file = new File(imagesFolder, fileName + ".jpg");
             FileOutputStream stream = new FileOutputStream(file);
             image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             stream.flush();
@@ -409,6 +432,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         scrambleURI = Uri.fromFile(file);
     }
 
+    // Update data for current user personal statistics
     private void updateDataBaseStatistic() {
         if (thisRoom.isRoom_collection_synchronization() && cube != null && updateTime != 0L) {
             cube.updateStatistics(updateTime);
@@ -417,20 +441,23 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     private void updateResultsList() {
         // TODO: Loading to DB scr & sld uri's and add them into roomMember
-        RoomMember roomMember = new RoomMember(newMemberID, updateTime, false);
-        thisRoom.getRoom_members().add(roomMember);
-        ref.child(roomID).setValue(thisRoom);
+        uploadPictures();
+        //Toast.makeText(getContext(), "Scramble URI: " + scrambleURI.getLastPathSegment() + "; Solved URI: " + solvedURI.getLastPathSegment(), Toast.LENGTH_SHORT).show();
+        //Log.d("ROOMS_KEY", "Scramble URI: " + scrambleUriSTR + "; Solved URI: " + solvedUriSTR);
     }
 
     private void updatePreparation(boolean preparation, boolean resUpdate, boolean scrambleUpdate) {
+        Log.d("ROOMS_KEY", "in update first + " + resUpdate + "  +  " + updateTime);
         for (int i = 0; i < thisRoom.getRoom_members().size(); i++) {
             if (thisRoom.getRoom_members().get(i).getMember_id().equals(newMemberID))
                 thisRoom.getRoom_members().get(i).setMember_preparation(preparation);
         }
 
         ref.child(roomID).setValue(thisRoom).addOnCompleteListener(task -> {
-            if (resUpdate && updateTime != 0)
+            if (resUpdate && updateTime != 0) {
+                Log.d("ROOMS_KEY", "in if");
                 updateResultsList();
+            }
             if (scrambleUpdate && newMemberID.equals(thisRoom.getRoom_admin_id()))
                 downloadNewScramble();
         });
@@ -608,12 +635,14 @@ public class RoomsKeyBattleFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        chronometer.setText("00:000");
+        // TODO: Check logic. After picture takes this method called
 
-        startTime = 0L;
-        timeInMS = 0L;
-        timeSwapBuffer = 0L;
-        updateTime = 0L;
+        //chronometer.setText("00:000");
+//
+        //startTime = 0L;
+        //timeInMS = 0L;
+        //timeSwapBuffer = 0L;
+        //updateTime = 0L;
     }
 
     @Override
