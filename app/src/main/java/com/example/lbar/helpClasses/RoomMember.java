@@ -57,4 +57,20 @@ public class RoomMember {
     public void setMember_result(Long member_result) {
         this.member_result = member_result;
     }
+
+    public String getMember_scramble_img() {
+        return member_scramble_img;
+    }
+
+    public void setMember_scramble_img(String member_scramble_img) {
+        this.member_scramble_img = member_scramble_img;
+    }
+
+    public String getMember_result_img() {
+        return member_result_img;
+    }
+
+    public void setMember_result_img(String member_result_img) {
+        this.member_result_img = member_result_img;
+    }
 }

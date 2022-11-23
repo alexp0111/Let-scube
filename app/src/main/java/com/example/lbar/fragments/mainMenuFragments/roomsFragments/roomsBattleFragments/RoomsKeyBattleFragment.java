@@ -4,6 +4,7 @@ import static com.example.lbar.MainActivity.storage;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -68,6 +69,9 @@ public class RoomsKeyBattleFragment extends Fragment {
 
     // TODO: Разобраться с версиями (33 вырубает xml хинты, а котлин без 33 не работает)
 
+    // TODO: Разобраться со скипом диалога, когда людей несколько в комнате ( массив готовностей )
+    //  Разобраться с соотношением фотографий. Они сплющенные почему-то
+
     // Логика контроля сборки головоломки
 
     // [1] Выводим скрамбл на экран
@@ -78,14 +82,12 @@ public class RoomsKeyBattleFragment extends Fragment {
     // [4] При повторонм нажатии на кнопки можно переделать фото
     // [5] После подтверждения корректности фото происходит возврат к экрану сборки
     //      (фотографии временно хранятся в Uri)
-    // 6. Начинается отсчёт (15 секунд) - инспекция
-    // 7. Этап сборки
-    // 8. Остановка таймера
+    // [6] Начинается отсчёт (15 секунд) - инспекция
+    // [7] Этап сборки
+    // [8] Остановка таймера
     // 9. Сразу после остановки начинается отсчёт - 5 секунд и участник должен показать один угол головомки
     //      на фронтальную камеру
-    // 10. Призводится третий снимок в серии
-    // 11. Все три снимка загружаются в firebase storage вместе с объектом класса элемент сборки
-    // 12. В RecyclerView отображаются сжатые изображение напротив имени участника (в одном item с ним)
+    // [12] В RecyclerView отображаются сжатые изображение напротив имени участника (в одном item с ним)
     //      тем самым к каждой сборке есть подтверждение правильного скрамбла и результата сборки
 
     private DatabaseReference ref = FirebaseDatabase
@@ -93,6 +95,7 @@ public class RoomsKeyBattleFragment extends Fragment {
             .getReference("Rooms");
 
     private boolean isRunning = false;
+    private boolean picturesFlag = false;
     private Cube cube;
 
     private ActivityResultLauncher<Intent> launcherSCR;
@@ -238,7 +241,7 @@ public class RoomsKeyBattleFragment extends Fragment {
         layout.setOnTouchListener((view12, motionEvent) -> {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    if (!isRunning) {
+                    if (!isRunning && !picturesFlag) {
                         Log.d("ROOMS_KEY", "is not running");
                         layout.setBackgroundResource(R.color.colorChronometerPress); // pressed state
 
@@ -250,8 +253,9 @@ public class RoomsKeyBattleFragment extends Fragment {
                         updateTime = 0L;
                         showScrambleConfirmDialogue("scr"); // dialog for checking scramble
                     } else {
-                        //Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
                         isRunning = false;
+                        picturesFlag = true;
+                        //Snackbar.make(getView(), "Time is: " + chronometer.getText(), BaseTransientBottomBar.LENGTH_SHORT).show();
 
                         Log.d("ROOMS_KEY_OK_before", updateTime + "");
 
@@ -283,7 +287,6 @@ public class RoomsKeyBattleFragment extends Fragment {
             }
         });
 
-        // TODO: difference between scr & sld
         MaterialAlertDialogBuilder mdBuilder = new MaterialAlertDialogBuilder(getContext());
         mdBuilder.setTitle("Confirmation");
         mdBuilder.setMessage("Take a photo of your puzzle's corner. It is necessary to show 3 sides");
@@ -294,14 +297,23 @@ public class RoomsKeyBattleFragment extends Fragment {
         }
         mdBuilder.setView(dilaogView);
 
-        // TODO: show it only after picture made
         mdBuilder.setPositiveButton(R.string.apply, (dialogInterface, i) -> {
-            // TODO: check if uri is new anf not null !!!!
-            // Checking that image changed !!!!!
-            if (flag.equals("scr")) {
+            if (flag.equals("scr") && scrambleURI != null) {
                 updatePreparation(true, false, false);
-            } else {
+            } else if (solvedURI != null) {
+                picturesFlag = false;
                 updatePreparation(false, true, false);
+            }
+        });
+
+        mdBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                if (flag.equals("scr")) {
+                    scrambleURI = null;
+                } else if (solvedURI != null) {
+                    solvedURI = null;
+                }
             }
         });
 
@@ -389,16 +401,23 @@ public class RoomsKeyBattleFragment extends Fragment {
         mUploadTask1 = riversRef1.putFile(scrambleURI).addOnSuccessListener(taskSnapshot -> {
             Task<Uri> downloadURl1 = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task -> {
                 pic1 = task.getResult().toString();
-            });
-        }).addOnCompleteListener(task2 -> mUploadTask2 = riversRef2.putFile(solvedURI).addOnSuccessListener(taskSnapshot -> {
-            Task<Uri> downloadURl2 = taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(task3 -> {
-                pic2 = task3.getResult().toString();
-            });
-        }).addOnCompleteListener(taskFinal -> {
-            RoomMember roomMember = new RoomMember(newMemberID, updateTime, false, pic1, pic2);
-            thisRoom.getRoom_members().add(roomMember);
-            ref.child(roomID).setValue(thisRoom);
-        }));
+                Log.d("qwerty456", pic1);
+            }).addOnCompleteListener(task2 -> mUploadTask2 = riversRef2.putFile(solvedURI).addOnSuccessListener(taskSnapshot2 -> {
+                Task<Uri> downloadURl2 = taskSnapshot2.getStorage().getDownloadUrl().addOnCompleteListener(task3 -> {
+                    pic2 = task3.getResult().toString();
+                    Log.d("qwerty456", pic2);
+                }).addOnCompleteListener(taskFinal -> {
+                    Log.d("qwerty456", pic1 + " //// " + pic2);
+                    RoomMember roomMember = new RoomMember(newMemberID, updateTime, false, pic1, pic2);
+                    thisRoom.getRoom_members().add(roomMember);
+                    ref.child(roomID).setValue(thisRoom);
+
+                    //Set pic's to default
+                    scrambleURI = null;
+                    solvedURI = null;
+                });
+            }));
+        });
     }
 
     private Uri saveImage(Bitmap image, Context context, String fileName) {

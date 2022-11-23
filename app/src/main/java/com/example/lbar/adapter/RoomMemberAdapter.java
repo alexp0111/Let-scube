@@ -54,7 +54,7 @@ public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.Vi
                                 holder.time.setText(convertFromMStoString(
                                         member.getMember_result()));
                             } else {
-                                holder.time.setText(R.string.joined_room);
+                                holder.time.setText("new"); // R.string.joined_room
                             }
                         }
                     }
@@ -64,6 +64,9 @@ public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.Vi
 
                     }
                 });
+
+        Glide.with(mContext).load(member.getMember_scramble_img()).into(holder.scrambled);
+        Glide.with(mContext).load(member.getMember_result_img()).into(holder.solved);
     }
 
     @Override
@@ -98,6 +101,8 @@ public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.Vi
         public TextView username;
         public ImageView profile_image;
         public TextView time;
+        public ImageView scrambled;
+        public ImageView solved;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -105,6 +110,8 @@ public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.Vi
             username = itemView.findViewById(R.id.room_member_item_author);
             profile_image = itemView.findViewById(R.id.room_member_item_iv);
             time = itemView.findViewById(R.id.room_member_item_time);
+            scrambled = itemView.findViewById(R.id.room_member_item_iv_scr);
+            solved = itemView.findViewById(R.id.room_member_item_iv_sld);
         }
     }
 }

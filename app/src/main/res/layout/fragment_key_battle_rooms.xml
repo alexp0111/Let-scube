@@ -57,13 +57,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/key_battle_members_list"
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/layout_key_battle_chronometer"
         android:layout_below="@+id/divider1"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginBottom="0dp"
+        android:padding="10dp" />
 
     <LinearLayout
         android:id="@+id/layout_key_battle_chronometer"
