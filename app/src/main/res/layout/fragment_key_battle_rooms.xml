@@ -62,8 +62,9 @@
         android:layout_above="@+id/layout_key_battle_chronometer"
         android:layout_below="@+id/divider1"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:padding="10dp" />
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="0dp" />
 
     <LinearLayout
         android:id="@+id/layout_key_battle_chronometer"

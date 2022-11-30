@@ -51,7 +51,7 @@
     <string name="title_people">People</string>
     <string name="assembly_rooms">Assembly rooms</string>
     <string name="commandSolving">Command solving</string>
-    <string name="last_mess">\last message: \</string>
+    <string name="last_mess">last message:\u0020</string>
     <string name="change_mess_discr">Here you can change your message</string>
     <string name="header_correcting">Correcting…</string>
     <string name="apply">APPlY</string>

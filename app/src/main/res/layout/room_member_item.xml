@@ -11,7 +11,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/hacker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +20,8 @@
         android:id="@+id/room_member_item_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="12dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="Ekaterina Petrovskaya"
         android:textColor="@color/colorPrimaryDark"
@@ -31,20 +32,21 @@
 
     <TextView
         android:id="@+id/room_member_item_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="29dp"
         android:gravity="center"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/room_member_item_author"
+        app:layout_constraintBottom_toBottomOf="@id/room_member_item_iv"
         app:layout_constraintEnd_toEndOf="@id/room_member_item_author"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/room_member_item_iv" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/room_member_item_cv_scr"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_margin="12dp"
+        app:cardCornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/room_member_item_cv_sld"
         app:layout_constraintStart_toEndOf="@id/room_member_item_author"
@@ -64,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_margin="12dp"
+        app:cardCornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/room_member_item_cv_scr"

@@ -342,8 +342,8 @@ public class RoomsKeyBattleFragment extends Fragment {
                         Bitmap bitmap = (Bitmap) extras.get("data");
 
                         WeakReference<Bitmap> res = new WeakReference<>(
-                                Bitmap.createScaledBitmap(bitmap, bitmap.getHeight(),
-                                                bitmap.getWidth(), false)
+                                Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(),
+                                               bitmap.getHeight(), false)
                                         .copy(Bitmap.Config.RGB_565, true));
 
                         Bitmap clearBM = res.get();
@@ -367,8 +367,8 @@ public class RoomsKeyBattleFragment extends Fragment {
                         Bitmap bitmap = (Bitmap) extras.get("data");
 
                         WeakReference<Bitmap> res = new WeakReference<>(
-                                Bitmap.createScaledBitmap(bitmap, bitmap.getHeight(),
-                                                bitmap.getWidth(), false)
+                                Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(),
+                                                bitmap.getHeight(), false)
                                         .copy(Bitmap.Config.RGB_565, true));
 
                         Bitmap clearBM = res.get();
